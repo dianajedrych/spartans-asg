@@ -432,42 +432,6 @@
     </div>
   </sc-if>
 
-  <!-- PROMOCJE -->
-  <sc-if value="{{ isPromocje }}" hint-placeholder-val="{{ false }}">
-    <div style="paddingTop:96px;maxWidth:1300px;margin:0 auto;padding:96px 24px 80px">
-      <div style="display:flex;alignItems:center;gap:8px;marginBottom:14px">
-        <span onClick="{{ goHome }}" style="color:#67705D;fontSize:12px;cursor:pointer" style-hover="color:#E8E7DE">Strona główna</span>
-        <span style="color:#67705D;fontSize:12px">/</span>
-        <span style="color:#E8E7DE;fontSize:12px">Promocje</span>
-      </div>
-      <div style="marginBottom:32px;borderBottom:4px solid #A5131D;paddingBottom:20px">
-        <p style="font-family:'Oswald',sans-serif;fontSize:13px;letterSpacing:2px;color:#A5131D;marginBottom:8px">OFERTY OGRANICZONE CZASOWO</p>
-        <h1 style="font-family:'Oswald',sans-serif;fontWeight:700;fontSize:36px;letterSpacing:1px">PROMOCJE</h1>
-      </div>
-      <div style="display:grid;gridTemplateColumns:repeat(auto-fill,minmax(230px,1fr));gap:20px">
-        <sc-for list="{{ promoProducts }}" as="p" hint-placeholder-count="4">
-          <div style="background:#33392B;border:1px solid rgba(232,231,222,0.08);cursor:pointer;display:flex;flexDirection:column;position:relative" onClick="{{ p.onOpen }}" style-hover="border-color:#A5131D">
-            <span style="position:absolute;top:10px;left:10px;background:#431517;color:#E8E7DE;fontFamily:'Oswald',sans-serif;fontSize:10px;letterSpacing:1px;fontWeight:600;padding:5px 10px;zIndex:2">PROMOCJA</span>
-            <div style="height:190px;width:100%">
-              <image-slot id="{{ p.slotId }}" shape="rect" placeholder="{{ p.imgHint }}"></image-slot>
-            </div>
-            <div style="padding:16px;display:flex;flexDirection:column;gap:8px;flex:1">
-              <span style="fontSize:11px;letterSpacing:1px;color:#67705D;fontFamily:'Oswald',sans-serif">{{ p.category }}</span>
-              <span style="fontSize:15px;fontWeight:500;lineHeight:1.3;flex:1">{{ p.name }}</span>
-              <div style="display:flex;justifyContent:space-between;alignItems:center;marginTop:6px">
-                <div style="display:flex;flexDirection:column">
-                  <span style="color:#67705D;fontSize:12px;textDecoration:line-through">{{ p.oldPriceLabel }}</span>
-                  <span style="fontFamily:'Oswald',sans-serif;fontSize:18px;fontWeight:600;color:#A5131D">{{ p.priceLabel }}</span>
-                </div>
-                <button onClick="{{ p.onAdd }}" style="background:#A5131D;color:#fff;border:none;padding:8px 14px;fontFamily:'Oswald',sans-serif;fontSize:12px;letterSpacing:1px;fontWeight:600;cursor:pointer" style-hover="background:#431517">DO KOSZYKA</button>
-              </div>
-            </div>
-          </div>
-        </sc-for>
-      </div>
-    </div>
-  </sc-if>
-
   <!-- PRODUCT DETAIL -->
   <sc-if value="{{ isProduct }}" hint-placeholder-val="{{ false }}">
     <sc-if value="{{ hasSelectedProduct }}" hint-placeholder-val="{{ false }}">
@@ -623,19 +587,35 @@
       </sc-if>
 
       <sc-if value="{{ showingArchive }}" hint-placeholder-val="{{ false }}">
-        <div style="display:grid;gridTemplateColumns:repeat(auto-fill,minmax(240px,1fr));gap:20px">
-          <sc-for list="{{ archiveEvents }}" as="ev" hint-placeholder-count="4">
-            <div style="background:#33392B;border:1px solid rgba(232,231,222,0.08)">
-              <div style="height:160px;width:100%">
-                <image-slot id="{{ ev.slotId }}" shape="rect" placeholder="Zdjęcie z wydarzenia"></image-slot>
+        <sc-if value="{{ showArchiveList }}" hint-placeholder-val="{{ true }}">
+          <div style="display:grid;gridTemplateColumns:repeat(auto-fill,minmax(240px,1fr));gap:20px">
+            <sc-for list="{{ archiveEventsOut }}" as="ev" hint-placeholder-count="4">
+              <div style="background:#33392B;border:1px solid rgba(232,231,222,0.08);cursor:pointer" onClick="{{ ev.onOpen }}" style-hover="border-color:rgba(165,19,29,0.5)">
+                <div style="height:160px;width:100%">
+                  <image-slot id="{{ ev.slotId }}" shape="rect" placeholder="Zdjęcie z wydarzenia"></image-slot>
+                </div>
+                <div style="padding:16px">
+                  <span style="display:block;fontSize:15px;fontWeight:500;marginBottom:4px">{{ ev.name }}</span>
+                  <span style="color:#67705D;fontSize:13px">{{ ev.date }}</span>
+                </div>
               </div>
-              <div style="padding:16px">
-                <span style="display:block;fontSize:15px;fontWeight:500;marginBottom:4px">{{ ev.name }}</span>
-                <span style="color:#67705D;fontSize:13px">{{ ev.date }}</span>
+            </sc-for>
+          </div>
+        </sc-if>
+
+        <sc-if value="{{ hasSelectedArchiveEvent }}" hint-placeholder-val="{{ false }}">
+          <span onClick="{{ closeArchiveEvent }}" style="color:#67705D;fontSize:13px;cursor:pointer;display:inline-block;marginBottom:20px" style-hover="color:#E8E7DE">&larr; Wróć do archiwum</span>
+          <h2 style="font-family:'Oswald',sans-serif;fontWeight:700;fontSize:28px;letterSpacing:0.5px;marginBottom:6px">{{ selectedArchiveEventData.name }}</h2>
+          <span style="color:#67705D;fontSize:14px;display:block;marginBottom:20px">{{ selectedArchiveEventData.date }}</span>
+          <p style="color:#E8E7DE;opacity:0.8;fontSize:15px;lineHeight:1.7;maxWidth:700px;marginBottom:34px">{{ selectedArchiveEventData.desc }}</p>
+          <div style="display:grid;gridTemplateColumns:repeat(auto-fill,minmax(220px,1fr));gridAutoFlow:dense;gap:14px">
+            <sc-for list="{{ selectedArchiveEventData.photos }}" as="ph" hint-placeholder-count="9">
+              <div onClick="{{ ph.onOpen }}" style="cursor:pointer;width:100%;height:{{ ph.height }}px;position:relative">
+                <image-slot id="{{ ph.slotId }}" shape="rect" placeholder="Zdjęcie z wydarzenia"></image-slot>
               </div>
-            </div>
-          </sc-for>
-        </div>
+            </sc-for>
+          </div>
+        </sc-if>
       </sc-if>
     </div>
   </sc-if>
@@ -1045,15 +1025,6 @@
         </div>
       </sc-if>
     </div>
-
-    <sc-if value="{{ lightboxOpen }}" hint-placeholder-val="{{ false }}">
-      <div style="position:fixed;inset:0;background:rgba(15,15,13,0.95);zIndex:400;display:flex;alignItems:center;justifyContent:center;padding:40px" onClick="{{ closeLightbox }}">
-        <span onClick="{{ closeLightbox }}" style="position:absolute;top:24px;right:32px;color:#E8E7DE;fontSize:28px;cursor:pointer">&times;</span>
-        <div style="width:min(900px,100%);height:min(600px,80vh)">
-          <image-slot id="{{ lightboxSlotId }}" shape="rect" placeholder="Zdjęcie z wydarzenia"></image-slot>
-        </div>
-      </div>
-    </sc-if>
   </sc-if>
 
   <!-- EVENTY SPECJALNE (SUBPAGE) -->
@@ -1638,6 +1609,15 @@
     </div>
   </footer>
 
+  <sc-if value="{{ lightboxOpen }}" hint-placeholder-val="{{ false }}">
+    <div style="position:fixed;inset:0;background:rgba(15,15,13,0.95);zIndex:400;display:flex;alignItems:center;justifyContent:center;padding:40px" onClick="{{ closeLightbox }}">
+      <span onClick="{{ closeLightbox }}" style="position:absolute;top:24px;right:32px;color:#E8E7DE;fontSize:28px;cursor:pointer">&times;</span>
+      <div style="width:min(900px,100%);height:min(600px,80vh)">
+        <image-slot id="{{ lightboxSlotId }}" shape="rect" placeholder="Zdjęcie z wydarzenia"></image-slot>
+      </div>
+    </div>
+  </sc-if>
+
 </div>
 
 </x-dc>
@@ -1691,6 +1671,7 @@ class Component extends DCLogic {
     courierForm: { imie: '', nazwisko: '', adres: '', kod: '', miasto: '', telefon: '' },
     paczkomatForm: { imie: '', nazwisko: '', telefon: '' },
     selectedPaczkomat: null,
+    selectedArchiveEvent: null,
   };
 
   products = [
@@ -1789,10 +1770,14 @@ class Component extends DCLogic {
   };
 
   archiveEvents = [
-    { name: 'Niedzielne U3', date: '09.08.2026', slotId: 'arch-1' },
-    { name: 'Korengal – edycja III', date: 'czerwiec 2026', slotId: 'arch-2' },
-    { name: 'Pokaz ASG – Dni Lublina', date: 'maj 2026', slotId: 'arch-3' },
-    { name: 'Niedzielne U3', date: '02.08.2026', slotId: 'arch-4' },
+    { name: 'Niedzielne U3', date: '09.08.2026', slotId: 'arch-1', photoCount: 12,
+      desc: 'Cotygodniowa rozgrywka terenowa U3 z udziałem graczy różnych poziomów. Dobra frekwencja, kilka nowych twarzy i tradycyjna Giełda ASG po grze.' },
+    { name: 'Korengal – edycja III', date: 'czerwiec 2026', slotId: 'arch-2', photoCount: 16,
+      desc: 'Trzydniowy milsim Korengal w swojej trzeciej edycji — rozbudowane frakcje, nocne akcje i pełna obsługa organizacyjna na terenie wydarzenia.' },
+    { name: 'Pokaz ASG – Dni Lublina', date: 'maj 2026', slotId: 'arch-3', photoCount: 14,
+      desc: 'Pokaz sprzętu i rozgrywki ASG zorganizowany podczas miejskiej imprezy Dni Lublina — prezentacja replik, strefa bezpiecznego strzelania i rozmowy z mieszkańcami zainteresowanymi hobby.' },
+    { name: 'Niedzielne U3', date: '02.08.2026', slotId: 'arch-4', photoCount: 10,
+      desc: 'Kolejna edycja Niedzielnego U3 — pogoda dopisała, teren w dobrym stanie po pracach porządkowych z poprzedniego tygodnia.' },
   ];
 
   u3 = {
@@ -2131,12 +2116,17 @@ class Component extends DCLogic {
 
   setSearch = (v) => this.setState({ search: v });
   setCategory = (v) => this.setState({ category: v, weightFilter: 'Wszystkie', akcSubFilter: 'Wszystkie', subFilter: 'Wszystkie', brandFilter: [], brandsExpanded: false });
+  selectSidebarCategory = (cat, hasSubs) => { this.setCategory(cat); if (hasSubs) this.toggleSidebarCat(cat); };
   setWeightFilter = (v) => this.setState({ weightFilter: v });
   setAkcSubFilter = (v) => this.setState({ akcSubFilter: v });
   setSubFilter = (v) => this.setState({ subFilter: v });
   toggleSidebarCat = (cat) => this.setState(s => ({ expandedSidebarCat: s.expandedSidebarCat === cat ? null : cat }));
   toggleBrandFilter = (b) => this.setState(s => ({ brandFilter: s.brandFilter.includes(b) ? s.brandFilter.filter(x => x !== b) : [...s.brandFilter, b] }));
-  filterByBrandOnly = (b) => this.setState({ brandFilter: [b] });
+  // Only-by-brand pills (top of shop): must ignore category, showing that brand across the whole catalog.
+  filterByBrandOnly = (b) => this.setState({
+    category: 'Wszystkie', weightFilter: 'Wszystkie', akcSubFilter: 'Wszystkie', subFilter: 'Wszystkie',
+    brandFilter: [b], brandsExpanded: false,
+  });
   toggleBrandsExpanded = () => this.setState(s => ({ brandsExpanded: !s.brandsExpanded }));
   setPriceDraft = (which, v) => this.setState({ [which]: v });
   applyPriceRange = () => this.setState(s => ({
@@ -2165,8 +2155,10 @@ class Component extends DCLogic {
   closeAlbum = () => this.setState({ selectedAlbum: null });
   openLightbox = (slotId) => this.setState({ lightboxSlotId: slotId });
   closeLightbox = () => this.setState({ lightboxSlotId: null });
+  openArchiveEvent = (i) => { window.scrollTo(0, 0); this.setState({ selectedArchiveEvent: i }); };
+  closeArchiveEvent = () => this.setState({ selectedArchiveEvent: null });
   renderVals() {
-    const { view, scrolled, isMobile, mobileMenuOpen, cartOpen, cart, search, category, sort, selectedProductId, eventsTab, productQty, productVariant, selectedAlbum, lightboxSlotId, checkoutStep, deliveryOption, toast, weightFilter, akcSubFilter, subFilter, bannerIndex, expandedSidebarCat, brandFilter, brandsExpanded, priceMinDraft, priceMaxDraft, priceRange, onlyBestseller, onlyPromocja, onlyDostepne, courierForm, paczkomatForm, selectedPaczkomat } = this.state;
+    const { view, scrolled, isMobile, mobileMenuOpen, cartOpen, cart, search, category, sort, selectedProductId, eventsTab, productQty, productVariant, selectedAlbum, lightboxSlotId, checkoutStep, deliveryOption, toast, weightFilter, akcSubFilter, subFilter, bannerIndex, expandedSidebarCat, brandFilter, brandsExpanded, priceMinDraft, priceMaxDraft, priceRange, onlyBestseller, onlyPromocja, onlyDostepne, courierForm, paczkomatForm, selectedPaczkomat, selectedArchiveEvent } = this.state;
 
     const badgeFor = (p) => {
       if (p.bestseller) return { badge: 'BESTSELLER', badgeBg: '#A5131D' };
@@ -2181,7 +2173,7 @@ class Component extends DCLogic {
       ? [...new Set(this.products.filter(p => p.name.toLowerCase().includes(search.toLowerCase())).map(p => p.name))].slice(0, 8)
       : [];
     let filtered = decorated.filter(p =>
-      (category === 'Wszystkie' || p.category === category) &&
+      (category === 'Wszystkie' || (category === 'Promocje' ? p.promo === true : p.category === category)) &&
       p.name.toLowerCase().includes((search || '').toLowerCase()) &&
       (category !== 'Kulki ASG' || weightFilter === 'Wszystkie' || p.weight === weightFilter) &&
       (!currentSubOptions || subFilter === 'Wszystkie' || p.subcategory === subFilter) &&
@@ -2416,7 +2408,7 @@ class Component extends DCLogic {
         color: this.state.u3Tab === t.key ? '#E8E7DE' : '#67705D',
         border: this.state.u3Tab === t.key ? '2px solid #A5131D' : '2px solid transparent',
       })),
-      isGallery: view === 'gallery', isCheckout: view === 'checkout', isPromocje: view === 'promocje', isCart: view === 'cart', isEventy: view === 'eventy',
+      isGallery: view === 'gallery', isCheckout: view === 'checkout', isCart: view === 'cart', isEventy: view === 'eventy',
       goToCartPage: this.goToCartPage, clearCart: this.clearCart,
       showAuthModal: this.state.showAuthModal, closeAuthModal: this.closeAuthModal,
       isLoginTab: this.state.authTab === 'login', isRegisterTab: this.state.authTab === 'register',
@@ -2435,11 +2427,6 @@ class Component extends DCLogic {
       authSubmitLabel: this.state.authTab === 'login' ? 'ZALOGUJ SIĘ' : 'ZAREJESTRUJ SIĘ',
       upsellProducts: this.products.filter(p => p.active !== false && !cart.some(c => c.id === p.id)).slice(0, 5).map(p => ({
         ...p, priceLabel: p.price + ' zł', upsellSlotId: 'upsell-' + p.id, onOpen: () => this.openProduct(p.id),
-      })),
-      promoProducts: decorated.filter(p => p.badge === 'PROMOCJA').map(p => ({
-        ...p, priceLabel: p.price + ' zł', oldPriceLabel: (p.oldPrice || Math.round(p.price * 1.15)) + ' zł',
-        onOpen: () => this.openProduct(p.id),
-        onAdd: (e) => { e.stopPropagation(); this.addToCart(p.id, 1, false); },
       })),
       albums: this.albums.map(a => ({ ...a, onOpen: () => this.openAlbum(a.id) })),
       selectedAlbumData: (() => {
@@ -2479,16 +2466,16 @@ class Component extends DCLogic {
         ...b, active: i === bannerIndex,
         opacity: i === bannerIndex ? 1 : 0,
         zIndex: i === bannerIndex ? 2 : 1,
-        onClick: b.category === 'Promocje' ? () => this.setView('promocje') : () => this.setCategory(b.category),
+        onClick: () => this.setCategory(b.category),
       })),
       bannerDots: this.shopBanners.map((b, i) => ({
         onClick: () => this.goBanner(i),
         bg: i === bannerIndex ? '#A5131D' : 'rgba(232,231,222,0.3)',
       })),
-      categoryBrands: [...new Set(this.products.filter(p => category === 'Wszystkie' || p.category === category).map(p => p.brand))].sort().map(b => ({ name: b, onClick: () => this.filterByBrandOnly(b) })),
+      categoryBrands: [...new Set(this.products.filter(p => category === 'Wszystkie' || (category === 'Promocje' ? p.promo === true : p.category === category)).map(p => p.brand))].sort().map(b => ({ name: b, onClick: () => this.filterByBrandOnly(b) })),
       setBrandsRef: this.setBrandsRef, scrollBrandsLeft: this.scrollBrandsLeft, scrollBrandsRight: this.scrollBrandsRight,
-      brandFilterOptions: [...new Set(this.products.filter(p => category === 'Wszystkie' || p.category === category).map(p => p.brand))].sort().map(b => ({
-        label: b, count: this.products.filter(p => p.brand === b && (category === 'Wszystkie' || p.category === category)).length,
+      brandFilterOptions: [...new Set(this.products.filter(p => category === 'Wszystkie' || (category === 'Promocje' ? p.promo === true : p.category === category)).map(p => p.brand))].sort().map(b => ({
+        label: b, count: this.products.filter(p => p.brand === b && (category === 'Wszystkie' || (category === 'Promocje' ? p.promo === true : p.category === category))).length,
         checked: brandFilter.includes(b) ? '#A5131D' : 'transparent', onClick: () => this.toggleBrandFilter(b),
       })),
       priceMinDraft, priceMaxDraft,
@@ -2507,8 +2494,10 @@ class Component extends DCLogic {
         const expanded = expandedSidebarCat === cat;
         const isPromo = cat === 'Promocje';
         return {
-          label: cat, onClick: isPromo ? () => this.setView('promocje') : () => this.setCategory(cat),
-          color: isPromo ? '#A5131D' : (category === cat ? '#E8E7DE' : '#67705D'),
+          // Clicking anywhere on the row both filters by this category AND
+          // expands its subcategories \u2014 the tiny arrow alone wasn't discoverable.
+          label: cat, onClick: () => this.selectSidebarCategory(cat, !!subs),
+          color: category === cat ? '#E8E7DE' : (isPromo ? '#A5131D' : '#67705D'),
           bg: category === cat ? 'rgba(165,19,29,0.12)' : 'transparent',
           borderLeft: category === cat ? '2px solid #A5131D' : '2px solid transparent',
           hasSubs: !!subs,
@@ -2522,6 +2511,22 @@ class Component extends DCLogic {
           })) : [],
         };
       }),
+      archiveEventsOut: this.archiveEvents.map((ev, i) => ({ ...ev, onOpen: () => this.openArchiveEvent(i) })),
+      hasSelectedArchiveEvent: selectedArchiveEvent != null,
+      showArchiveList: selectedArchiveEvent == null,
+      closeArchiveEvent: this.closeArchiveEvent,
+      selectedArchiveEventData: selectedArchiveEvent != null ? (() => {
+        const ev = this.archiveEvents[selectedArchiveEvent];
+        const heights = [220, 300, 180, 260, 320, 200, 240, 280, 210];
+        return {
+          ...ev,
+          photos: Array.from({ length: ev.photoCount || 12 }, (_, i) => ({
+            slotId: ev.slotId + '-photo-' + i,
+            height: heights[i % heights.length],
+            onOpen: () => this.openLightbox(ev.slotId + '-photo-' + i),
+          })),
+        };
+      })() : null,
       cartCount, cartTotalLabel: cartTotal + ' zł',
       cartItems, hasCartItems: cartItems.length > 0, hasNoCartItems: cartItems.length === 0, goShopFromCart: this.goShopFromCart,
       toast, hasToast: !!toast,
