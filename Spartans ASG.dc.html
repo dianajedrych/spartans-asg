@@ -15,6 +15,10 @@
     @keyframes cartBump { 0% { transform: scale(1.7); } 100% { transform: scale(1); } }
     @keyframes toastIn { 0% { opacity: 0; transform: translateY(12px); } 100% { opacity: 1; transform: translateY(0); } }
     input, select, button { font-family: 'Inter', sans-serif; outline: none; }
+    [tabindex]:focus-visible, button:focus-visible, a:focus-visible, input:focus-visible,
+    select:focus-visible, textarea:focus-visible, [role="button"]:focus-visible {
+      outline: 2px solid #F2846D; outline-offset: 2px; border-radius: 2px;
+    }
     .brands-scroll::-webkit-scrollbar { display: none; }
     .sidebar-scroll::-webkit-scrollbar { width: 6px; }
     .sidebar-scroll::-webkit-scrollbar-track { background: transparent; }
@@ -32,7 +36,7 @@
   <!-- NAV -->
   <nav style="position:fixed;top:0;left:0;right:0;z-index:200;background:{{ navBg }};borderBottom:{{ navBorder }};backdropFilter:blur(10px);transition:background 0.3s ease">
     <div style="max-width:1400px;margin:0 auto;padding:14px 24px;display:flex;align-items:center;justify-content:space-between;gap:24px">
-      <div style="display:flex;align-items:center;gap:12px;cursor:pointer" onClick="{{ goHome }}">
+      <div tabIndex="0" role="button" style="display:flex;align-items:center;gap:12px;cursor:pointer" onClick="{{ goHome }}">
         <img src="assets/spartans-logo.png" alt="Spartans ASG" style="height:44px;width:44px;object-fit:contain">
         <span style="font-family:'Oswald',sans-serif;font-weight:700;font-size:19px;letter-spacing:1px;color:#E8E7DE">SPARTANS ASG</span>
       </div>
@@ -40,7 +44,7 @@
       <sc-if value="{{ showDesktopNav }}" hint-placeholder-val="{{ true }}">
         <div style="display:flex;align-items:center;gap:28px">
           <sc-for list="{{ navItems }}" as="item" hint-placeholder-count="7">
-            <span onClick="{{ item.onClick }}" style="font-family:'Oswald',sans-serif;font-size:13px;letter-spacing:1.2px;color:{{ item.color }};cursor:pointer;fontWeight:500;whiteSpace:nowrap" style-hover="color:#E8E7DE">{{ item.label }}</span>
+            <span tabIndex="0" role="button" onClick="{{ item.onClick }}" style="font-family:'Oswald',sans-serif;font-size:13px;letter-spacing:1.2px;color:{{ item.color }};cursor:pointer;fontWeight:500;whiteSpace:nowrap" style-hover="color:#E8E7DE">{{ item.label }}</span>
           </sc-for>
         </div>
       </sc-if>
@@ -51,14 +55,14 @@
             <svg width="19" height="19" viewBox="0 0 24 24" fill="none" stroke="#E8E7DE" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"></path><circle cx="12" cy="7" r="4"></circle></svg>
           </span>
         </sc-if>
-        <span onClick="{{ toggleCart }}" title="Koszyk" style="cursor:pointer;position:relative;font-size:18px;color:#E8E7DE">
+        <span tabIndex="0" role="button" onClick="{{ toggleCart }}" title="Koszyk" style="cursor:pointer;position:relative;font-size:18px;color:#E8E7DE">
           &#128722;
           <sc-if value="{{ cartCount }}" hint-placeholder-val="{{ 0 }}">
             <span key="{{ cartCount }}" style="position:absolute;top:-8px;right:-12px;background:#A5131D;color:#fff;fontSize:10px;fontFamily:'Oswald',sans-serif;borderRadius:20px;width:16px;height:16px;display:flex;alignItems:center;justifyContent:center;animation:cartBump 0.35s ease">{{ cartCount }}</span>
           </sc-if>
         </span>
         <sc-if value="{{ isMobile }}" hint-placeholder-val="{{ false }}">
-          <span onClick="{{ toggleMobileMenu }}" style="cursor:pointer;font-size:20px;color:#E8E7DE;fontFamily:monospace">{{ mobileMenuIcon }}</span>
+          <span tabIndex="0" role="button" onClick="{{ toggleMobileMenu }}" style="cursor:pointer;font-size:20px;color:#E8E7DE;fontFamily:monospace">{{ mobileMenuIcon }}</span>
         </sc-if>
       </div>
     </div>
@@ -66,7 +70,7 @@
     <sc-if value="{{ mobileMenuOpen }}" hint-placeholder-val="{{ false }}">
       <div style="background:#0F0F0D;borderTop:1px solid rgba(232,231,222,0.12);padding:16px 24px;display:flex;flexDirection:column;gap:16px">
         <sc-for list="{{ navItems }}" as="item" hint-placeholder-count="7">
-          <span onClick="{{ item.onClick }}" style="font-family:'Oswald',sans-serif;font-size:15px;letter-spacing:1px;color:{{ item.color }};cursor:pointer">{{ item.label }}</span>
+          <span tabIndex="0" role="button" onClick="{{ item.onClick }}" style="font-family:'Oswald',sans-serif;font-size:15px;letter-spacing:1px;color:{{ item.color }};cursor:pointer">{{ item.label }}</span>
         </sc-for>
       </div>
     </sc-if>
@@ -84,8 +88,8 @@
         <div style="position:relative;zIndex:2;height:100%;display:flex;flexDirection:column;justifyContent:center;gap:22px;padding:120px 5vw 60px;maxWidth:640px">
           <img src="assets/spartans-logo.png" alt="Spartans ASG" style="height:64px;width:64px;object-fit:contain;marginBottom:6px">
           <h1 style="font-family:'Oswald',sans-serif;font-weight:700;font-size:clamp(38px,6vw,68px);letter-spacing:1px;lineHeight:1.05;color:#E8E7DE">WEJDŹ<br/>DO GRY.</h1>
-          <p style="font-family:'Oswald',sans-serif;font-size:15px;letter-spacing:2px;color:#A5131D;fontWeight:500">SKLEP &bull; SERWIS &bull; ROZGRYWKI ASG</p>
-          <p style="color:#67705D;fontSize:15px;lineHeight:1.7;maxWidth:420px">Sprzęt, zaopatrzenie i rozgrywki ASG w jednym miejscu. Dołącz do ekipy Spartans i zagraj w najbliższym terminie.</p>
+          <p style="font-family:'Oswald',sans-serif;font-size:15px;letter-spacing:2px;color:#F2846D;fontWeight:500">SKLEP &bull; SERWIS &bull; ROZGRYWKI ASG</p>
+          <p style="color:#9CA68C;fontSize:15px;lineHeight:1.7;maxWidth:420px">Sprzęt, zaopatrzenie i rozgrywki ASG w jednym miejscu. Dołącz do ekipy Spartans i zagraj w najbliższym terminie.</p>
           <div style="display:flex;gap:16px;flexWrap:wrap;marginTop:10px">
             <button onClick="{{ goEvents }}" style="background:#A5131D;color:#fff;border:none;padding:16px 30px;font-family:'Oswald',sans-serif;fontSize:14px;letterSpacing:1.5px;fontWeight:600;cursor:pointer" style-hover="background:#431517">NAJBLIŻSZE WYDARZENIE</button>
             <button onClick="{{ goShop }}" style="background:transparent;color:#E8E7DE;border:1.5px solid #E8E7DE;padding:16px 30px;font-family:'Oswald',sans-serif;fontSize:14px;letterSpacing:1.5px;fontWeight:600;cursor:pointer" style-hover="background:rgba(232,231,222,0.1)">PRZEJDŹ DO SKLEPU</button>
@@ -104,8 +108,8 @@
         </div>
         <div style="flex:2;minWidth:320px;display:grid;gridTemplateColumns:repeat(3,1fr)">
           <sc-for list="{{ serviceHighlights }}" as="s" hint-placeholder-count="6">
-            <div onClick="{{ s.onClick }}" style="padding:34px 26px;display:flex;flexDirection:column;gap:12px;background:{{ s.tileBg }};borderRight:3px solid #0F0F0D;borderBottom:3px solid #0F0F0D;cursor:pointer" style-hover="background:#431517">
-              <span style="font-size:24px;color:#A5131D">{{ s.icon }}</span>
+            <div tabIndex="0" role="button" onClick="{{ s.onClick }}" style="padding:34px 26px;display:flex;flexDirection:column;gap:12px;background:{{ s.tileBg }};borderRight:3px solid #0F0F0D;borderBottom:3px solid #0F0F0D;cursor:pointer" style-hover="background:#431517">
+              <span style="font-size:24px;color:#F2846D">{{ s.icon }}</span>
               <span style="fontFamily:'Oswald',sans-serif;fontSize:14px;letterSpacing:0.6px;fontWeight:600;color:#E8E7DE">{{ s.title }}</span>
               <span style="color:#E8E7DE;opacity:0.6;fontSize:13px;lineHeight:1.5">{{ s.desc }}</span>
             </div>
@@ -118,13 +122,13 @@
       <div style="background:#0F0F0D;padding:70px 24px;borderTop:4px solid #431517;borderBottom:4px solid #431517">
         <div style="max-width:1100px;margin:0 auto;display:flex;gap:48px;alignItems:center;flexWrap:wrap">
           <div style="flex:1;minWidth:280px">
-            <p style="font-family:'Oswald',sans-serif;font-size:13px;letterSpacing:2px;color:#A5131D;marginBottom:10px">NAJBLIŻSZA ROZGRYWKA</p>
+            <p style="font-family:'Oswald',sans-serif;font-size:13px;letterSpacing:2px;color:#F2846D;marginBottom:10px">NAJBLIŻSZA ROZGRYWKA</p>
             <h2 style="font-family:'Oswald',sans-serif;font-weight:700;font-size:38px;letterSpacing:1px;marginBottom:16px">NIEDZIELNE U3</h2>
             <div style="display:flex;flexDirection:column;gap:6px;color:#E8E7DE;fontSize:15px;marginBottom:18px">
               <span>{{ nearestEvent.date }}</span>
               <span>{{ nearestEvent.time }}</span>
             </div>
-            <p style="color:#67705D;fontSize:15px;lineHeight:1.6;maxWidth:520px;marginBottom:26px">{{ nearestEvent.desc }}</p>
+            <p style="color:#9CA68C;fontSize:15px;lineHeight:1.6;maxWidth:520px;marginBottom:26px">{{ nearestEvent.desc }}</p>
             <div style="display:flex;gap:14px;flexWrap:wrap">
               <a href="{{ nearestEvent.formsUrl }}" target="_blank" style="background:#A5131D;color:#fff;border:none;padding:14px 26px;font-family:'Oswald',sans-serif;fontSize:13px;letterSpacing:1.5px;fontWeight:600;textDecoration:none" style-hover="background:#431517">ZAPISZ SIĘ</a>
               <button onClick="{{ goEvents }}" style="background:transparent;color:#E8E7DE;border:1.5px solid rgba(232,231,222,0.4);padding:14px 26px;font-family:'Oswald',sans-serif;fontSize:13px;letterSpacing:1.5px;fontWeight:600;cursor:pointer" style-hover="border-color:#E8E7DE">SZCZEGÓŁY</button>
@@ -149,7 +153,7 @@
               </div>
               <div style="padding:26px;display:flex;flexDirection:column;gap:12px;flex:1">
                 <h3 style="font-family:'Oswald',sans-serif;fontSize:20px;letterSpacing:1px;fontWeight:600">{{ tile.title }}</h3>
-                <p style="color:#67705D;fontSize:14px;lineHeight:1.6;flex:1">{{ tile.desc }}</p>
+                <p style="color:#9CA68C;fontSize:14px;lineHeight:1.6;flex:1">{{ tile.desc }}</p>
                 <button onClick="{{ tile.onClick }}" style="align-self:flex-start;background:#A5131D;color:#fff;border:none;padding:12px 22px;fontFamily:'Oswald',sans-serif;fontSize:12px;letterSpacing:1.2px;fontWeight:600;cursor:pointer" style-hover="background:#431517">{{ tile.cta }}</button>
               </div>
             </div>
@@ -161,14 +165,14 @@
       <div id="sklep-podglad" style="padding:0 24px 80px;maxWidth:1300px;margin:0 auto">
         <div style="display:flex;justifyContent:space-between;alignItems:flex-end;marginBottom:30px;flexWrap:wrap;gap:14px">
           <div>
-            <p style="font-family:'Oswald',sans-serif;fontSize:13px;letterSpacing:2px;color:#A5131D;marginBottom:8px">SKLEP</p>
+            <p style="font-family:'Oswald',sans-serif;fontSize:13px;letterSpacing:2px;color:#F2846D;marginBottom:8px">SKLEP</p>
             <h2 style="font-family:'Oswald',sans-serif;fontWeight:700;fontSize:28px;letterSpacing:1px">WYBRANE PRODUKTY</h2>
           </div>
-          <span onClick="{{ goShop }}" style="color:#E8E7DE;fontFamily:'Oswald',sans-serif;fontSize:12px;letterSpacing:1.2px;fontWeight:600;cursor:pointer;borderBottom:1.5px solid #A5131D" style-hover="color:#A5131D">ZOBACZ CAŁY SKLEP &rarr;</span>
+          <span tabIndex="0" role="button" onClick="{{ goShop }}" style="color:#E8E7DE;fontFamily:'Oswald',sans-serif;fontSize:12px;letterSpacing:1.2px;fontWeight:600;cursor:pointer;borderBottom:1.5px solid #A5131D" style-hover="color:#F2846D">ZOBACZ CAŁY SKLEP &rarr;</span>
         </div>
         <div style="display:grid;gridTemplateColumns:repeat(4,1fr);gap:12px">
           <sc-for list="{{ homeFeatured }}" as="p" hint-placeholder-count="8">
-            <div onClick="{{ p.onOpen }}" style="background:#33392B;border:1px solid rgba(232,231,222,0.08);cursor:pointer;display:flex;flexDirection:column;position:relative" style-hover="border-color:#A5131D">
+            <div tabIndex="0" role="button" onClick="{{ p.onOpen }}" style="background:#33392B;border:1px solid rgba(232,231,222,0.08);cursor:pointer;display:flex;flexDirection:column;position:relative" style-hover="border-color:#F2846D">
               <sc-if value="{{ p.badge }}" hint-placeholder-val="{{ false }}">
                 <span style="position:absolute;top:6px;left:6px;background:{{ p.badgeBg }};color:#E8E7DE;fontFamily:'Oswald',sans-serif;fontSize:9px;letterSpacing:0.5px;fontWeight:600;padding:4px 7px;zIndex:2">{{ p.badge }}</span>
               </sc-if>
@@ -177,7 +181,7 @@
               </div>
               <div style="padding:10px;display:flex;flexDirection:column;gap:4px">
                 <span style="fontSize:12px;fontWeight:500;lineHeight:1.3">{{ p.name }}</span>
-                <span style="fontFamily:'Oswald',sans-serif;fontSize:14px;fontWeight:600;color:#A5131D">{{ p.priceLabel }}</span>
+                <span style="fontFamily:'Oswald',sans-serif;fontSize:14px;fontWeight:600;color:#F2846D">{{ p.priceLabel }}</span>
               </div>
             </div>
           </sc-for>
@@ -187,17 +191,17 @@
       <!-- OPINIE -->
       <div id="opinie" style="background:#33392B;padding:80px 24px;borderTop:1px solid rgba(232,231,222,0.08)">
         <div style="maxWidth:1300px;margin:0 auto">
-          <p style="font-family:'Oswald',sans-serif;fontSize:13px;letterSpacing:2px;color:#A5131D;marginBottom:8px;textAlign:center">OPINIE</p>
+          <p style="font-family:'Oswald',sans-serif;fontSize:13px;letterSpacing:2px;color:#F2846D;marginBottom:8px;textAlign:center">OPINIE</p>
           <h2 style="font-family:'Oswald',sans-serif;fontWeight:700;fontSize:32px;letterSpacing:1px;textAlign:center;marginBottom:50px">CO MÓWIĄ NASI GRACZE</h2>
           <div style="position:relative">
-          <span onClick="{{ onReviewPrev }}" style="position:absolute;left:-14px;top:50%;transform:translateY(-50%);zIndex:2;width:40px;height:40px;background:#0F0F0D;border:1px solid rgba(232,231,222,0.15);color:#E8E7DE;display:flex;alignItems:center;justifyContent:center;cursor:pointer;fontSize:18px" style-hover="borderColor:#A5131D;color:#A5131D">&lsaquo;</span>
-          <span onClick="{{ onReviewNext }}" style="position:absolute;right:-14px;top:50%;transform:translateY(-50%);zIndex:2;width:40px;height:40px;background:#0F0F0D;border:1px solid rgba(232,231,222,0.15);color:#E8E7DE;display:flex;alignItems:center;justifyContent:center;cursor:pointer;fontSize:18px" style-hover="borderColor:#A5131D;color:#A5131D">&rsaquo;</span>
+          <span tabIndex="0" role="button" onClick="{{ onReviewPrev }}" style="position:absolute;left:-14px;top:50%;transform:translateY(-50%);zIndex:2;width:40px;height:40px;background:#0F0F0D;border:1px solid rgba(232,231,222,0.15);color:#E8E7DE;display:flex;alignItems:center;justifyContent:center;cursor:pointer;fontSize:18px" style-hover="borderColor:#A5131D;color:#F2846D">&lsaquo;</span>
+          <span tabIndex="0" role="button" onClick="{{ onReviewNext }}" style="position:absolute;right:-14px;top:50%;transform:translateY(-50%);zIndex:2;width:40px;height:40px;background:#0F0F0D;border:1px solid rgba(232,231,222,0.15);color:#E8E7DE;display:flex;alignItems:center;justifyContent:center;cursor:pointer;fontSize:18px" style-hover="borderColor:#A5131D;color:#F2846D">&rsaquo;</span>
           <div style="overflow:hidden">
             <div style="display:flex;width:{{ reviewTrackWidth }};transform:{{ reviewTrackTransform }};transition:{{ reviewTrackTransition }}">
             <sc-for list="{{ reviewTrack }}" as="r" hint-placeholder-count="3">
               <div style="flex:{{ reviewCardFlex }};padding:0 12px;boxSizing:border-box">
               <div style="background:#0F0F0D;border:1px solid rgba(232,231,222,0.08);padding:28px;display:flex;flexDirection:column;gap:14px;height:100%">
-                <span style="color:#A5131D;fontSize:14px;letterSpacing:2px">{{ r.stars }}</span>
+                <span style="color:#F2846D;fontSize:14px;letterSpacing:2px">{{ r.stars }}</span>
                 <p style="color:#E8E7DE;opacity:0.85;fontSize:14px;lineHeight:1.7;flex:1">{{ r.text }}</p>
                 <div style="display:flex;alignItems:center;gap:10px;marginTop:6px">
                   <div style="width:36px;height:36px;borderRadius:50%;background:#A5131D;display:flex;alignItems:center;justifyContent:center;fontFamily:'Oswald',sans-serif;fontWeight:600;fontSize:13px;color:#fff;flexShrink:0">{{ r.initials }}</div>
@@ -220,10 +224,10 @@
         <div style="position:absolute;inset:0;background:rgba(13,14,10,0.82);zIndex:1;pointerEvents:none"></div>
         <div style="position:relative;zIndex:2;maxWidth:640px;margin:0 auto;display:flex;flexDirection:column;gap:18px;alignItems:center">
           <h2 style="font-family:'Oswald',sans-serif;fontWeight:700;fontSize:30px;letterSpacing:1px">TO NIE TYLKO ASG.</h2>
-          <h3 style="font-family:'Oswald',sans-serif;fontWeight:500;fontSize:20px;letterSpacing:1px;color:#A5131D">TO LUDZIE, KTÓRZY TWORZĄ GRĘ.</h3>
+          <h3 style="font-family:'Oswald',sans-serif;fontWeight:500;fontSize:20px;letterSpacing:1px;color:#F2846D">TO LUDZIE, KTÓRZY TWORZĄ GRĘ.</h3>
           <div style="display:flex;gap:24px;marginTop:12px">
-            <a href="#" target="_blank" style="color:#E8E7DE;fontFamily:'Oswald',sans-serif;fontSize:14px;letterSpacing:1px;textDecoration:none;borderBottom:1px solid rgba(232,231,222,0.4)" style-hover="color:#A5131D;border-color:#A5131D">FACEBOOK</a>
-            <a href="#" target="_blank" style="color:#E8E7DE;fontFamily:'Oswald',sans-serif;fontSize:14px;letterSpacing:1px;textDecoration:none;borderBottom:1px solid rgba(232,231,222,0.4)" style-hover="color:#A5131D;border-color:#A5131D">INSTAGRAM</a>
+            <a href="#" target="_blank" style="color:#E8E7DE;fontFamily:'Oswald',sans-serif;fontSize:14px;letterSpacing:1px;textDecoration:none;borderBottom:1px solid rgba(232,231,222,0.4)" style-hover="color:#F2846D;border-color:#F2846D">FACEBOOK</a>
+            <a href="#" target="_blank" style="color:#E8E7DE;fontFamily:'Oswald',sans-serif;fontSize:14px;letterSpacing:1px;textDecoration:none;borderBottom:1px solid rgba(232,231,222,0.4)" style-hover="color:#F2846D;border-color:#F2846D">INSTAGRAM</a>
           </div>
         </div>
       </div>
@@ -232,17 +236,17 @@
       <div id="kontakt" style="background:#33392B;padding:80px 24px;borderTop:1px solid rgba(232,231,222,0.08)">
         <div style="max-width:1100px;margin:0 auto;display:flex;gap:48px;flexWrap:wrap">
           <div style="flex:1;minWidth:280px">
-            <p style="font-family:'Oswald',sans-serif;fontSize:13px;letterSpacing:2px;color:#A5131D;marginBottom:10px">KONTAKT</p>
+            <p style="font-family:'Oswald',sans-serif;fontSize:13px;letterSpacing:2px;color:#F2846D;marginBottom:10px">KONTAKT</p>
             <h2 style="font-family:'Oswald',sans-serif;fontWeight:700;fontSize:30px;marginBottom:22px">SPARTANS ASG</h2>
             <div style="display:flex;flexDirection:column;gap:10px;color:#E8E7DE;fontSize:15px;lineHeight:1.7;marginBottom:22px">
               <span>Kunickiego 54, lokal B<br/>20-412 Lublin</span>
               <span>Tel: 514 206 664</span>
-              <span style="color:#67705D">E-mail: do potwierdzenia z właścicielem</span>
+              <span style="color:#9CA68C">E-mail: do potwierdzenia z właścicielem</span>
               <div style="marginTop:8px">
                 <span style="display:block;color:#E8E7DE;fontWeight:600;marginBottom:4px">Godziny otwarcia</span>
                 <span>Wtorek – Piątek: 10:00–18:00</span>
                 <span>Sobota, Niedziela, Poniedziałek: zamknięte</span>
-                <span style="color:#67705D;fontSize:13px;display:block;marginTop:4px">Godziny mogą się zmieniać w dni świąteczne — przed przyjazdem zalecany kontakt telefoniczny.</span>
+                <span style="color:#9CA68C;fontSize:13px;display:block;marginTop:4px">Godziny mogą się zmieniać w dni świąteczne — przed przyjazdem zalecany kontakt telefoniczny.</span>
               </div>
             </div>
             <div style="display:flex;gap:14px;flexWrap:wrap">
@@ -263,18 +267,18 @@
   <sc-if value="{{ isShop }}" hint-placeholder-val="{{ false }}">
     <div style="paddingTop:96px;maxWidth:1360px;margin:0 auto;padding:96px 24px 60px">
       <div style="display:flex;alignItems:center;gap:8px;marginBottom:14px">
-        <span onClick="{{ goHome }}" style="color:#67705D;fontSize:12px;cursor:pointer" style-hover="color:#E8E7DE">Strona główna</span>
-        <span style="color:#67705D;fontSize:12px">/</span>
+        <span tabIndex="0" role="button" onClick="{{ goHome }}" style="color:#9CA68C;fontSize:12px;cursor:pointer" style-hover="color:#E8E7DE">Strona główna</span>
+        <span style="color:#9CA68C;fontSize:12px">/</span>
         <span style="color:#E8E7DE;fontSize:12px">Sklep</span>
       </div>
       <div style="position:relative;height:280px;overflow:hidden;marginBottom:32px">
-        <span onClick="{{ prevBanner }}" style="position:absolute;left:14px;top:50%;transform:translateY(-50%);zIndex:3;width:40px;height:40px;background:rgba(15,15,13,0.6);border:1px solid rgba(232,231,222,0.25);color:#E8E7DE;display:flex;alignItems:center;justifyContent:center;cursor:pointer;fontSize:18px" style-hover="borderColor:#A5131D;color:#A5131D">&lsaquo;</span>
-        <span onClick="{{ nextBanner }}" style="position:absolute;right:14px;top:50%;transform:translateY(-50%);zIndex:3;width:40px;height:40px;background:rgba(15,15,13,0.6);border:1px solid rgba(232,231,222,0.25);color:#E8E7DE;display:flex;alignItems:center;justifyContent:center;cursor:pointer;fontSize:18px" style-hover="borderColor:#A5131D;color:#A5131D">&rsaquo;</span>
+        <span tabIndex="0" role="button" onClick="{{ prevBanner }}" style="position:absolute;left:14px;top:50%;transform:translateY(-50%);zIndex:3;width:40px;height:40px;background:rgba(15,15,13,0.6);border:1px solid rgba(232,231,222,0.25);color:#E8E7DE;display:flex;alignItems:center;justifyContent:center;cursor:pointer;fontSize:18px" style-hover="borderColor:#A5131D;color:#F2846D">&lsaquo;</span>
+        <span tabIndex="0" role="button" onClick="{{ nextBanner }}" style="position:absolute;right:14px;top:50%;transform:translateY(-50%);zIndex:3;width:40px;height:40px;background:rgba(15,15,13,0.6);border:1px solid rgba(232,231,222,0.25);color:#E8E7DE;display:flex;alignItems:center;justifyContent:center;cursor:pointer;fontSize:18px" style-hover="borderColor:#A5131D;color:#F2846D">&rsaquo;</span>
         <sc-for list="{{ shopBanners }}" as="b" hint-placeholder-count="5">
-          <div onClick="{{ b.onClick }}" style="position:absolute;inset:0;cursor:pointer;opacity:{{ b.opacity }};zIndex:{{ b.zIndex }};transition:opacity 0.7s ease">
+          <div tabIndex="0" role="button" onClick="{{ b.onClick }}" style="position:absolute;inset:0;cursor:pointer;opacity:{{ b.opacity }};zIndex:{{ b.zIndex }};transition:opacity 0.7s ease">
             <image-slot id="{{ b.slotId }}" shape="rect" placeholder="Baner kategorii: {{ b.title }}"></image-slot>
             <div style="position:absolute;inset:0;background:linear-gradient(90deg,rgba(15,15,13,0.88) 0%,rgba(15,15,13,0.35) 55%,rgba(15,15,13,0.1) 100%);display:flex;flexDirection:column;justifyContent:center;padding:40px 40px 40px 80px;pointerEvents:none">
-              <span style="fontFamily:'Oswald',sans-serif;fontSize:12px;letterSpacing:2px;color:#A5131D;marginBottom:8px">KATEGORIA</span>
+              <span style="fontFamily:'Oswald',sans-serif;fontSize:12px;letterSpacing:2px;color:#F2846D;marginBottom:8px">KATEGORIA</span>
               <h2 style="fontFamily:'Oswald',sans-serif;fontWeight:700;fontSize:34px;letterSpacing:1px;color:#E8E7DE;marginBottom:8px">{{ b.title }}</h2>
               <span style="color:#E8E7DE;opacity:0.75;fontSize:14px;maxWidth:360px">{{ b.desc }}</span>
             </div>
@@ -282,7 +286,7 @@
         </sc-for>
         <div style="position:absolute;bottom:16px;left:50%;transform:translateX(-50%);display:flex;gap:8px;zIndex:3">
           <sc-for list="{{ bannerDots }}" as="d" hint-placeholder-count="5">
-            <span onClick="{{ d.onClick }}" style="width:9px;height:9px;borderRadius:50%;background:{{ d.bg }};cursor:pointer"></span>
+            <span tabIndex="0" role="button" onClick="{{ d.onClick }}" style="width:9px;height:9px;borderRadius:50%;background:{{ d.bg }};cursor:pointer"></span>
           </sc-for>
         </div>
       </div>
@@ -290,24 +294,24 @@
       <div style="marginBottom:36px">
         <h2 style="fontFamily:'Oswald',sans-serif;fontWeight:700;fontSize:20px;letterSpacing:0.5px;color:#E8E7DE;marginBottom:18px">Najpopularniejsze marki</h2>
         <div style="display:flex;alignItems:center;gap:16px">
-          <span onClick="{{ scrollBrandsLeft }}" style="cursor:pointer;color:#67705D;fontSize:20px;flexShrink:0" style-hover="color:#E8E7DE">&lsaquo;</span>
+          <span tabIndex="0" role="button" onClick="{{ scrollBrandsLeft }}" style="cursor:pointer;color:#9CA68C;fontSize:20px;flexShrink:0" style-hover="color:#E8E7DE">&lsaquo;</span>
           <div ref="{{ setBrandsRef }}" class="brands-scroll" style="display:flex;gap:16px;overflowX:auto;flex:1;scrollbarWidth:none;msOverflowStyle:none">
             <sc-for list="{{ categoryBrands }}" as="brand" hint-placeholder-count="8">
-              <div onClick="{{ brand.onClick }}" style="background:#E8E7DE;padding:22px 30px;display:flex;alignItems:center;justifyContent:center;minWidth:150px;flexShrink:0;cursor:pointer" style-hover="background:#D8D7CE">
+              <div tabIndex="0" role="button" onClick="{{ brand.onClick }}" style="background:#E8E7DE;padding:22px 30px;display:flex;alignItems:center;justifyContent:center;minWidth:150px;flexShrink:0;cursor:pointer" style-hover="background:#D8D7CE">
                 <span style="color:#0F0F0D;fontSize:15px;fontFamily:'Oswald',sans-serif;fontWeight:600;letterSpacing:0.5px;whiteSpace:nowrap">{{ brand.name }}</span>
               </div>
             </sc-for>
           </div>
-          <span onClick="{{ scrollBrandsRight }}" style="cursor:pointer;color:#67705D;fontSize:20px;flexShrink:0" style-hover="color:#E8E7DE">&rsaquo;</span>
+          <span tabIndex="0" role="button" onClick="{{ scrollBrandsRight }}" style="cursor:pointer;color:#9CA68C;fontSize:20px;flexShrink:0" style-hover="color:#E8E7DE">&rsaquo;</span>
         </div>
       </div>
 
       <div style="display:flex;justifyContent:flex-end;marginBottom:28px">
-        <span style="color:#67705D;fontSize:13px">Znaleziono: {{ productCount }} produktów</span>
+        <span style="color:#9CA68C;fontSize:13px">Znaleziono: {{ productCount }} produktów</span>
       </div>
 
-      <div style="display:flex;gap:36px;alignItems:flex-start">
-        <div class="sidebar-scroll" style="width:250px;flexShrink:0;display:flex;flexDirection:column;gap:22px;position:sticky;top:120px;maxHeight:calc(100vh - 140px);overflowY:auto;paddingRight:8px">
+      <div style="display:flex;gap:36px;alignItems:flex-start;flexDirection:{{ shopBodyDirection }}">
+        <div class="sidebar-scroll" style="width:{{ shopSidebarWidth }};flexShrink:0;display:flex;flexDirection:column;gap:22px;position:{{ shopSidebarPosition }};top:{{ shopSidebarTop }};maxHeight:{{ shopSidebarMaxHeight }};overflowY:auto;paddingRight:8px">
           <input value="{{ search }}" onChange="{{ onSearchChange }}" placeholder="Szukaj produktu..." list="product-suggestions" style="background:#33392B;border:1px solid rgba(232,231,222,0.15);color:#E8E7DE;padding:12px 14px;fontSize:14px;width:100%"/>
           <datalist id="product-suggestions">
             <sc-for list="{{ searchSuggestions }}" as="s" hint-placeholder-count="5">
@@ -319,16 +323,16 @@
             <div style="display:flex;flexDirection:column;gap:2px">
               <sc-for list="{{ sidebarCategories }}" as="cat" hint-placeholder-count="10">
                 <div>
-                  <div onClick="{{ cat.onClick }}" style="padding:9px 10px;fontSize:14px;cursor:pointer;color:{{ cat.color }};background:{{ cat.bg }};borderLeft:{{ cat.borderLeft }};display:flex;alignItems:center;justifyContent:space-between" style-hover="color:#E8E7DE">
+                  <div tabIndex="0" role="button" onClick="{{ cat.onClick }}" style="padding:9px 10px;fontSize:14px;cursor:pointer;color:{{ cat.color }};background:{{ cat.bg }};borderLeft:{{ cat.borderLeft }};display:flex;alignItems:center;justifyContent:space-between" style-hover="color:#E8E7DE">
                     <span>{{ cat.label }}</span>
                     <sc-if value="{{ cat.hasSubs }}" hint-placeholder-val="{{ false }}">
-                      <span onClick="{{ cat.onToggleArrow }}" style="fontSize:11px;color:#67705D;padding:4px">{{ cat.arrowIcon }}</span>
+                      <span tabIndex="0" role="button" onClick="{{ cat.onToggleArrow }}" style="fontSize:11px;color:#9CA68C;padding:4px">{{ cat.arrowIcon }}</span>
                     </sc-if>
                   </div>
                   <sc-if value="{{ cat.showSubs }}" hint-placeholder-val="{{ false }}">
                     <div style="display:flex;flexDirection:column;gap:2px;padding:6px 0 6px 20px">
                       <sc-for list="{{ cat.subs }}" as="s" hint-placeholder-count="4">
-                        <span onClick="{{ s.onClick }}" style="fontSize:13px;cursor:pointer;color:{{ s.color }};padding:6px 8px" style-hover="color:#E8E7DE">{{ s.label }}</span>
+                        <span tabIndex="0" role="button" onClick="{{ s.onClick }}" style="fontSize:13px;cursor:pointer;color:{{ s.color }};padding:6px 8px" style-hover="color:#E8E7DE">{{ s.label }}</span>
                       </sc-for>
                     </div>
                   </sc-if>
@@ -342,9 +346,9 @@
               <span style="fontFamily:'Oswald',sans-serif;fontSize:12px;letterSpacing:1.5px;color:#E8E7DE;display:block;marginBottom:14px">WAGA KULEK</span>
               <div style="display:flex;flexDirection:column;gap:10px">
                 <sc-for list="{{ weightOptions }}" as="w" hint-placeholder-count="5">
-                  <span onClick="{{ w.onClick }}" style="fontSize:13px;cursor:pointer;color:{{ w.color }};display:flex;alignItems:center;gap:10px">
-                    <span style="width:14px;height:14px;border:1px solid #67705D;background:{{ w.bg }};display:inline-block;flexShrink:0"></span>{{ w.label }}
-                  </span>
+                  <label style="fontSize:13px;cursor:pointer;color:{{ w.color }};display:flex;alignItems:center;gap:10px">
+                    <input type="radio" name="weightFilter" checked="{{ w.isChecked }}" onChange="{{ w.onClick }}" style="accentColor:#F2846D;width:14px;height:14px;margin:0;flexShrink:0"/>{{ w.label }}
+                  </label>
                 </sc-for>
               </div>
             </div>
@@ -354,11 +358,11 @@
             <span style="fontFamily:'Oswald',sans-serif;fontSize:12px;letterSpacing:1.5px;color:#E8E7DE;display:block;marginBottom:14px">MARKA</span>
             <div style="display:flex;flexDirection:column;gap:10px;marginBottom:14px">
               <sc-for list="{{ brandFilterOptions }}" as="b" hint-placeholder-count="4">
-                <span onClick="{{ b.onClick }}" style="fontSize:13px;cursor:pointer;color:#E8E7DE;display:flex;alignItems:center;gap:10px">
-                  <span style="width:14px;height:14px;border:1px solid #67705D;background:{{ b.checked }};display:inline-block;flexShrink:0"></span>
+                <label style="fontSize:13px;cursor:pointer;color:#E8E7DE;display:flex;alignItems:center;gap:10px">
+                  <input type="checkbox" checked="{{ b.isChecked }}" onChange="{{ b.onClick }}" style="accentColor:#F2846D;width:14px;height:14px;margin:0;flexShrink:0"/>
                   <span style="flex:1">{{ b.label }}</span>
-                  <span style="color:#67705D;fontSize:12px">({{ b.count }})</span>
-                </span>
+                  <span style="color:#9CA68C;fontSize:12px">({{ b.count }})</span>
+                </label>
               </sc-for>
             </div>
           </div>
@@ -376,15 +380,14 @@
             <span style="fontFamily:'Oswald',sans-serif;fontSize:12px;letterSpacing:1.5px;color:#E8E7DE;display:block;marginBottom:14px">POKAŻ TYLKO</span>
             <div style="display:flex;flexDirection:column;gap:10px">
               <sc-for list="{{ onlyFilters }}" as="f" hint-placeholder-count="3">
-                <span onClick="{{ f.onClick }}" style="fontSize:13px;cursor:pointer;color:#E8E7DE;display:flex;alignItems:center;gap:10px">
-                  <span style="width:14px;height:14px;border:1px solid #67705D;background:{{ f.checked }};display:inline-block;flexShrink:0"></span>{{ f.label }}
-                </span>
+                <label style="fontSize:13px;cursor:pointer;color:#E8E7DE;display:flex;alignItems:center;gap:10px">
+                  <input type="checkbox" checked="{{ f.isChecked }}" onChange="{{ f.onClick }}" style="accentColor:#F2846D;width:14px;height:14px;margin:0;flexShrink:0"/>{{ f.label }}
+                </label>
               </sc-for>
             </div>
           </div>
 
           <div style="display:flex;flexDirection:column;gap:10px">
-            <button onClick="{{ applySelectedFilters }}" style="background:#0F0F0D;color:#E8E7DE;border:none;padding:13px;fontSize:12px;letterSpacing:0.5px;fontWeight:600;cursor:pointer" style-hover="background:#000">ZASTOSUJ WYBRANE FILTRY</button>
             <button onClick="{{ clearAllFilters }}" style="background:transparent;color:#E8E7DE;border:1px solid rgba(232,231,222,0.3);padding:13px;fontSize:12px;letterSpacing:0.5px;fontWeight:600;cursor:pointer" style-hover="border-color:#E8E7DE">USUŃ WSZYSTKIE FILTRY</button>
           </div>
         </div>
@@ -401,7 +404,7 @@
           <sc-if value="{{ hasProducts }}" hint-placeholder-val="{{ true }}">
             <div style="display:grid;gridTemplateColumns:repeat(auto-fill,minmax(230px,1fr));gap:20px">
               <sc-for list="{{ products }}" as="p" hint-placeholder-count="8">
-                <div style="background:#33392B;border:1px solid rgba(232,231,222,0.08);cursor:pointer;display:flex;flexDirection:column;position:relative" onClick="{{ p.onOpen }}" style-hover="border-color:#A5131D">
+                <div tabIndex="0" role="button" style="background:#33392B;border:1px solid rgba(232,231,222,0.08);cursor:pointer;display:flex;flexDirection:column;position:relative" onClick="{{ p.onOpen }}" style-hover="border-color:#F2846D">
                   <sc-if value="{{ p.badge }}" hint-placeholder-val="{{ false }}">
                     <span style="position:absolute;top:10px;left:10px;background:{{ p.badgeBg }};color:#E8E7DE;fontFamily:'Oswald',sans-serif;fontSize:10px;letterSpacing:1px;fontWeight:600;padding:5px 10px;zIndex:2">{{ p.badge }}</span>
                   </sc-if>
@@ -409,7 +412,7 @@
                     <image-slot id="{{ p.slotId }}" shape="rect" placeholder="{{ p.imgHint }}"></image-slot>
                   </div>
                   <div style="padding:16px;display:flex;flexDirection:column;gap:8px;flex:1">
-                    <span style="fontSize:11px;letterSpacing:1px;color:#67705D;fontFamily:'Oswald',sans-serif">{{ p.category }}</span>
+                    <span style="fontSize:11px;letterSpacing:1px;color:#9CA68C;fontFamily:'Oswald',sans-serif">{{ p.category }}</span>
                     <span style="fontSize:15px;fontWeight:500;lineHeight:1.3;flex:1">{{ p.name }}</span>
                     <span style="fontSize:12px;color:{{ p.stockColor }}">{{ p.stockLabel }}</span>
                     <div style="display:flex;justifyContent:space-between;alignItems:center;marginTop:6px">
@@ -423,7 +426,7 @@
           </sc-if>
           <sc-if value="{{ hasNoProducts }}" hint-placeholder-val="{{ false }}">
             <div style="display:flex;flexDirection:column;alignItems:center;gap:14px;padding:60px 0">
-              <p style="color:#67705D;textAlign:center">Brak produktów spełniających kryteria.</p>
+              <p style="color:#9CA68C;textAlign:center">Brak produktów spełniających kryteria.</p>
               <button onClick="{{ clearAllFilters }}" style="background:transparent;color:#E8E7DE;border:1px solid rgba(232,231,222,0.3);padding:12px 22px;fontSize:12px;letterSpacing:0.5px;fontWeight:600;cursor:pointer" style-hover="border-color:#E8E7DE">WYCZYŚĆ FILTRY</button>
             </div>
           </sc-if>
@@ -436,7 +439,7 @@
   <sc-if value="{{ isProduct }}" hint-placeholder-val="{{ false }}">
     <sc-if value="{{ hasSelectedProduct }}" hint-placeholder-val="{{ false }}">
       <div style="paddingTop:96px;maxWidth:1200px;margin:0 auto;padding:96px 24px 80px">
-        <span onClick="{{ goShop }}" style="color:#67705D;fontSize:13px;cursor:pointer;marginBottom:24px;display:inline-block" style-hover="color:#E8E7DE">&larr; Wróć do sklepu</span>
+        <span tabIndex="0" role="button" onClick="{{ goShop }}" style="color:#9CA68C;fontSize:13px;cursor:pointer;marginBottom:24px;display:inline-block" style-hover="color:#E8E7DE">&larr; Wróć do sklepu</span>
         <div style="display:flex;gap:48px;flexWrap:wrap;marginTop:20px">
           <div style="flex:1;minWidth:300px;maxWidth:480px;display:flex;flexDirection:column;gap:12px">
             <div style="position:relative;height:380px;width:100%;background:#33392B">
@@ -459,14 +462,14 @@
             <div style="display:grid;gridTemplateColumns:1fr 1fr;gap:10px 24px;padding:16px 0;borderTop:1px solid rgba(232,231,222,0.1);borderBottom:1px solid rgba(232,231,222,0.1)">
               <sc-for list="{{ selectedProduct.specs }}" as="sp" hint-placeholder-count="4">
                 <div>
-                  <span style="display:block;fontSize:11px;color:#67705D;letterSpacing:0.5px">{{ sp.label }}</span>
+                  <span style="display:block;fontSize:11px;color:#9CA68C;letterSpacing:0.5px">{{ sp.label }}</span>
                   <span style="fontSize:14px;color:#E8E7DE;fontWeight:500">{{ sp.value }}</span>
                 </div>
               </sc-for>
             </div>
 
             <div>
-              <span style="display:block;fontSize:12px;letterSpacing:1px;color:#67705D;marginBottom:8px">WARIANT</span>
+              <span style="display:block;fontSize:12px;letterSpacing:1px;color:#9CA68C;marginBottom:8px">WARIANT</span>
               <select value="{{ productVariant }}" onChange="{{ onVariantChange }}" style="background:#33392B;border:1px solid rgba(232,231,222,0.15);color:#E8E7DE;padding:12px 14px;fontSize:14px;width:100%">
                 <sc-for list="{{ selectedProduct.variants }}" as="v" hint-placeholder-count="2">
                   <option value="{{ v }}">{{ v }}</option>
@@ -478,7 +481,7 @@
 
             <div style="display:flex;alignItems:center;justifyContent:space-between;flexWrap:wrap;gap:12px">
               <div style="display:flex;alignItems:center;gap:14px">
-                <span style="fontSize:12px;letterSpacing:1px;color:#67705D">ILOŚĆ</span>
+                <span style="fontSize:12px;letterSpacing:1px;color:#9CA68C">ILOŚĆ</span>
                 <div style="display:flex;alignItems:center;border:1px solid rgba(232,231,222,0.2)">
                   <button onClick="{{ decreaseQty }}" style="background:none;border:none;color:#E8E7DE;padding:8px 14px;fontSize:16px;cursor:pointer">−</button>
                   <span style="padding:0 14px;fontSize:15px">{{ productQty }}</span>
@@ -489,7 +492,7 @@
             </div>
 
             <sc-if value="{{ selectedProduct.showAgeNotice }}" hint-placeholder-val="{{ false }}">
-              <span style="color:#A5131D;fontSize:12px;letterSpacing:0.5px;border:1px solid rgba(165,19,29,0.4);padding:8px 12px;display:inline-block">18+ Produkt przeznaczony dla osób pełnoletnich</span>
+              <span style="color:#F2846D;fontSize:12px;letterSpacing:0.5px;border:1px solid rgba(165,19,29,0.4);padding:8px 12px;display:inline-block">18+ Produkt przeznaczony dla osób pełnoletnich</span>
             </sc-if>
 
             <button onClick="{{ addSelectedToCart }}" disabled="{{ selectedProduct.outOfStock }}" style="background:{{ selectedProduct.addBtnBg }};color:#fff;border:none;padding:16px;fontFamily:'Oswald',sans-serif;fontSize:14px;letterSpacing:1.5px;fontWeight:600;cursor:{{ selectedProduct.addBtnCursor }}" style-hover="background:#431517">{{ selectedProduct.addBtnLabel }}</button>
@@ -498,7 +501,7 @@
               <button style="flex:1;background:#0F0F0D;color:#E8E7DE;border:1px solid rgba(232,231,222,0.15);padding:13px;fontFamily:'Oswald',sans-serif;fontSize:12px;letterSpacing:1px;cursor:pointer" style-hover="border-color:#E8E7DE">DODAJ DO PORÓWNANIA</button>
             </div>
 
-            <div style="color:#67705D;fontSize:13px;display:flex;flexDirection:column;gap:6px;marginTop:6px">
+            <div style="color:#9CA68C;fontSize:13px;display:flex;flexDirection:column;gap:6px;marginTop:6px">
               <span>Wysyłka w ciągu 2 dni</span>
               <span>Paczkomat InPost dostępny &mdash; koszt dostawy od 9,99 zł</span>
             </div>
@@ -523,12 +526,12 @@
           <h3 style="font-family:'Oswald',sans-serif;fontSize:20px;letterSpacing:1px;marginBottom:24px">PODOBNE PRODUKTY</h3>
           <div style="display:grid;gridTemplateColumns:repeat(auto-fill,minmax(220px,1fr));gap:20px">
             <sc-for list="{{ related }}" as="p" hint-placeholder-count="3">
-              <div style="background:#33392B;border:1px solid rgba(232,231,222,0.08);cursor:pointer;position:relative" onClick="{{ p.onOpen }}" style-hover="border-color:rgba(232,231,222,0.3)">
+              <div tabIndex="0" role="button" style="background:#33392B;border:1px solid rgba(232,231,222,0.08);cursor:pointer;position:relative" onClick="{{ p.onOpen }}" style-hover="border-color:rgba(232,231,222,0.3)">
                 <div style="height:160px;width:100%">
                   <image-slot id="{{ p.relatedSlotId }}" shape="rect" placeholder="{{ p.imgHint }}"></image-slot>
                 </div>
                 <div style="padding:14px;display:flex;flexDirection:column;gap:6px">
-                  <span style="fontSize:11px;color:#67705D;letterSpacing:0.5px">{{ p.brand }}</span>
+                  <span style="fontSize:11px;color:#9CA68C;letterSpacing:0.5px">{{ p.brand }}</span>
                   <span style="fontSize:14px;display:block">{{ p.name }}</span>
                   <div style="display:flex;justifyContent:space-between;alignItems:center;marginTop:4px">
                     <span style="fontFamily:'Oswald',sans-serif;fontSize:16px;fontWeight:600">{{ p.priceLabel }}</span>
@@ -546,39 +549,39 @@
   <!-- EVENTS -->
   <sc-if value="{{ isEvents }}" hint-placeholder-val="{{ false }}">
     <div style="paddingTop:96px;maxWidth:1200px;margin:0 auto;padding:96px 24px 60px">
-      <p style="font-family:'Oswald',sans-serif;fontSize:13px;letterSpacing:2px;color:#A5131D;marginBottom:8px">SPARTANS ASG</p>
+      <p style="font-family:'Oswald',sans-serif;fontSize:13px;letterSpacing:2px;color:#F2846D;marginBottom:8px">SPARTANS ASG</p>
       <h1 style="font-family:'Oswald',sans-serif;fontWeight:700;fontSize:36px;letterSpacing:1px;marginBottom:30px">WYDARZENIA</h1>
 
       <div style="display:flex;gap:28px;borderBottom:1px solid rgba(232,231,222,0.12);marginBottom:40px">
-        <span onClick="{{ showNearest }}" style="fontFamily:'Oswald',sans-serif;fontSize:14px;letterSpacing:1px;padding:12px 0;cursor:pointer;color:{{ nearestTabColor }};borderBottom:{{ nearestTabBorder }}">NAJBLIŻSZE WYDARZENIA</span>
-        <span onClick="{{ showArchive }}" style="fontFamily:'Oswald',sans-serif;fontSize:14px;letterSpacing:1px;padding:12px 0;cursor:pointer;color:{{ archiveTabColor }};borderBottom:{{ archiveTabBorder }}">ARCHIWUM WYDARZEŃ</span>
+        <span tabIndex="0" role="button" onClick="{{ showNearest }}" style="fontFamily:'Oswald',sans-serif;fontSize:14px;letterSpacing:1px;padding:12px 0;cursor:pointer;color:{{ nearestTabColor }};borderBottom:{{ nearestTabBorder }}">NAJBLIŻSZE WYDARZENIA</span>
+        <span tabIndex="0" role="button" onClick="{{ showArchive }}" style="fontFamily:'Oswald',sans-serif;fontSize:14px;letterSpacing:1px;padding:12px 0;cursor:pointer;color:{{ archiveTabColor }};borderBottom:{{ archiveTabBorder }}">ARCHIWUM WYDARZEŃ</span>
       </div>
 
       <sc-if value="{{ showingNearest }}" hint-placeholder-val="{{ true }}">
         <div style="display:flex;flexDirection:column;gap:24px">
-          <div style="background:#33392B;border:1px solid rgba(232,231,222,0.08);display:flex;flexWrap:wrap;cursor:pointer" onClick="{{ goU3 }}" style-hover="border-color:rgba(165,19,29,0.5)">
+          <div tabIndex="0" role="button" style="background:#33392B;border:1px solid rgba(232,231,222,0.08);display:flex;flexWrap:wrap;cursor:pointer" onClick="{{ goU3 }}" style-hover="border-color:rgba(165,19,29,0.5)">
             <div style="flex:1;minWidth:260px;maxWidth:380px;alignSelf:stretch">
               <image-slot id="event-u3-img" shape="rect" placeholder="Zdjęcie: Niedzielne U3 w akcji"></image-slot>
             </div>
             <div style="flex:2;minWidth:280px;padding:30px;display:flex;flexDirection:column;gap:10px;justifyContent:center">
-              <span style="fontSize:11px;letterSpacing:1.5px;color:#67705D;fontFamily:'Oswald',sans-serif">{{ nearestEvent.level }}</span>
+              <span style="fontSize:11px;letterSpacing:1.5px;color:#9CA68C;fontFamily:'Oswald',sans-serif">{{ nearestEvent.level }}</span>
               <h3 style="font-family:'Oswald',sans-serif;fontSize:26px;fontWeight:700">{{ nearestEvent.title }}</h3>
-              <span style="color:#67705D;fontSize:14px">{{ nearestEvent.subtitle }}</span>
+              <span style="color:#9CA68C;fontSize:14px">{{ nearestEvent.subtitle }}</span>
               <div style="color:#E8E7DE;fontSize:14px;lineHeight:1.7;marginTop:6px">
                 <span style="display:block">{{ nearestEvent.date }}</span>
                 <span style="display:block">{{ nearestEvent.time }}</span>
               </div>
-              <p style="color:#67705D;fontSize:14px;lineHeight:1.6;marginTop:6px;maxWidth:520px">{{ nearestEvent.desc }}</p>
+              <p style="color:#9CA68C;fontSize:14px;lineHeight:1.6;marginTop:6px;maxWidth:520px">{{ nearestEvent.desc }}</p>
               <span style="align-self:flex-start;background:#A5131D;color:#fff;border:none;padding:13px 24px;fontFamily:'Oswald',sans-serif;fontSize:13px;letterSpacing:1.2px;fontWeight:600;marginTop:10px">ZOBACZ SZCZEGÓŁY</span>
             </div>
           </div>
 
-          <div style="position:relative;background:#33392B;border:1px solid rgba(165,19,29,0.35);overflow:hidden;cursor:pointer" onClick="{{ goKorengal }}">
+          <div tabIndex="0" role="button" style="position:relative;background:#33392B;border:1px solid rgba(165,19,29,0.35);overflow:hidden;cursor:pointer" onClick="{{ goKorengal }}">
             <div style="height:340px;width:100%">
               <image-slot id="korengal-hero-thumb" shape="rect" placeholder="Zdjęcie: Korengal – kadr z poprzedniej edycji, duża skala wydarzenia"></image-slot>
             </div>
             <div style="position:absolute;inset:0;background:linear-gradient(180deg,rgba(13,14,10,0) 30%,rgba(13,14,10,0.92) 100%);display:flex;flexDirection:column;justifyContent:flex-end;padding:32px;pointerEvents:none">
-              <span style="fontSize:12px;letterSpacing:2px;color:#A5131D;fontFamily:'Oswald',sans-serif;marginBottom:8px">WYDARZENIE SPECJALNE</span>
+              <span style="fontSize:12px;letterSpacing:2px;color:#F2846D;fontFamily:'Oswald',sans-serif;marginBottom:8px">WYDARZENIE SPECJALNE</span>
               <h3 style="font-family:'Oswald',sans-serif;fontWeight:700;fontSize:34px">KORENGAL</h3>
               <span style="color:#E8E7DE;fontSize:14px;marginTop:6px">3-dniowa impreza milsim &mdash; zobacz szczegóły</span>
             </div>
@@ -590,13 +593,13 @@
         <sc-if value="{{ showArchiveList }}" hint-placeholder-val="{{ true }}">
           <div style="display:grid;gridTemplateColumns:repeat(auto-fill,minmax(240px,1fr));gap:20px">
             <sc-for list="{{ archiveEventsOut }}" as="ev" hint-placeholder-count="4">
-              <div style="background:#33392B;border:1px solid rgba(232,231,222,0.08);cursor:pointer" onClick="{{ ev.onOpen }}" style-hover="border-color:rgba(165,19,29,0.5)">
+              <div tabIndex="0" role="button" style="background:#33392B;border:1px solid rgba(232,231,222,0.08);cursor:pointer" onClick="{{ ev.onOpen }}" style-hover="border-color:rgba(165,19,29,0.5)">
                 <div style="height:160px;width:100%">
                   <image-slot id="{{ ev.slotId }}" shape="rect" placeholder="Zdjęcie z wydarzenia"></image-slot>
                 </div>
                 <div style="padding:16px">
                   <span style="display:block;fontSize:15px;fontWeight:500;marginBottom:4px">{{ ev.name }}</span>
-                  <span style="color:#67705D;fontSize:13px">{{ ev.date }}</span>
+                  <span style="color:#9CA68C;fontSize:13px">{{ ev.date }}</span>
                 </div>
               </div>
             </sc-for>
@@ -604,13 +607,13 @@
         </sc-if>
 
         <sc-if value="{{ hasSelectedArchiveEvent }}" hint-placeholder-val="{{ false }}">
-          <span onClick="{{ closeArchiveEvent }}" style="color:#67705D;fontSize:13px;cursor:pointer;display:inline-block;marginBottom:20px" style-hover="color:#E8E7DE">&larr; Wróć do archiwum</span>
+          <span tabIndex="0" role="button" onClick="{{ closeArchiveEvent }}" style="color:#9CA68C;fontSize:13px;cursor:pointer;display:inline-block;marginBottom:20px" style-hover="color:#E8E7DE">&larr; Wróć do archiwum</span>
           <h2 style="font-family:'Oswald',sans-serif;fontWeight:700;fontSize:28px;letterSpacing:0.5px;marginBottom:6px">{{ selectedArchiveEventData.name }}</h2>
-          <span style="color:#67705D;fontSize:14px;display:block;marginBottom:20px">{{ selectedArchiveEventData.date }}</span>
+          <span style="color:#9CA68C;fontSize:14px;display:block;marginBottom:20px">{{ selectedArchiveEventData.date }}</span>
           <p style="color:#E8E7DE;opacity:0.8;fontSize:15px;lineHeight:1.7;maxWidth:700px;marginBottom:34px">{{ selectedArchiveEventData.desc }}</p>
           <div style="display:grid;gridTemplateColumns:repeat(auto-fill,minmax(220px,1fr));gridAutoFlow:dense;gap:14px">
             <sc-for list="{{ selectedArchiveEventData.photos }}" as="ph" hint-placeholder-count="9">
-              <div onClick="{{ ph.onOpen }}" style="cursor:pointer;width:100%;height:{{ ph.height }}px;position:relative">
+              <div tabIndex="0" role="button" onClick="{{ ph.onOpen }}" style="cursor:pointer;width:100%;height:{{ ph.height }}px;position:relative">
                 <image-slot id="{{ ph.slotId }}" shape="rect" placeholder="Zdjęcie z wydarzenia"></image-slot>
               </div>
             </sc-for>
@@ -629,8 +632,8 @@
         </div>
         <div style="position:absolute;inset:0;background:linear-gradient(180deg,rgba(15,15,13,0.2) 0%,rgba(15,15,13,0.95) 100%);zIndex:1;pointerEvents:none"></div>
         <div style="position:relative;zIndex:2;maxWidth:1200px;margin:0 auto;width:100%">
-          <span onClick="{{ goEvents }}" style="color:#E8E7DE;fontSize:13px;cursor:pointer;display:inline-block;marginBottom:16px" style-hover="color:#A5131D">&larr; Wróć do wydarzeń</span>
-          <span style="display:block;fontSize:13px;letterSpacing:2px;color:#A5131D;fontFamily:'Oswald',sans-serif;marginBottom:10px">ROZGRYWKA CYKLICZNA</span>
+          <span tabIndex="0" role="button" onClick="{{ goEvents }}" style="color:#E8E7DE;fontSize:13px;cursor:pointer;display:inline-block;marginBottom:16px" style-hover="color:#F2846D">&larr; Wróć do wydarzeń</span>
+          <span style="display:block;fontSize:13px;letterSpacing:2px;color:#F2846D;fontFamily:'Oswald',sans-serif;marginBottom:10px">ROZGRYWKA CYKLICZNA</span>
           <h1 style="font-family:'Oswald',sans-serif;fontWeight:700;fontSize:clamp(32px,6vw,52px);letterSpacing:1px">NIEDZIELNE U3</h1>
         </div>
       </div>
@@ -640,7 +643,7 @@
 
           <div style="display:flex;gap:24px;flexWrap:wrap;borderBottom:1px solid rgba(232,231,222,0.12)">
             <sc-for list="{{ u3Tabs }}" as="t" hint-placeholder-count="5">
-              <span onClick="{{ t.onClick }}" style="fontFamily:'Oswald',sans-serif;fontSize:13px;letterSpacing:1px;padding:0 0 14px;cursor:pointer;color:{{ t.color }};borderBottom:{{ t.border }}">{{ t.label }}</span>
+              <span tabIndex="0" role="button" onClick="{{ t.onClick }}" style="fontFamily:'Oswald',sans-serif;fontSize:13px;letterSpacing:1px;padding:0 0 14px;cursor:pointer;color:{{ t.color }};borderBottom:{{ t.border }}">{{ t.label }}</span>
             </sc-for>
           </div>
 
@@ -657,9 +660,9 @@
                     <span style="color:#E8E7DE;fontSize:15px;lineHeight:1.6">&mdash; {{ c }}</span>
                   </sc-for>
                 </div>
-                <p style="color:#67705D;fontSize:14px;lineHeight:1.6;marginBottom:6px">{{ u3.wejsciowka }}</p>
-                <p style="color:#67705D;fontSize:14px;lineHeight:1.6;marginBottom:6px">{{ u3.naMiejscu }}</p>
-                <p style="color:#67705D;fontSize:14px;lineHeight:1.6">{{ u3.platnosc }}</p>
+                <p style="color:#9CA68C;fontSize:14px;lineHeight:1.6;marginBottom:6px">{{ u3.wejsciowka }}</p>
+                <p style="color:#9CA68C;fontSize:14px;lineHeight:1.6;marginBottom:6px">{{ u3.naMiejscu }}</p>
+                <p style="color:#9CA68C;fontSize:14px;lineHeight:1.6">{{ u3.platnosc }}</p>
               </div>
               <div>
                 <h3 style="font-family:'Oswald',sans-serif;fontSize:20px;letterSpacing:1px;marginBottom:16px">START ZAPISÓW</h3>
@@ -678,7 +681,7 @@
                   </div>
                 </sc-for>
               </div>
-              <p style="color:#67705D;fontSize:14px;lineHeight:1.6">{{ u3.wypozyczenieInfo }}</p>
+              <p style="color:#9CA68C;fontSize:14px;lineHeight:1.6">{{ u3.wypozyczenieInfo }}</p>
             </div>
           </sc-if>
 
@@ -687,7 +690,7 @@
               <div style="height:300px;width:100%;marginBottom:16px">
                 <image-slot id="u3-mapa-dojazd" shape="rect" placeholder="Mapa dojazdu: teren gry w Ursusie"></image-slot>
               </div>
-              <a href="{{ u3.dojazdUrl }}" target="_blank" style="color:#A5131D;fontSize:14px;textDecoration:none;borderBottom:1px solid rgba(165,19,29,0.4)" style-hover="border-color:#A5131D">Otwórz trasę w Google Maps &rarr;</a>
+              <a href="{{ u3.dojazdUrl }}" target="_blank" style="color:#F2846D;fontSize:14px;textDecoration:none;borderBottom:1px solid rgba(165,19,29,0.4)" style-hover="border-color:#F2846D">Otwórz trasę w Google Maps &rarr;</a>
             </div>
           </sc-if>
 
@@ -728,14 +731,14 @@
                   <span style="color:#E8E7DE;fontSize:15px;lineHeight:1.6">&mdash; {{ b }}</span>
                 </sc-for>
               </div>
-              <p style="color:#67705D;fontSize:14px;lineHeight:1.7;marginBottom:20px">{{ u3.zasadyDodatkowe }}</p>
-              <a href="{{ u3.zgodaUrl }}" target="_blank" style="color:#A5131D;fontSize:14px;textDecoration:none;borderBottom:1px solid rgba(165,19,29,0.4)" style-hover="border-color:#A5131D">Zgoda dla niepełnoletnich graczy</a>
+              <p style="color:#9CA68C;fontSize:14px;lineHeight:1.7;marginBottom:20px">{{ u3.zasadyDodatkowe }}</p>
+              <a href="{{ u3.zgodaUrl }}" target="_blank" style="color:#F2846D;fontSize:14px;textDecoration:none;borderBottom:1px solid rgba(165,19,29,0.4)" style-hover="border-color:#F2846D">Zgoda dla niepełnoletnich graczy</a>
             </div>
           </sc-if>
         </div>
 
         <div style="flex:1;minWidth:280px;maxWidth:340px;background:#33392B;padding:28px;display:flex;flexDirection:column;gap:14px;position:sticky;top:120px">
-          <span style="fontFamily:'Oswald',sans-serif;fontSize:12px;letterSpacing:2px;color:#A5131D">NAJBLIŻSZY TERMIN</span>
+          <span style="fontFamily:'Oswald',sans-serif;fontSize:12px;letterSpacing:2px;color:#F2846D">NAJBLIŻSZY TERMIN</span>
           <h3 style="font-family:'Oswald',sans-serif;fontWeight:700;fontSize:24px;letterSpacing:0.5px">NIEDZIELNE U3</h3>
           <div style="display:flex;flexDirection:column;gap:4px;color:#E8E7DE;fontSize:15px;paddingTop:6px;borderTop:1px solid rgba(232,231,222,0.12)">
             <span>{{ nearestEvent.date }}</span>
@@ -756,8 +759,8 @@
         </div>
         <div style="position:absolute;inset:0;background:linear-gradient(180deg,rgba(13,14,10,0.2) 0%,rgba(13,14,10,0.95) 100%);zIndex:1;pointerEvents:none"></div>
         <div style="position:relative;zIndex:2;maxWidth:1200px;margin:0 auto;width:100%">
-          <span onClick="{{ goEvents }}" style="color:#E8E7DE;fontSize:13px;cursor:pointer;display:inline-block;marginBottom:16px" style-hover="color:#A5131D">&larr; Wróć do wydarzeń</span>
-          <span style="display:block;fontSize:13px;letterSpacing:2px;color:#A5131D;fontFamily:'Oswald',sans-serif;marginBottom:10px">WYDARZENIE SPECJALNE</span>
+          <span tabIndex="0" role="button" onClick="{{ goEvents }}" style="color:#E8E7DE;fontSize:13px;cursor:pointer;display:inline-block;marginBottom:16px" style-hover="color:#F2846D">&larr; Wróć do wydarzeń</span>
+          <span style="display:block;fontSize:13px;letterSpacing:2px;color:#F2846D;fontFamily:'Oswald',sans-serif;marginBottom:10px">WYDARZENIE SPECJALNE</span>
           <h1 style="font-family:'Oswald',sans-serif;fontWeight:700;fontSize:clamp(34px,6vw,60px);letterSpacing:1px">KORENGAL: FINAL CHAPTER</h1>
           <span style="color:#E8E7DE;fontSize:16px">3-dniowa impreza LARP / MILSIM</span>
         </div>
@@ -768,7 +771,7 @@
 
           <div style="display:flex;gap:24px;flexWrap:wrap;borderBottom:1px solid rgba(232,231,222,0.12)">
             <sc-for list="{{ korengalTabs }}" as="t" hint-placeholder-count="5">
-              <span onClick="{{ t.onClick }}" style="fontFamily:'Oswald',sans-serif;fontSize:13px;letterSpacing:1px;padding:0 0 14px;cursor:pointer;color:{{ t.color }};borderBottom:{{ t.border }}">{{ t.label }}</span>
+              <span tabIndex="0" role="button" onClick="{{ t.onClick }}" style="fontFamily:'Oswald',sans-serif;fontSize:13px;letterSpacing:1px;padding:0 0 14px;cursor:pointer;color:{{ t.color }};borderBottom:{{ t.border }}">{{ t.label }}</span>
             </sc-for>
           </div>
 
@@ -777,7 +780,7 @@
             <div style="display:flex;flexDirection:column;gap:8px">
 
               <div style="marginBottom:8px">
-                <span style="display:block;fontFamily:'Oswald',sans-serif;fontSize:11px;letterSpacing:3px;color:#A5131D;marginBottom:10px">AKTA SPRAWY &mdash; KORENGAL: OSTATNI ROZDZIAŁ</span>
+                <span style="display:block;fontFamily:'Oswald',sans-serif;fontSize:11px;letterSpacing:3px;color:#F2846D;marginBottom:10px">AKTA SPRAWY &mdash; KORENGAL: OSTATNI ROZDZIAŁ</span>
                 <h2 style="font-family:'Oswald',sans-serif;fontWeight:700;fontSize:26px;letterSpacing:0.5px;lineHeight:1.3;color:#E8E7DE">Trzy dni. Jeden wąwóz. Sprawy, które nigdy nie zostały zamknięte.</h2>
               </div>
 
@@ -791,27 +794,27 @@
                       <div style="height:280px;width:100%">
                         <image-slot id="{{ n.slotId }}" shape="rect" placeholder="{{ n.imgHint }}"></image-slot>
                       </div>
-                      <span style="display:block;color:#67705D;fontSize:12px;letterSpacing:0.5px;marginTop:8px;fontStyle:italic">{{ n.caption }}</span>
+                      <span style="display:block;color:#9CA68C;fontSize:12px;letterSpacing:0.5px;marginTop:8px;fontStyle:italic">{{ n.caption }}</span>
                     </div>
                   </sc-if>
                 </sc-for>
               </div>
 
               <div style="borderLeft:3px solid #A5131D;paddingLeft:20px;margin:14px 0">
-                <p style="color:#67705D;fontSize:14px;lineHeight:1.7">{{ korengal.lorePreNote }}</p>
+                <p style="color:#9CA68C;fontSize:14px;lineHeight:1.7">{{ korengal.lorePreNote }}</p>
               </div>
 
               <div style="background:#33392B;padding:24px;marginTop:10px">
                 <h3 style="font-family:'Oswald',sans-serif;fontSize:16px;letterSpacing:0.5px;marginBottom:10px">MIEJSCE GRY</h3>
                 <p style="color:#E8E7DE;fontSize:14px;lineHeight:1.6">{{ korengal.miejsce }}</p>
-                <p style="color:#67705D;fontSize:13px;marginTop:8px">Organizator: {{ korengal.organizator }}</p>
+                <p style="color:#9CA68C;fontSize:13px;marginTop:8px">Organizator: {{ korengal.organizator }}</p>
               </div>
               <div style="marginTop:20px">
                 <h3 style="font-family:'Oswald',sans-serif;fontSize:18px;letterSpacing:0.5px;marginBottom:14px">HARMONOGRAM</h3>
                 <div style="display:flex;flexDirection:column;gap:12px">
                   <sc-for list="{{ korengal.schedule }}" as="s" hint-placeholder-count="4">
                     <div style="display:flex;gap:20px;borderLeft:2px solid #67705D;paddingLeft:16px">
-                      <span style="fontFamily:'Oswald',sans-serif;fontSize:13px;letterSpacing:1px;color:#67705D;minWidth:100px">{{ s.day }}</span>
+                      <span style="fontFamily:'Oswald',sans-serif;fontSize:13px;letterSpacing:1px;color:#9CA68C;minWidth:100px">{{ s.day }}</span>
                       <span style="color:#E8E7DE;fontSize:14px;lineHeight:1.6">{{ s.text }}</span>
                     </div>
                   </sc-for>
@@ -845,8 +848,8 @@
               <div style="background:#33392B;padding:24px">
                 <h3 style="font-family:'Oswald',sans-serif;fontSize:16px;letterSpacing:0.5px;marginBottom:10px">PŁATNOŚĆ</h3>
                 <p style="color:#E8E7DE;fontSize:14px;lineHeight:1.6;marginBottom:6px">{{ korengal.konto }}</p>
-                <p style="color:#67705D;fontSize:13px;lineHeight:1.6">{{ korengal.kontoOpis }}</p>
-                <p style="color:#67705D;fontSize:13px;marginTop:10px">Telefon do organizatora: {{ korengal.telefon }}</p>
+                <p style="color:#9CA68C;fontSize:13px;lineHeight:1.6">{{ korengal.kontoOpis }}</p>
+                <p style="color:#9CA68C;fontSize:13px;marginTop:10px">Telefon do organizatora: {{ korengal.telefon }}</p>
               </div>
             </div>
           </sc-if>
@@ -905,7 +908,7 @@
                     </div>
                     <div style="padding:16px">
                       <span style="color:#E8E7DE;fontSize:15px;fontWeight:600;display:block;marginBottom:4px">{{ m.name }}</span>
-                      <span style="color:#67705D;fontSize:13px">{{ m.role }}</span>
+                      <span style="color:#9CA68C;fontSize:13px">{{ m.role }}</span>
                     </div>
                   </div>
                 </sc-for>
@@ -955,7 +958,7 @@
                     <span style="color:#E8E7DE;fontSize:14px;lineHeight:1.6">&mdash; {{ b }}</span>
                   </sc-for>
                 </div>
-                <p style="color:#67705D;fontSize:13px;lineHeight:1.7">{{ korengal.zastrzezenia }}</p>
+                <p style="color:#9CA68C;fontSize:13px;lineHeight:1.7">{{ korengal.zastrzezenia }}</p>
               </div>
             </div>
           </sc-if>
@@ -964,29 +967,29 @@
           <sc-if value="{{ isKorTabMapa }}" hint-placeholder-val="{{ false }}">
             <div style="background:#33392B;padding:28px">
               <h3 style="font-family:'Oswald',sans-serif;fontSize:18px;letterSpacing:0.5px;marginBottom:16px">JAK DOJECHAĆ</h3>
-              <p style="color:#67705D;fontSize:14px;lineHeight:1.6;marginBottom:16px">{{ korengal.miejsce }}</p>
+              <p style="color:#9CA68C;fontSize:14px;lineHeight:1.6;marginBottom:16px">{{ korengal.miejsce }}</p>
               <div style="height:300px;width:100%;marginBottom:16px">
                 <image-slot id="korengal-mapa-dojazd" shape="rect" placeholder="Mapa dojazdu: kamieniołom Józefów"></image-slot>
               </div>
-              <a href="{{ korengal.dojazdUrl }}" target="_blank" style="color:#A5131D;fontSize:14px;textDecoration:none;borderBottom:1px solid rgba(165,19,29,0.4)" style-hover="border-color:#A5131D">Otwórz trasę w Google Maps &rarr;</a>
+              <a href="{{ korengal.dojazdUrl }}" target="_blank" style="color:#F2846D;fontSize:14px;textDecoration:none;borderBottom:1px solid rgba(165,19,29,0.4)" style-hover="border-color:#F2846D">Otwórz trasę w Google Maps &rarr;</a>
             </div>
           </sc-if>
         </div>
 
         <div style="flex:1;minWidth:280px;maxWidth:340px;background:#33392B;padding:28px;display:flex;flexDirection:column;gap:14px;position:sticky;top:120px">
-          <span style="fontFamily:'Oswald',sans-serif;fontSize:12px;letterSpacing:2px;color:#A5131D">WYDARZENIE SPECJALNE</span>
+          <span style="fontFamily:'Oswald',sans-serif;fontSize:12px;letterSpacing:2px;color:#F2846D">WYDARZENIE SPECJALNE</span>
           <h3 style="font-family:'Oswald',sans-serif;fontWeight:700;fontSize:24px;letterSpacing:0.5px">KORENGAL</h3>
           <div style="display:flex;flexDirection:column;gap:4px;color:#E8E7DE;fontSize:15px;paddingTop:6px;borderTop:1px solid rgba(232,231,222,0.12)">
             <span>28&ndash;30 sierpnia 2026</span>
             <span>Kamieniołom Józefów + las</span>
           </div>
           <div style="display:flex;flexDirection:column;gap:6px;paddingTop:6px;borderTop:1px solid rgba(232,231,222,0.12)">
-            <span style="fontSize:11px;letterSpacing:1px;color:#67705D">W CENIE</span>
+            <span style="fontSize:11px;letterSpacing:1px;color:#9CA68C">W CENIE</span>
             <sc-for list="{{ korengalIncludes }}" as="inc" hint-placeholder-count="3">
               <span style="fontSize:13px;color:#E8E7DE">— {{ inc }}</span>
             </sc-for>
           </div>
-          <span onClick="{{ goKorengalZapisy }}" style="background:#A5131D;color:#fff;border:none;padding:15px;fontFamily:'Oswald',sans-serif;fontSize:13px;letterSpacing:1.2px;fontWeight:600;textAlign:center;marginTop:8px;cursor:pointer" style-hover="background:#431517">ZAPISZ SIĘ</span>
+          <span tabIndex="0" role="button" onClick="{{ goKorengalZapisy }}" style="background:#A5131D;color:#fff;border:none;padding:15px;fontFamily:'Oswald',sans-serif;fontSize:13px;letterSpacing:1.2px;fontWeight:600;textAlign:center;marginTop:8px;cursor:pointer" style-hover="background:#431517">ZAPISZ SIĘ</span>
         </div>
       </div>
     </div>
@@ -996,17 +999,17 @@
   <sc-if value="{{ isGallery }}" hint-placeholder-val="{{ false }}">
     <div style="paddingTop:96px;maxWidth:1200px;margin:0 auto;padding:96px 24px 80px">
       <sc-if value="{{ showAlbumList }}" hint-placeholder-val="{{ true }}">
-        <p style="font-family:'Oswald',sans-serif;fontSize:13px;letterSpacing:2px;color:#A5131D;marginBottom:8px">SPARTANS ASG</p>
+        <p style="font-family:'Oswald',sans-serif;fontSize:13px;letterSpacing:2px;color:#F2846D;marginBottom:8px">SPARTANS ASG</p>
         <h1 style="font-family:'Oswald',sans-serif;fontWeight:700;fontSize:36px;letterSpacing:1px;marginBottom:36px">GALERIA</h1>
         <div style="display:grid;gridTemplateColumns:repeat(auto-fill,minmax(260px,1fr));gap:22px">
           <sc-for list="{{ albums }}" as="a" hint-placeholder-count="4">
-            <div style="background:#33392B;border:1px solid rgba(232,231,222,0.08);cursor:pointer" onClick="{{ a.onOpen }}" style-hover="border-color:rgba(232,231,222,0.3)">
+            <div tabIndex="0" role="button" style="background:#33392B;border:1px solid rgba(232,231,222,0.08);cursor:pointer" onClick="{{ a.onOpen }}" style-hover="border-color:rgba(232,231,222,0.3)">
               <div style="height:220px;width:100%">
                 <image-slot id="{{ a.slotId }}" shape="rect" placeholder="Zdjęcie okładkowe albumu"></image-slot>
               </div>
               <div style="padding:16px">
                 <span style="display:block;fontSize:15px;fontWeight:500;marginBottom:4px">{{ a.name }}</span>
-                <span style="color:#67705D;fontSize:13px">{{ a.count }} zdjęć</span>
+                <span style="color:#9CA68C;fontSize:13px">{{ a.count }} zdjęć</span>
               </div>
             </div>
           </sc-for>
@@ -1014,11 +1017,11 @@
       </sc-if>
 
       <sc-if value="{{ hasSelectedAlbum }}" hint-placeholder-val="{{ false }}">
-        <span onClick="{{ closeAlbum }}" style="color:#67705D;fontSize:13px;cursor:pointer;display:inline-block;marginBottom:20px" style-hover="color:#E8E7DE">&larr; Wszystkie albumy</span>
+        <span tabIndex="0" role="button" onClick="{{ closeAlbum }}" style="color:#9CA68C;fontSize:13px;cursor:pointer;display:inline-block;marginBottom:20px" style-hover="color:#E8E7DE">&larr; Wszystkie albumy</span>
         <h1 style="font-family:'Oswald',sans-serif;fontWeight:700;fontSize:30px;letterSpacing:1px;marginBottom:30px">{{ selectedAlbumData.name }}</h1>
         <div style="display:grid;gridTemplateColumns:repeat(auto-fill,minmax(220px,1fr));gridAutoFlow:dense;gap:14px">
           <sc-for list="{{ selectedAlbumData.photos }}" as="ph" hint-placeholder-count="9">
-            <div onClick="{{ ph.onOpen }}" style="cursor:pointer;width:100%;height:{{ ph.height }}px;position:relative">
+            <div tabIndex="0" role="button" onClick="{{ ph.onOpen }}" style="cursor:pointer;width:100%;height:{{ ph.height }}px;position:relative">
               <image-slot id="{{ ph.slotId }}" shape="rect" placeholder="Zdjęcie z wydarzenia"></image-slot>
             </div>
           </sc-for>
@@ -1036,7 +1039,7 @@
         </div>
         <div style="position:absolute;inset:0;background:linear-gradient(180deg,rgba(15,15,13,0.2) 0%,rgba(15,15,13,0.95) 100%);zIndex:1;pointerEvents:none"></div>
         <div style="position:relative;zIndex:2;maxWidth:1100px;margin:0 auto;width:100%">
-          <p style="font-family:'Oswald',sans-serif;fontSize:13px;letterSpacing:2px;color:#A5131D;marginBottom:10px">DLA GRUP I FIRM</p>
+          <p style="font-family:'Oswald',sans-serif;fontSize:13px;letterSpacing:2px;color:#F2846D;marginBottom:10px">DLA GRUP I FIRM</p>
           <h1 style="font-family:'Oswald',sans-serif;fontWeight:700;fontSize:clamp(32px,5vw,48px);letterSpacing:1px">EVENTY</h1>
           <p style="color:#E8E7DE;opacity:0.8;fontSize:15px;maxWidth:560px;marginTop:10px">Wieczór kawalerski, panieński, integracja firmowa czy prywatna impreza — przygotujemy rozgrywkę ASG dopasowaną do grupy.</p>
         </div>
@@ -1046,10 +1049,10 @@
         <div style="display:grid;gridTemplateColumns:repeat(auto-fit,minmax(280px,1fr));gap:2px;marginBottom:60px">
           <sc-for list="{{ specialEvents }}" as="ev" hint-placeholder-count="3">
             <div style="background:{{ ev.bg }};padding:36px 30px;display:flex;flexDirection:column;gap:14px">
-              <span style="font-size:26px;color:#A5131D">{{ ev.icon }}</span>
+              <span style="font-size:26px;color:#F2846D">{{ ev.icon }}</span>
               <h3 style="fontFamily:'Oswald',sans-serif;fontSize:19px;letterSpacing:0.5px;fontWeight:600;color:#E8E7DE">{{ ev.title }}</h3>
               <p style="color:#E8E7DE;opacity:0.7;fontSize:14px;lineHeight:1.6;flex:1">{{ ev.desc }}</p>
-              <span onClick="{{ ev.onClick }}" style="color:#E8E7DE;fontFamily:'Oswald',sans-serif;fontSize:12px;letterSpacing:1.2px;fontWeight:600;cursor:pointer;borderBottom:1.5px solid #A5131D;alignSelf:flex-start" style-hover="color:#A5131D">ZAPYTAJ O OFERTĘ</span>
+              <span tabIndex="0" role="button" onClick="{{ ev.onClick }}" style="color:#E8E7DE;fontFamily:'Oswald',sans-serif;fontSize:12px;letterSpacing:1.2px;fontWeight:600;cursor:pointer;borderBottom:1.5px solid #A5131D;alignSelf:flex-start" style-hover="color:#F2846D">ZAPYTAJ O OFERTĘ</span>
             </div>
           </sc-for>
         </div>
@@ -1057,7 +1060,7 @@
         <div style="background:#33392B;padding:44px;display:flex;flexWrap:wrap;gap:24px;alignItems:center;justifyContent:space-between">
           <div>
             <h3 style="fontFamily:'Oswald',sans-serif;fontSize:22px;letterSpacing:0.5px;marginBottom:8px">MASZ WŁASNY POMYSŁ NA EVENT?</h3>
-            <p style="color:#67705D;fontSize:14px;maxWidth:480px">Napisz do nas lub zadzwoń — ustalimy scenariusz, teren i termin dopasowany do Twojej grupy.</p>
+            <p style="color:#9CA68C;fontSize:14px;maxWidth:480px">Napisz do nas lub zadzwoń — ustalimy scenariusz, teren i termin dopasowany do Twojej grupy.</p>
           </div>
           <button onClick="{{ scrollKontakt }}" style="background:#A5131D;color:#fff;border:none;padding:16px 30px;fontFamily:'Oswald',sans-serif;fontSize:13px;letterSpacing:1.2px;fontWeight:600;cursor:pointer;flexShrink:0" style-hover="background:#431517">SKONTAKTUJ SIĘ</button>
         </div>
@@ -1072,7 +1075,7 @@
         <image-slot id="about-img" shape="rect" placeholder="Zdjęcie: wnętrze sklepu lub zespół Spartans ASG"></image-slot>
       </div>
       <div style="flex:1;minWidth:280px">
-        <p style="font-family:'Oswald',sans-serif;fontSize:13px;letterSpacing:2px;color:#A5131D;marginBottom:10px">O NAS</p>
+        <p style="font-family:'Oswald',sans-serif;fontSize:13px;letterSpacing:2px;color:#F2846D;marginBottom:10px">O NAS</p>
         <h1 style="font-family:'Oswald',sans-serif;fontWeight:700;fontSize:36px;marginBottom:20px">SPARTANS ASG</h1>
         <p style="color:#E8E7DE;fontSize:16px;lineHeight:1.8">Spartans ASG to lubelska marka zbudowana wokół rozgrywek ASG. Prowadzimy sklep ze sprzętem i akcesoriami, wypożyczalnię dla osób bez własnej repliki oraz serwis. Organizujemy cotygodniowe i większe wydarzenia — od Niedzielnych U3 po Korengal. Najważniejsza jest dla nas społeczność, która co tydzień spotyka się na polu gry.</p>
       </div>
@@ -1085,7 +1088,7 @@
       <div style="position:absolute;top:0;right:0;height:100%;width:min(420px,100%);background:#33392B;padding:28px;display:flex;flexDirection:column;gap:20px;overflow:auto" onClick="{{ stopProp }}">
         <div style="display:flex;justifyContent:space-between;alignItems:center">
           <h3 style="font-family:'Oswald',sans-serif;fontSize:20px;letterSpacing:1px">KOSZYK</h3>
-          <span onClick="{{ toggleCart }}" style="cursor:pointer;fontSize:20px">&times;</span>
+          <span tabIndex="0" role="button" onClick="{{ toggleCart }}" style="cursor:pointer;fontSize:20px">&times;</span>
         </div>
 
         <sc-if value="{{ hasCartItems }}" hint-placeholder-val="{{ false }}">
@@ -1101,7 +1104,7 @@
                     <button onClick="{{ c.onDecrease }}" style="background:none;border:1px solid rgba(232,231,222,0.2);color:#E8E7DE;width:24px;height:24px;cursor:pointer;fontSize:13px">−</button>
                     <span style="fontSize:13px">{{ c.qty }}</span>
                     <button onClick="{{ c.onIncrease }}" style="background:none;border:1px solid rgba(232,231,222,0.2);color:#E8E7DE;width:24px;height:24px;cursor:pointer;fontSize:13px">+</button>
-                    <span onClick="{{ c.onRemove }}" style="marginLeft:auto;color:#67705D;fontSize:12px;cursor:pointer" style-hover="color:#A5131D">Usuń</span>
+                    <span tabIndex="0" role="button" onClick="{{ c.onRemove }}" style="marginLeft:auto;color:#9CA68C;fontSize:12px;cursor:pointer" style-hover="color:#F2846D">Usuń</span>
                   </div>
                 </div>
                 <span style="fontFamily:'Oswald',sans-serif;fontSize:14px;fontWeight:600">{{ c.lineTotalLabel }}</span>
@@ -1117,7 +1120,7 @@
         </sc-if>
         <sc-if value="{{ hasNoCartItems }}" hint-placeholder-val="{{ true }}">
           <div style="display:flex;flexDirection:column;alignItems:center;gap:16px;marginTop:20px;textAlign:center">
-            <p style="color:#67705D;fontSize:14px">Koszyk jest pusty.</p>
+            <p style="color:#9CA68C;fontSize:14px">Koszyk jest pusty.</p>
             <button onClick="{{ goShopFromCart }}" style="background:#A5131D;color:#fff;border:none;padding:13px 26px;fontFamily:'Oswald',sans-serif;fontSize:13px;letterSpacing:1.2px;fontWeight:600;cursor:pointer" style-hover="background:#431517">WRÓĆ DO SKLEPU</button>
           </div>
         </sc-if>
@@ -1129,13 +1132,13 @@
   <sc-if value="{{ showAuthModal }}" hint-placeholder-val="{{ false }}">
     <div style="position:fixed;inset:0;background:rgba(0,0,0,0.65);zIndex:500;display:flex;alignItems:center;justifyContent:center;padding:20px" onClick="{{ closeAuthModal }}">
       <div style="background:#33392B;width:min(400px,100%);padding:32px;position:relative" onClick="{{ stopProp }}">
-        <span onClick="{{ closeAuthModal }}" style="position:absolute;top:16px;right:20px;cursor:pointer;fontSize:20px;color:#67705D" style-hover="color:#E8E7DE">&times;</span>
+        <span tabIndex="0" role="button" onClick="{{ closeAuthModal }}" style="position:absolute;top:16px;right:20px;cursor:pointer;fontSize:20px;color:#9CA68C" style-hover="color:#E8E7DE">&times;</span>
         <h2 style="font-family:'Oswald',sans-serif;fontWeight:700;fontSize:22px;letterSpacing:0.5px;marginBottom:6px">ZALOGUJ SIĘ</h2>
-        <p style="color:#67705D;fontSize:13px;marginBottom:22px">Zaloguj się lub kontynuuj jako gość, aby przejść do dostawy.</p>
+        <p style="color:#9CA68C;fontSize:13px;marginBottom:22px">Zaloguj się lub kontynuuj jako gość, aby przejść do dostawy.</p>
 
         <div style="display:flex;gap:20px;marginBottom:22px;borderBottom:1px solid rgba(232,231,222,0.12)">
-          <span onClick="{{ onLoginTab }}" style="fontFamily:'Oswald',sans-serif;fontSize:13px;letterSpacing:1px;padding:0 0 12px;cursor:pointer;color:{{ loginTabColor }};borderBottom:{{ loginTabBorder }}">LOGOWANIE</span>
-          <span onClick="{{ onRegisterTab }}" style="fontFamily:'Oswald',sans-serif;fontSize:13px;letterSpacing:1px;padding:0 0 12px;cursor:pointer;color:{{ registerTabColor }};borderBottom:{{ registerTabBorder }}">REJESTRACJA</span>
+          <span tabIndex="0" role="button" onClick="{{ onLoginTab }}" style="fontFamily:'Oswald',sans-serif;fontSize:13px;letterSpacing:1px;padding:0 0 12px;cursor:pointer;color:{{ loginTabColor }};borderBottom:{{ loginTabBorder }}">LOGOWANIE</span>
+          <span tabIndex="0" role="button" onClick="{{ onRegisterTab }}" style="fontFamily:'Oswald',sans-serif;fontSize:13px;letterSpacing:1px;padding:0 0 12px;cursor:pointer;color:{{ registerTabColor }};borderBottom:{{ registerTabBorder }}">REJESTRACJA</span>
         </div>
 
         <div style="display:flex;flexDirection:column;gap:12px">
@@ -1147,7 +1150,7 @@
           <input value="{{ authPassword }}" onChange="{{ onAuthPasswordChange }}" type="password" placeholder="Hasło" style="background:#0F0F0D;border:1px solid rgba(232,231,222,0.15);color:#E8E7DE;padding:12px 14px;fontSize:14px;width:100%"/>
 
           <button onClick="{{ submitAuth }}" style="background:#A5131D;color:#fff;border:none;padding:14px;fontFamily:'Oswald',sans-serif;fontSize:13px;letterSpacing:1.2px;fontWeight:600;cursor:pointer;marginTop:6px" style-hover="background:#431517">{{ authSubmitLabel }}</button>
-          <span onClick="{{ continueAsGuest }}" style="textAlign:center;color:#67705D;fontSize:13px;cursor:pointer;marginTop:4px" style-hover="color:#E8E7DE">Kontynuuj jako gość &rarr;</span>
+          <span tabIndex="0" role="button" onClick="{{ continueAsGuest }}" style="textAlign:center;color:#9CA68C;fontSize:13px;cursor:pointer;marginTop:4px" style-hover="color:#E8E7DE">Kontynuuj jako gość &rarr;</span>
         </div>
       </div>
     </div>
@@ -1159,14 +1162,14 @@
       <div style="display:flex;justifyContent:space-between;alignItems:center;flexWrap:wrap;gap:16px;marginBottom:28px">
         <div>
           <div style="display:flex;alignItems:center;gap:8px;marginBottom:14px">
-            <span onClick="{{ goHome }}" style="color:#67705D;fontSize:12px;cursor:pointer" style-hover="color:#E8E7DE">Strona główna</span>
-            <span style="color:#67705D;fontSize:12px">/</span>
+            <span tabIndex="0" role="button" onClick="{{ goHome }}" style="color:#9CA68C;fontSize:12px;cursor:pointer" style-hover="color:#E8E7DE">Strona główna</span>
+            <span style="color:#9CA68C;fontSize:12px">/</span>
             <span style="color:#E8E7DE;fontSize:12px">Koszyk</span>
           </div>
           <h1 style="font-family:'Oswald',sans-serif;fontWeight:700;fontSize:28px;letterSpacing:1px">KOSZYK ({{ cartCount }})</h1>
         </div>
         <div style="display:flex;gap:24px">
-          <span onClick="{{ clearCart }}" style="color:#67705D;fontSize:13px;cursor:pointer" style-hover="color:#A5131D">Wyczyść koszyk</span>
+          <span tabIndex="0" role="button" onClick="{{ clearCart }}" style="color:#9CA68C;fontSize:13px;cursor:pointer" style-hover="color:#F2846D">Wyczyść koszyk</span>
         </div>
       </div>
 
@@ -1185,7 +1188,7 @@
                   <span style="fontSize:13px;padding:0 8px">{{ c.qty }}</span>
                   <button onClick="{{ c.onIncrease }}" style="background:none;border:none;color:#E8E7DE;width:28px;height:28px;cursor:pointer;fontSize:14px">+</button>
                 </div>
-                <span onClick="{{ c.onRemove }}" style="color:#67705D;fontSize:18px;cursor:pointer;padding:4px" style-hover="color:#A5131D">&#128465;</span>
+                <span tabIndex="0" role="button" onClick="{{ c.onRemove }}" style="color:#9CA68C;fontSize:18px;cursor:pointer;padding:4px" style-hover="color:#F2846D">&#128465;</span>
               </div>
             </sc-for>
           </div>
@@ -1195,21 +1198,21 @@
               <span>DO ZAPŁATY</span><span>{{ cartTotalLabel }}</span>
             </div>
             <button onClick="{{ goToCheckout }}" style="background:#A5131D;color:#fff;border:none;padding:16px;fontFamily:'Oswald',sans-serif;fontSize:14px;letterSpacing:1.2px;fontWeight:600;cursor:pointer" style-hover="background:#431517">PRZEJDŹ DO DOSTAWY &rsaquo;</button>
-            <span style="color:#67705D;fontSize:12px;lineHeight:1.5">Produkty w koszyku nie są rezerwowane.</span>
+            <span style="color:#9CA68C;fontSize:12px;lineHeight:1.5">Produkty w koszyku nie są rezerwowane.</span>
           </div>
         </div>
 
         <div style="display:flex;gap:24px;flexWrap:wrap;alignItems:center;background:#33392B;padding:18px 24px;marginTop:32px">
-          <span style="color:#67705D;fontSize:13px">Bezpieczne zakupy online</span>
-          <span style="color:#67705D;fontSize:13px">Darmowa dostawa od 300 zł</span>
-          <span style="color:#67705D;fontSize:13px">Wygodny zwrot do 14 dni</span>
+          <span style="color:#9CA68C;fontSize:13px">Bezpieczne zakupy online</span>
+          <span style="color:#9CA68C;fontSize:13px">Darmowa dostawa od 300 zł</span>
+          <span style="color:#9CA68C;fontSize:13px">Wygodny zwrot do 14 dni</span>
         </div>
 
         <div style="marginTop:56px">
           <h3 style="font-family:'Oswald',sans-serif;fontSize:20px;letterSpacing:1px;marginBottom:24px">MOŻE JESZCZE TO CI SIĘ PRZYDA</h3>
           <div style="display:grid;gridTemplateColumns:repeat(auto-fill,minmax(200px,1fr));gap:16px">
             <sc-for list="{{ upsellProducts }}" as="p" hint-placeholder-count="5">
-              <div style="background:#33392B;border:1px solid rgba(232,231,222,0.08);cursor:pointer" onClick="{{ p.onOpen }}" style-hover="border-color:rgba(232,231,222,0.3)">
+              <div tabIndex="0" role="button" style="background:#33392B;border:1px solid rgba(232,231,222,0.08);cursor:pointer" onClick="{{ p.onOpen }}" style-hover="border-color:rgba(232,231,222,0.3)">
                 <div style="height:140px;width:100%">
                   <image-slot id="{{ p.upsellSlotId }}" shape="rect" placeholder="{{ p.imgHint }}"></image-slot>
                 </div>
@@ -1225,7 +1228,7 @@
 
       <sc-if value="{{ hasNoCartItems }}" hint-placeholder-val="{{ false }}">
         <div style="display:flex;flexDirection:column;alignItems:center;gap:16px;padding:60px 0">
-          <p style="color:#67705D;fontSize:15px">Koszyk jest pusty.</p>
+          <p style="color:#9CA68C;fontSize:15px">Koszyk jest pusty.</p>
           <button onClick="{{ goShopFromCart }}" style="background:#A5131D;color:#fff;border:none;padding:14px 28px;fontFamily:'Oswald',sans-serif;fontSize:13px;letterSpacing:1.2px;fontWeight:600;cursor:pointer" style-hover="background:#431517">WRÓĆ DO SKLEPU</button>
         </div>
       </sc-if>
@@ -1236,29 +1239,29 @@
   <sc-if value="{{ isCheckout }}" hint-placeholder-val="{{ false }}">
     <div style="paddingTop:96px;maxWidth:1200px;margin:0 auto;padding:96px 24px 100px">
       <div style="display:flex;alignItems:center;gap:8px;marginBottom:20px">
-        <span onClick="{{ goHome }}" style="color:#67705D;fontSize:12px;cursor:pointer" style-hover="color:#E8E7DE">Strona główna</span>
-        <span style="color:#67705D;fontSize:12px">/</span>
-        <span onClick="{{ goToCartPage }}" style="color:#67705D;fontSize:12px;cursor:pointer" style-hover="color:#E8E7DE">Koszyk</span>
-        <span style="color:#67705D;fontSize:12px">/</span>
+        <span tabIndex="0" role="button" onClick="{{ goHome }}" style="color:#9CA68C;fontSize:12px;cursor:pointer" style-hover="color:#E8E7DE">Strona główna</span>
+        <span style="color:#9CA68C;fontSize:12px">/</span>
+        <span tabIndex="0" role="button" onClick="{{ goToCartPage }}" style="color:#9CA68C;fontSize:12px;cursor:pointer" style-hover="color:#E8E7DE">Koszyk</span>
+        <span style="color:#9CA68C;fontSize:12px">/</span>
         <span style="color:#E8E7DE;fontSize:12px">Dostawa i płatność</span>
       </div>
       <sc-if value="{{ isDeliveryFormStep }}" hint-placeholder-val="{{ true }}">
-        <span onClick="{{ backToShop }}" style="color:#67705D;fontSize:13px;cursor:pointer;display:inline-block;marginBottom:20px" style-hover="color:#E8E7DE">&larr; Wróć do sklepu</span>
+        <span tabIndex="0" role="button" onClick="{{ backToShop }}" style="color:#9CA68C;fontSize:13px;cursor:pointer;display:inline-block;marginBottom:20px" style-hover="color:#E8E7DE">&larr; Wróć do sklepu</span>
         <h1 style="font-family:'Oswald',sans-serif;fontWeight:700;fontSize:28px;letterSpacing:1px;marginBottom:32px">DOSTAWA I PŁATNOŚĆ</h1>
 
         <div style="display:flex;gap:36px;alignItems:flex-start;flexWrap:wrap">
           <div style="flex:2;minWidth:340px;display:flex;flexDirection:column;gap:32px">
 
             <div>
-              <span style="display:block;fontFamily:'Oswald',sans-serif;fontSize:13px;letterSpacing:1.5px;color:#67705D;marginBottom:14px">KUPUJESZ JAKO</span>
-              <div style="display:flex;gap:12px">
-                <div onClick="{{ onBuyerPrivate }}" style="flex:1;background:#33392B;border:{{ privateBuyerBorder }};padding:16px;cursor:pointer;fontSize:14px;fontWeight:500">Osoba prywatna</div>
-                <div onClick="{{ onBuyerCompany }}" style="flex:1;background:#33392B;border:{{ companyBuyerBorder }};padding:16px;cursor:pointer;fontSize:14px;fontWeight:500">Firma</div>
+              <span style="display:block;fontFamily:'Oswald',sans-serif;fontSize:13px;letterSpacing:1.5px;color:#9CA68C;marginBottom:14px">KUPUJESZ JAKO</span>
+              <div role="radiogroup" aria-label="Kupujesz jako" style="display:flex;gap:12px">
+                <div tabIndex="0" role="radio" aria-checked="{{ isPrivateBuyer }}" onClick="{{ onBuyerPrivate }}" style="flex:1;background:#33392B;border:{{ privateBuyerBorder }};padding:16px;cursor:pointer;fontSize:14px;fontWeight:500">Osoba prywatna</div>
+                <div tabIndex="0" role="radio" aria-checked="{{ isCompanyBuyer }}" onClick="{{ onBuyerCompany }}" style="flex:1;background:#33392B;border:{{ companyBuyerBorder }};padding:16px;cursor:pointer;fontSize:14px;fontWeight:500">Firma</div>
               </div>
             </div>
 
             <div>
-              <span style="display:block;fontFamily:'Oswald',sans-serif;fontSize:13px;letterSpacing:1.5px;color:#67705D;marginBottom:14px">DANE OSOBY ODBIERAJĄCEJ</span>
+              <span style="display:block;fontFamily:'Oswald',sans-serif;fontSize:13px;letterSpacing:1.5px;color:#9CA68C;marginBottom:14px">DANE OSOBY ODBIERAJĄCEJ</span>
               <div style="background:#33392B;padding:20px;display:flex;flexDirection:column;gap:14px">
                 <div style="display:grid;gridTemplateColumns:1fr 1fr;gap:14px">
                   <input value="{{ buyerForm.imie }}" onChange="{{ onBuyerImieChange }}" placeholder="Imię" style="background:#0F0F0D;border:1px solid rgba(232,231,222,0.15);color:#E8E7DE;padding:12px 14px;fontSize:14px"/>
@@ -1272,7 +1275,7 @@
             </div>
 
             <div>
-              <span style="display:block;fontFamily:'Oswald',sans-serif;fontSize:13px;letterSpacing:1.5px;color:#67705D;marginBottom:14px">DANE DO FAKTURY</span>
+              <span style="display:block;fontFamily:'Oswald',sans-serif;fontSize:13px;letterSpacing:1.5px;color:#9CA68C;marginBottom:14px">DANE DO FAKTURY</span>
               <sc-if value="{{ isCompanyBuyer }}" hint-placeholder-val="{{ false }}">
                 <div style="background:#33392B;padding:20px;display:flex;flexDirection:column;gap:14px">
                   <input value="{{ invoiceForm.nazwaFirmy }}" onChange="{{ onInvoiceNazwaChange }}" placeholder="Nazwa firmy" style="background:#0F0F0D;border:1px solid rgba(232,231,222,0.15);color:#E8E7DE;padding:12px 14px;fontSize:14px"/>
@@ -1286,10 +1289,10 @@
               </sc-if>
               <sc-if value="{{ isPrivateBuyer }}" hint-placeholder-val="{{ true }}">
                 <div style="background:#33392B;padding:20px;display:flex;flexDirection:column;gap:14px">
-                  <p style="color:#67705D;fontSize:13px;lineHeight:1.6">Standardowo wystawiamy fakturę na dane osoby odbierającej.</p>
-                  <span onClick="{{ toggleInvoiceDetails }}" style="fontSize:13px;cursor:pointer;color:#E8E7DE;display:flex;alignItems:center;gap:10px">
-                    <span style="width:14px;height:14px;border:1px solid #67705D;background:{{ invoiceCheckboxBg }};display:inline-block;flexShrink:0"></span>Chcę podać inne dane do faktury
-                  </span>
+                  <p style="color:#9CA68C;fontSize:13px;lineHeight:1.6">Standardowo wystawiamy fakturę na dane osoby odbierającej.</p>
+                  <label style="fontSize:13px;cursor:pointer;color:#E8E7DE;display:flex;alignItems:center;gap:10px">
+                    <input type="checkbox" checked="{{ wantInvoiceDetails }}" onChange="{{ toggleInvoiceDetails }}" style="accentColor:#F2846D;width:14px;height:14px;margin:0;flexShrink:0"/>Chcę podać inne dane do faktury
+                  </label>
                   <sc-if value="{{ wantInvoiceDetails }}" hint-placeholder-val="{{ false }}">
                     <div style="display:flex;flexDirection:column;gap:14px;marginTop:6px">
                       <input value="{{ invoiceForm.nip }}" onChange="{{ onInvoiceNipChange }}" placeholder="NIP (opcjonalnie)" style="background:#0F0F0D;border:1px solid rgba(232,231,222,0.15);color:#E8E7DE;padding:12px 14px;fontSize:14px"/>
@@ -1305,16 +1308,16 @@
             </div>
 
             <div>
-              <span style="display:block;fontFamily:'Oswald',sans-serif;fontSize:13px;letterSpacing:1.5px;color:#67705D;marginBottom:14px">SPOSÓB DOSTAWY</span>
-              <div style="display:flex;flexDirection:column;gap:2px">
+              <span style="display:block;fontFamily:'Oswald',sans-serif;fontSize:13px;letterSpacing:1.5px;color:#9CA68C;marginBottom:14px">SPOSÓB DOSTAWY</span>
+              <div role="radiogroup" aria-label="Sposób dostawy" style="display:flex;flexDirection:column;gap:2px">
                 <sc-for list="{{ deliveryOptions }}" as="d" hint-placeholder-count="3">
-                  <div onClick="{{ d.onClick }}" style="display:flex;alignItems:center;gap:14px;padding:18px;border:1.5px solid {{ d.borderColor }};cursor:pointer;background:#33392B;marginBottom:2px">
+                  <div tabIndex="0" role="radio" aria-checked="{{ d.selected }}" onClick="{{ d.onClick }}" style="display:flex;alignItems:center;gap:14px;padding:18px;border:1.5px solid {{ d.borderColor }};cursor:pointer;background:#33392B;marginBottom:2px">
                     <div style="width:16px;height:16px;borderRadius:50%;border:1.5px solid #A5131D;background:{{ d.dot }};flexShrink:0"></div>
                     <div style="flex:1">
                       <span style="fontSize:15px;color:#E8E7DE;display:block">{{ d.label }}</span>
-                      <span style="fontSize:12px;color:#67705D">{{ d.desc }}</span>
+                      <span style="fontSize:12px;color:#9CA68C">{{ d.desc }}</span>
                     </div>
-                    <span style="fontSize:13px;color:#67705D">{{ d.price }}</span>
+                    <span style="fontSize:13px;color:#9CA68C">{{ d.price }}</span>
                   </div>
                 </sc-for>
               </div>
@@ -1328,7 +1331,7 @@
 
             <sc-if value="{{ isCourierOption }}" hint-placeholder-val="{{ false }}">
               <div style="background:#33392B;border:1px solid rgba(232,231,222,0.08);padding:28px;display:flex;flexDirection:column;gap:16px">
-                <span style="fontFamily:'Oswald',sans-serif;fontSize:13px;letterSpacing:1.5px;color:#67705D">ADRES DOSTAWY</span>
+                <span style="fontFamily:'Oswald',sans-serif;fontSize:13px;letterSpacing:1.5px;color:#9CA68C">ADRES DOSTAWY</span>
                 <div style="display:grid;gridTemplateColumns:1fr 1fr;gap:14px">
                   <input value="{{ courierForm.imie }}" onChange="{{ onCourierChange_imie }}" placeholder="Imię" style="background:#0F0F0D;border:1px solid rgba(232,231,222,0.15);color:#E8E7DE;padding:12px 14px;fontSize:14px"/>
                   <input value="{{ courierForm.nazwisko }}" onChange="{{ onCourierChange_nazwisko }}" placeholder="Nazwisko" style="background:#0F0F0D;border:1px solid rgba(232,231,222,0.15);color:#E8E7DE;padding:12px 14px;fontSize:14px"/>
@@ -1344,30 +1347,30 @@
 
             <sc-if value="{{ isPaczkomatOption }}" hint-placeholder-val="{{ false }}">
               <div style="background:#33392B;border:1px solid rgba(232,231,222,0.08);padding:28px;display:flex;flexDirection:column;gap:16px">
-                <span style="fontFamily:'Oswald',sans-serif;fontSize:13px;letterSpacing:1.5px;color:#67705D">DANE ODBIORCY</span>
+                <span style="fontFamily:'Oswald',sans-serif;fontSize:13px;letterSpacing:1.5px;color:#9CA68C">DANE ODBIORCY</span>
                 <div style="display:grid;gridTemplateColumns:1fr 1fr;gap:14px">
                   <input value="{{ paczkomatForm.imie }}" onChange="{{ onPaczkomatChange_imie }}" placeholder="Imię" style="background:#0F0F0D;border:1px solid rgba(232,231,222,0.15);color:#E8E7DE;padding:12px 14px;fontSize:14px"/>
                   <input value="{{ paczkomatForm.nazwisko }}" onChange="{{ onPaczkomatChange_nazwisko }}" placeholder="Nazwisko" style="background:#0F0F0D;border:1px solid rgba(232,231,222,0.15);color:#E8E7DE;padding:12px 14px;fontSize:14px"/>
                 </div>
                 <input value="{{ paczkomatForm.telefon }}" onChange="{{ onPaczkomatChange_telefon }}" placeholder="Telefon" style="background:#0F0F0D;border:1px solid rgba(232,231,222,0.15);color:#E8E7DE;padding:12px 14px;fontSize:14px"/>
 
-                <span style="fontFamily:'Oswald',sans-serif;fontSize:13px;letterSpacing:1.5px;color:#67705D;marginTop:8px">WYBIERZ PACZKOMAT</span>
+                <span style="fontFamily:'Oswald',sans-serif;fontSize:13px;letterSpacing:1.5px;color:#9CA68C;marginTop:8px">WYBIERZ PACZKOMAT</span>
                 <div style="height:220px;width:100%">
                   <image-slot id="paczkomat-map" shape="rect" placeholder="Mapa: wybór paczkomatu w okolicy Lublina"></image-slot>
                 </div>
-                <div style="display:flex;gap:10px;flexWrap:wrap">
+                <div role="radiogroup" aria-label="Wybierz paczkomat" style="display:flex;gap:10px;flexWrap:wrap">
                   <sc-for list="{{ paczkomatOptions }}" as="pk" hint-placeholder-count="4">
-                    <span onClick="{{ pk.onClick }}" style="padding:10px 14px;fontSize:13px;cursor:pointer;color:{{ pk.color }};background:{{ pk.bg }};border:{{ pk.border }}">{{ pk.label }}</span>
+                    <span tabIndex="0" role="radio" aria-checked="{{ pk.isSelected }}" onClick="{{ pk.onClick }}" style="padding:10px 14px;fontSize:13px;cursor:pointer;color:{{ pk.color }};background:{{ pk.bg }};border:{{ pk.border }}">{{ pk.label }}</span>
                   </sc-for>
                 </div>
               </div>
             </sc-if>
 
             <div>
-              <span style="display:block;fontFamily:'Oswald',sans-serif;fontSize:13px;letterSpacing:1.5px;color:#67705D;marginBottom:14px">PŁATNOŚĆ</span>
-              <div style="display:flex;flexDirection:column;gap:2px">
+              <span style="display:block;fontFamily:'Oswald',sans-serif;fontSize:13px;letterSpacing:1.5px;color:#9CA68C;marginBottom:14px">PŁATNOŚĆ</span>
+              <div role="radiogroup" aria-label="Płatność" style="display:flex;flexDirection:column;gap:2px">
                 <sc-for list="{{ paymentOptions }}" as="pm" hint-placeholder-count="6">
-                  <div onClick="{{ pm.onClick }}" style="display:flex;alignItems:center;gap:14px;padding:16px 18px;border:1.5px solid {{ pm.borderColor }};cursor:pointer;background:#33392B;marginBottom:2px">
+                  <div tabIndex="0" role="radio" aria-checked="{{ pm.selected }}" onClick="{{ pm.onClick }}" style="display:flex;alignItems:center;gap:14px;padding:16px 18px;border:1.5px solid {{ pm.borderColor }};cursor:pointer;background:#33392B;marginBottom:2px">
                     <div style="width:16px;height:16px;borderRadius:50%;border:1.5px solid #A5131D;background:{{ pm.dot }};flexShrink:0"></div>
                     <span style="fontSize:14px;color:#E8E7DE">{{ pm.label }}</span>
                   </div>
@@ -1384,20 +1387,20 @@
                 </div>
                 <div style="flex:1;fontSize:13px">
                   <span style="display:block">{{ c.name }}</span>
-                  <span style="color:#67705D">{{ c.qty }} szt.</span>
+                  <span style="color:#9CA68C">{{ c.qty }} szt.</span>
                 </div>
                 <span style="fontSize:13px;fontWeight:600">{{ c.lineTotalLabel }}</span>
               </div>
             </sc-for>
             <div style="display:flex;flexDirection:column;gap:8px;paddingTop:16px;borderTop:1px solid rgba(232,231,222,0.12);fontSize:14px">
-              <div style="display:flex;justifyContent:space-between;color:#67705D"><span>Koszyk</span><span>{{ cartTotalLabel }}</span></div>
-              <div style="display:flex;justifyContent:space-between;color:#67705D"><span>Dostawa i płatność</span><span>Wliczono powyżej</span></div>
+              <div style="display:flex;justifyContent:space-between;color:#9CA68C"><span>Koszyk</span><span>{{ cartTotalLabel }}</span></div>
+              <div style="display:flex;justifyContent:space-between;color:#9CA68C"><span>Dostawa i płatność</span><span>Wliczono powyżej</span></div>
             </div>
             <div style="display:flex;justifyContent:space-between;alignItems:center;fontFamily:'Oswald',sans-serif;fontSize:18px;fontWeight:600;paddingTop:12px;borderTop:1px solid rgba(232,231,222,0.12)">
               <span>DO ZAPŁATY</span><span>{{ cartTotalLabel }}</span>
             </div>
             <button onClick="{{ confirmOrder }}" style="background:#A5131D;color:#fff;border:none;padding:16px;fontFamily:'Oswald',sans-serif;fontSize:14px;letterSpacing:1.2px;fontWeight:600;cursor:pointer" style-hover="background:#431517">POTWIERDŹ ZAMÓWIENIE</button>
-            <span style="color:#67705D;fontSize:12px">Nie zwlekaj, produkty w koszyku nie są rezerwowane.</span>
+            <span style="color:#9CA68C;fontSize:12px">Nie zwlekaj, produkty w koszyku nie są rezerwowane.</span>
           </div>
         </div>
       </sc-if>
@@ -1405,7 +1408,7 @@
       <sc-if value="{{ isConfirmedStep }}" hint-placeholder-val="{{ false }}">
         <div style="display:flex;flexDirection:column;gap:16px;alignItems:flex-start;paddingTop:40px">
           <span style="fontFamily:'Oswald',sans-serif;fontSize:30px;fontWeight:700">DZIĘKUJEMY!</span>
-          <p style="color:#67705D;fontSize:15px;lineHeight:1.7;maxWidth:520px">Zamówienie zostało zarejestrowane (demo). Sposób dostawy: {{ deliveryOption }}. Suma: {{ cartTotalLabel }}. Potwierdzenie wyślemy telefonicznie lub e-mailem.</p>
+          <p style="color:#9CA68C;fontSize:15px;lineHeight:1.7;maxWidth:520px">Zamówienie zostało zarejestrowane (demo). Sposób dostawy: {{ deliveryOption }}. Suma: {{ cartTotalLabel }}. Potwierdzenie wyślemy telefonicznie lub e-mailem.</p>
           <button onClick="{{ closeCartFully }}" style="background:transparent;color:#E8E7DE;border:1.5px solid rgba(232,231,222,0.4);padding:14px 26px;fontFamily:'Oswald',sans-serif;fontSize:13px;letterSpacing:1px;fontWeight:600;cursor:pointer" style-hover="border-color:#E8E7DE">WRÓĆ DO SKLEPU</button>
         </div>
       </sc-if>
@@ -1415,7 +1418,7 @@
   <!-- TOAST -->
   <sc-if value="{{ hasToast }}" hint-placeholder-val="{{ false }}">
     <div key="{{ toast.id }}" style="position:fixed;bottom:28px;right:28px;zIndex:500;background:#33392B;border:1px solid rgba(165,19,29,0.5);padding:14px 20px;display:flex;alignItems:center;gap:10px;animation:toastIn 0.25s ease">
-      <span style="color:#67705D;fontSize:16px">&#10003;</span>
+      <span style="color:#9CA68C;fontSize:16px">&#10003;</span>
       <span style="fontSize:13px;color:#E8E7DE">Dodano: {{ toast.message }}</span>
     </div>
   </sc-if>
@@ -1424,14 +1427,14 @@
   <sc-if value="{{ isInfo }}" hint-placeholder-val="{{ false }}">
     <div style="paddingTop:96px;maxWidth:1100px;margin:0 auto;padding:96px 24px 100px">
       <div style="display:flex;alignItems:center;gap:8px;marginBottom:14px">
-        <span onClick="{{ goHome }}" style="color:#67705D;fontSize:12px;cursor:pointer" style-hover="color:#E8E7DE">Strona główna</span>
-        <span style="color:#67705D;fontSize:12px">/</span>
+        <span tabIndex="0" role="button" onClick="{{ goHome }}" style="color:#9CA68C;fontSize:12px;cursor:pointer" style-hover="color:#E8E7DE">Strona główna</span>
+        <span style="color:#9CA68C;fontSize:12px">/</span>
         <span style="color:#E8E7DE;fontSize:12px">Informacje</span>
       </div>
       <h1 style="font-family:'Oswald',sans-serif;fontWeight:700;fontSize:30px;marginBottom:28px">INFORMACJE</h1>
       <div style="display:flex;gap:24px;flexWrap:wrap;marginBottom:32px;borderBottom:1px solid rgba(232,231,222,0.12)">
         <sc-for list="{{ infoTabs }}" as="t" hint-placeholder-count="5">
-          <span onClick="{{ t.onClick }}" style="fontFamily:'Oswald',sans-serif;fontSize:12px;letterSpacing:1px;padding:0 0 14px;cursor:pointer;color:{{ t.color }};borderBottom:{{ t.border }}">{{ t.label }}</span>
+          <span tabIndex="0" role="button" onClick="{{ t.onClick }}" style="fontFamily:'Oswald',sans-serif;fontSize:12px;letterSpacing:1px;padding:0 0 14px;cursor:pointer;color:{{ t.color }};borderBottom:{{ t.border }}">{{ t.label }}</span>
         </sc-for>
       </div>
 
@@ -1502,27 +1505,27 @@
           <span style="font-family:'Oswald',sans-serif;fontWeight:700;fontSize:16px;letterSpacing:1px">SPARTANS ASG</span>
         </div>
         <div style="display:flex;gap:24px;flexWrap:wrap">
-          <span onClick="{{ goShop }}" style="color:#67705D;fontSize:13px;cursor:pointer" style-hover="color:#E8E7DE">Sklep</span>
-          <span onClick="{{ goEvents }}" style="color:#67705D;fontSize:13px;cursor:pointer" style-hover="color:#E8E7DE">Wydarzenia</span>
-          <span onClick="{{ goGallery }}" style="color:#67705D;fontSize:13px;cursor:pointer" style-hover="color:#E8E7DE">Galeria</span>
-          <span onClick="{{ goAbout }}" style="color:#67705D;fontSize:13px;cursor:pointer" style-hover="color:#E8E7DE">O nas</span>
-          <span onClick="{{ scrollKontakt }}" style="color:#67705D;fontSize:13px;cursor:pointer" style-hover="color:#E8E7DE">Kontakt</span>
+          <span tabIndex="0" role="button" onClick="{{ goShop }}" style="color:#9CA68C;fontSize:13px;cursor:pointer" style-hover="color:#E8E7DE">Sklep</span>
+          <span tabIndex="0" role="button" onClick="{{ goEvents }}" style="color:#9CA68C;fontSize:13px;cursor:pointer" style-hover="color:#E8E7DE">Wydarzenia</span>
+          <span tabIndex="0" role="button" onClick="{{ goGallery }}" style="color:#9CA68C;fontSize:13px;cursor:pointer" style-hover="color:#E8E7DE">Galeria</span>
+          <span tabIndex="0" role="button" onClick="{{ goAbout }}" style="color:#9CA68C;fontSize:13px;cursor:pointer" style-hover="color:#E8E7DE">O nas</span>
+          <span tabIndex="0" role="button" onClick="{{ scrollKontakt }}" style="color:#9CA68C;fontSize:13px;cursor:pointer" style-hover="color:#E8E7DE">Kontakt</span>
         </div>
         <div style="display:flex;flexDirection:column;gap:8px;alignItems:flex-end">
           <div style="display:flex;gap:20px">
-            <a href="#" target="_blank" style="color:#67705D;fontSize:13px;textDecoration:none" style-hover="color:#E8E7DE">Facebook</a>
-            <a href="#" target="_blank" style="color:#67705D;fontSize:13px;textDecoration:none" style-hover="color:#E8E7DE">Instagram</a>
+            <a href="#" target="_blank" style="color:#9CA68C;fontSize:13px;textDecoration:none" style-hover="color:#E8E7DE">Facebook</a>
+            <a href="#" target="_blank" style="color:#9CA68C;fontSize:13px;textDecoration:none" style-hover="color:#E8E7DE">Instagram</a>
           </div>
           <span style="color:#6b6e60;fontSize:12px">E-mail: do potwierdzenia z właścicielem</span>
         </div>
       </div>
       <div style="display:flex;justifyContent:space-between;flexWrap:wrap;gap:16px;paddingTop:24px;borderTop:1px solid rgba(232,231,222,0.08)">
         <div style="display:flex;gap:20px;flexWrap:wrap">
-          <span onClick="{{ goInfoRegulamin }}" style="color:#6b6e60;fontSize:12px;cursor:pointer" style-hover="color:#67705D">Regulamin sklepu</span>
-          <span onClick="{{ goInfoPrywatnosc }}" style="color:#6b6e60;fontSize:12px;cursor:pointer" style-hover="color:#67705D">Polityka prywatności</span>
-          <span onClick="{{ goInfoDostawa }}" style="color:#6b6e60;fontSize:12px;cursor:pointer" style-hover="color:#67705D">Dostawa i płatności</span>
-          <span onClick="{{ goInfoZwroty }}" style="color:#6b6e60;fontSize:12px;cursor:pointer" style-hover="color:#67705D">Zwroty i reklamacje</span>
-          <span onClick="{{ goInfoFaq }}" style="color:#6b6e60;fontSize:12px;cursor:pointer" style-hover="color:#67705D">FAQ</span>
+          <span tabIndex="0" role="button" onClick="{{ goInfoRegulamin }}" style="color:#6b6e60;fontSize:12px;cursor:pointer" style-hover="color:#9CA68C">Regulamin sklepu</span>
+          <span tabIndex="0" role="button" onClick="{{ goInfoPrywatnosc }}" style="color:#6b6e60;fontSize:12px;cursor:pointer" style-hover="color:#9CA68C">Polityka prywatności</span>
+          <span tabIndex="0" role="button" onClick="{{ goInfoDostawa }}" style="color:#6b6e60;fontSize:12px;cursor:pointer" style-hover="color:#9CA68C">Dostawa i płatności</span>
+          <span tabIndex="0" role="button" onClick="{{ goInfoZwroty }}" style="color:#6b6e60;fontSize:12px;cursor:pointer" style-hover="color:#9CA68C">Zwroty i reklamacje</span>
+          <span tabIndex="0" role="button" onClick="{{ goInfoFaq }}" style="color:#6b6e60;fontSize:12px;cursor:pointer" style-hover="color:#9CA68C">FAQ</span>
         </div>
         <span style="color:#6b6e60;fontSize:12px">&copy; Spartans ASG</span>
       </div>
@@ -1531,7 +1534,7 @@
 
   <sc-if value="{{ lightboxOpen }}" hint-placeholder-val="{{ false }}">
     <div style="position:fixed;inset:0;background:rgba(15,15,13,0.95);zIndex:400;display:flex;alignItems:center;justifyContent:center;padding:40px" onClick="{{ closeLightbox }}">
-      <span onClick="{{ closeLightbox }}" style="position:absolute;top:24px;right:32px;color:#E8E7DE;fontSize:28px;cursor:pointer">&times;</span>
+      <span tabIndex="0" role="button" onClick="{{ closeLightbox }}" style="position:absolute;top:24px;right:32px;color:#E8E7DE;fontSize:28px;cursor:pointer">&times;</span>
       <div style="width:min(900px,100%);height:min(600px,80vh)">
         <image-slot id="{{ lightboxSlotId }}" shape="rect" placeholder="Zdjęcie z wydarzenia"></image-slot>
       </div>
@@ -1543,6 +1546,18 @@
 </x-dc>
 <script type="text/x-dc" data-dc-script>
 class Component extends DCLogic {
+  // Keyboard activation: every clickable div/span below gets tabIndex="0" plus
+  // onKeyDown="{{ x.onKeyDown }}" wired through this — Enter/Space now do what a
+  // click does, matching native <button>/<a> behavior for controls that can't
+  // be native elements (nested clickables, custom checkboxes, etc.).
+  k = (handler) => (e) => {
+    if (typeof handler !== 'function') return;
+    if (e.key === 'Enter' || e.key === ' ' || e.key === 'Spacebar') {
+      e.preventDefault();
+      handler(e);
+    }
+  };
+
   state = {
     view: 'home',
     scrolled: false,
@@ -1895,7 +1910,70 @@ class Component extends DCLogic {
     this._onResize = () => this.setState({ isMobile: window.innerWidth < 900 });
     window.addEventListener('scroll', this._onScroll);
     window.addEventListener('resize', this._onResize);
+
+    // Keyboard activation for every custom clickable div/span in the template
+    // (added below via tabIndex="0" role="button"): Enter/Space fires the
+    // same native click the element already handles, so keyboard and screen
+    // reader users can reach and activate every control a mouse user can.
+    this._onKeydownActivate = (e) => {
+      if (e.key === 'Escape') {
+        // Closes whichever overlay is topmost — lightbox, then auth modal, then the cart drawer.
+        if (this.state.lightboxSlotId) this.closeLightbox();
+        else if (this.state.showAuthModal) this.closeAuthModal();
+        else if (this.state.cartOpen) this.setState({ cartOpen: false });
+        return;
+      }
+      if (e.key !== 'Enter' && e.key !== ' ' && e.key !== 'Spacebar') return;
+      const el = e.target;
+      const role = el && el.getAttribute && el.getAttribute('role');
+      if (el && (role === 'button' || role === 'radio') && el.hasAttribute('tabindex')) {
+        e.preventDefault();
+        el.click();
+      }
+    };
+    document.addEventListener('keydown', this._onKeydownActivate);
+
+    // Cart survives a refresh instead of silently emptying.
+    const savedCart = this.loadPersistedCart();
+    if (savedCart && savedCart.length) this.setState({ cart: savedCart });
+
+    // Routing: every view (and product) gets a real, bookmarkable URL instead
+    // of living only in memory — load lands on whatever the address bar says,
+    // not always Home, and Back/Forward moves between views instead of
+    // leaving the site.
+    const initial = this.parseRoute();
+    if (initial.view !== 'home' || (typeof window !== 'undefined' && window.location.hash)) {
+      this.setState(initial);
+    }
+    this._onHashChange = () => {
+      const next = this.parseRoute();
+      this.setState(s => (
+        s.view === next.view &&
+        (!next.selectedProductId || s.selectedProductId === next.selectedProductId) &&
+        (!next.category || s.category === next.category)
+      ) ? null : next);
+    };
+    window.addEventListener('hashchange', this._onHashChange);
   }
+
+  // Reads the current #/... hash into a view (+ product id / shop category).
+  parseRoute = () => {
+    const raw = (typeof window !== 'undefined' ? window.location.hash : '').replace(/^#\/?/, '');
+    const parts = raw.split('/').filter(Boolean).map((p) => { try { return decodeURIComponent(p); } catch (e) { return p; } });
+    const known = ['home', 'shop', 'product', 'events', 'korengal', 'u3', 'about', 'gallery', 'eventy', 'info', 'checkout', 'cart'];
+    if (parts[0] === 'product' && parts[1]) return { view: 'product', selectedProductId: parts[1] };
+    if (parts[0] === 'shop' && parts[1]) return { view: 'shop', category: parts[1] };
+    if (known.includes(parts[0])) return { view: parts[0] };
+    return { view: 'home' };
+  };
+  // Writes state to the URL. push=true for real navigation (adds a Back
+  // step); push=false for in-place refinement like a filter change, which
+  // updates the address bar without spamming browser history.
+  syncRoute = (hash, push) => {
+    if (typeof window === 'undefined') return;
+    if (push) window.location.hash = hash;
+    else window.history.replaceState(null, '', hash === '#/' ? (window.location.pathname + window.location.search) : hash);
+  };
   normalizeReviewIndex = (i) => {
     const n = this.reviewsData.length;
     return ((i - n) % n + n) % n + n;
@@ -1926,9 +2004,15 @@ class Component extends DCLogic {
     clearTimeout(this._reviewResetTimer);
     window.removeEventListener('scroll', this._onScroll);
     window.removeEventListener('resize', this._onResize);
+    window.removeEventListener('hashchange', this._onHashChange);
+    document.removeEventListener('keydown', this._onKeydownActivate);
   }
 
-  setView = (v) => { window.scrollTo(0, 0); this.setState({ view: v, mobileMenuOpen: false }); };
+  setView = (v) => {
+    window.scrollTo(0, 0);
+    this.setState({ view: v, mobileMenuOpen: false });
+    this.syncRoute(v === 'shop' && this.state.category !== 'Wszystkie' ? '#/shop/' + encodeURIComponent(this.state.category) : '#/' + v, true);
+  };
 
   scrollToHome = (id) => {
     this.setState({ view: 'home', mobileMenuOpen: false }, () => {
@@ -1944,6 +2028,22 @@ class Component extends DCLogic {
   goShopFromCart = () => { this.setState({ cartOpen: false }); this.setView('shop'); };
   stopProp = (e) => e.stopPropagation();
 
+  // Cart persistence: the cart used to live only in memory, so one accidental
+  // refresh (or the routing below sending someone Back) silently emptied it.
+  // Every mutation below now also writes the new cart to localStorage, and
+  // componentDidMount reads it back on load.
+  persistCart = () => {
+    try { window.localStorage.setItem('spartans-asg-cart', JSON.stringify(this.state.cart)); } catch (e) {}
+  };
+  loadPersistedCart = () => {
+    try {
+      const raw = window.localStorage.getItem('spartans-asg-cart');
+      const cart = raw ? JSON.parse(raw) : null;
+      if (Array.isArray(cart)) return cart.filter(c => c && typeof c.id === 'string' && Number.isFinite(c.qty));
+    } catch (e) {}
+    return null;
+  };
+
   addToCart = (id, qty, openDrawer) => {
     const p = this.products.find(pp => pp.id === id);
     this.setState(s => {
@@ -1952,7 +2052,7 @@ class Component extends DCLogic {
       if (existing) existing.qty += (qty || 1);
       else cart.push({ id, qty: qty || 1 });
       return { cart, cartOpen: openDrawer ? true : s.cartOpen, toast: { id: Date.now(), message: p ? p.name : 'Produkt' } };
-    });
+    }, this.persistCart);
     clearTimeout(this._toastTimer);
     this._toastTimer = setTimeout(() => this.setState({ toast: null }), 2200);
   };
@@ -1961,7 +2061,7 @@ class Component extends DCLogic {
     this.setState({ cartOpen: false, checkoutStep: 'delivery' }); this.setView('checkout');
   };
   goToCartPage = () => { this.setState({ cartOpen: false }); this.setView('cart'); };
-  clearCart = () => this.setState({ cart: [] });
+  clearCart = () => this.setState({ cart: [] }, this.persistCart);
   setAuthTab = (t) => this.setState({ authTab: t });
   updateAuthField = (field, value) => this.setState(s => ({ authForm: { ...s.authForm, [field]: value } }));
   submitAuth = () => {
@@ -2003,15 +2103,18 @@ class Component extends DCLogic {
     };
     this.setState(s => ({ checkoutStep: 'confirmed', orders: [order, ...s.orders] }));
   };
-  closeCartFully = () => { this.setState({ cartOpen: false, checkoutStep: 'delivery', cart: [] }); this.setView('home'); };
+  closeCartFully = () => { this.setState({ cartOpen: false, checkoutStep: 'delivery', cart: [] }, this.persistCart); this.setView('home'); };
   updateCourierField = (field, value) => this.setState(s => ({ courierForm: { ...s.courierForm, [field]: value } }));
   updatePaczkomatField = (field, value) => this.setState(s => ({ paczkomatForm: { ...s.paczkomatForm, [field]: value } }));
   selectPaczkomat = (code) => this.setState({ selectedPaczkomat: code });
-  removeFromCart = (id) => this.setState(s => ({ cart: s.cart.filter(c => c.id !== id) }));
-  changeQty = (id, delta) => this.setState(s => ({ cart: s.cart.map(c => c.id === id ? { ...c, qty: Math.max(1, c.qty + delta) } : c) }));
+  removeFromCart = (id) => this.setState(s => ({ cart: s.cart.filter(c => c.id !== id) }), this.persistCart);
+  changeQty = (id, delta) => this.setState(s => ({ cart: s.cart.map(c => c.id === id ? { ...c, qty: Math.max(1, c.qty + delta) } : c) }), this.persistCart);
 
   setSearch = (v) => this.setState({ search: v });
-  setCategory = (v) => this.setState({ category: v, weightFilter: 'Wszystkie', akcSubFilter: 'Wszystkie', subFilter: 'Wszystkie', brandFilter: [], brandsExpanded: false });
+  setCategory = (v) => {
+    this.setState({ category: v, weightFilter: 'Wszystkie', akcSubFilter: 'Wszystkie', subFilter: 'Wszystkie', brandFilter: [], brandsExpanded: false });
+    if (this.state.view === 'shop') this.syncRoute(v === 'Wszystkie' ? '#/shop' : '#/shop/' + encodeURIComponent(v), false);
+  };
   selectSidebarCategory = (cat, hasSubs) => { this.setCategory(cat); if (hasSubs) this.toggleSidebarCat(cat); };
   setWeightFilter = (v) => this.setState({ weightFilter: v });
   setAkcSubFilter = (v) => this.setState({ akcSubFilter: v });
@@ -2042,7 +2145,11 @@ class Component extends DCLogic {
   scrollBrandsLeft = () => { if (this._brandsRef) this._brandsRef.scrollBy({ left: -200, behavior: 'smooth' }); };
   scrollBrandsRight = () => { if (this._brandsRef) this._brandsRef.scrollBy({ left: 200, behavior: 'smooth' }); };
 
-  openProduct = (id) => { window.scrollTo(0, 0); this.setState({ view: 'product', selectedProductId: id, productQty: 1, productVariant: null }); };
+  openProduct = (id) => {
+    window.scrollTo(0, 0);
+    this.setState({ view: 'product', selectedProductId: id, productQty: 1, productVariant: null });
+    this.syncRoute('#/product/' + encodeURIComponent(id), true);
+  };
   setEventsTab = (t) => this.setState({ eventsTab: t });
   setProductVariant = (v) => this.setState({ productVariant: v });
   changeProductQty = (delta) => this.setState(s => ({ productQty: Math.max(1, (s.productQty || 1) + delta) }));
@@ -2183,6 +2290,14 @@ class Component extends DCLogic {
     return {
       view, isMobile, mobileMenuOpen, cartOpen,
       showDesktopNav: !isMobile,
+      // Shop layout: the filter sidebar sits beside the product grid on desktop but has
+      // nowhere to go on a phone-width viewport (no room to shrink, nothing to wrap to),
+      // so it stacks above the grid instead below the isMobile breakpoint.
+      shopBodyDirection: isMobile ? 'column' : 'row',
+      shopSidebarWidth: isMobile ? '100%' : '250px',
+      shopSidebarPosition: isMobile ? 'static' : 'sticky',
+      shopSidebarTop: isMobile ? 'auto' : '120px',
+      shopSidebarMaxHeight: isMobile ? 'none' : 'calc(100vh - 140px)',
       navBg: (scrolled || view !== 'home' || isMobile) ? 'rgba(13,14,10,0.96)' : 'rgba(13,14,10,0.15)',
       navBorder: (scrolled || view !== 'home' || isMobile) ? '1px solid rgba(232,231,222,0.12)' : '1px solid transparent',
       mobileMenuIcon: mobileMenuOpen ? '\u2715' : '\u2630',
@@ -2308,9 +2423,8 @@ class Component extends DCLogic {
       isAkcesoriaCategory: false,
       weightOptions: ['Wszystkie', '0.20g', '0.25g', '0.28g', '0.32g'].map(w => ({
         label: w, onClick: () => this.setWeightFilter(w),
-        color: weightFilter === w ? '#E8E7DE' : '#67705D',
-        bg: weightFilter === w ? '#A5131D' : 'transparent',
-        border: weightFilter === w ? '1px solid #A5131D' : '1px solid rgba(232,231,222,0.2)',
+        isChecked: weightFilter === w,
+        color: weightFilter === w ? '#E8E7DE' : '#9CA68C',
       })),
       akcSubOptions: (currentSubOptions ? ['Wszystkie', ...currentSubOptions] : []).map(s => ({
         label: s, onClick: () => this.setSubFilter(s),
@@ -2335,19 +2449,18 @@ class Component extends DCLogic {
       setBrandsRef: this.setBrandsRef, scrollBrandsLeft: this.scrollBrandsLeft, scrollBrandsRight: this.scrollBrandsRight,
       brandFilterOptions: [...new Set(this.products.filter(p => category === 'Wszystkie' || (category === 'Promocje' ? p.promo === true : p.category === category)).map(p => p.brand))].sort().map(b => ({
         label: b, count: this.products.filter(p => p.brand === b && (category === 'Wszystkie' || (category === 'Promocje' ? p.promo === true : p.category === category))).length,
-        checked: brandFilter.includes(b) ? '#A5131D' : 'transparent', onClick: () => this.toggleBrandFilter(b),
+        isChecked: brandFilter.includes(b), onClick: () => this.toggleBrandFilter(b),
       })),
       priceMinDraft, priceMaxDraft,
       onPriceMinChange: (e) => this.setPriceDraft('priceMinDraft', e.target.value),
       onPriceMaxChange: (e) => this.setPriceDraft('priceMaxDraft', e.target.value),
       applyPriceRange: this.applyPriceRange,
       onlyFilters: [
-        { key: 'onlyBestseller', label: 'Bestseller', checked: onlyBestseller },
-        { key: 'onlyPromocja', label: 'Promocja', checked: onlyPromocja },
-        { key: 'onlyDostepne', label: 'Dostępne', checked: onlyDostepne },
-      ].map(f => ({ ...f, checked: f.checked ? '#A5131D' : 'transparent', onClick: () => this.toggleOnly(f.key) })),
+        { key: 'onlyBestseller', label: 'Bestseller', isChecked: onlyBestseller },
+        { key: 'onlyPromocja', label: 'Promocja', isChecked: onlyPromocja },
+        { key: 'onlyDostepne', label: 'Dostępne', isChecked: onlyDostepne },
+      ].map(f => ({ ...f, onClick: () => this.toggleOnly(f.key) })),
       clearAllFilters: this.clearAllFilters,
-      applySelectedFilters: () => {},
       sidebarCategories: this.categories.map(cat => {
         const subs = this.subcategoriesMap[cat] || null;
         const expanded = expandedSidebarCat === cat;
@@ -2417,7 +2530,6 @@ class Component extends DCLogic {
       onBuyerEmailChange: (e) => this.updateBuyerField('email', e.target.value),
       wantInvoiceDetails: this.state.wantInvoiceDetails,
       toggleInvoiceDetails: this.toggleInvoiceDetails,
-      invoiceCheckboxBg: this.state.wantInvoiceDetails ? '#A5131D' : 'transparent',
       invoiceForm: this.state.invoiceForm,
       onInvoiceNazwaChange: (e) => this.updateInvoiceField('nazwaFirmy', e.target.value),
       onInvoiceNipChange: (e) => this.updateInvoiceField('nip', e.target.value),
@@ -2451,7 +2563,8 @@ class Component extends DCLogic {
         { code: 'LUB22M', label: 'LUB22M – ul. Kunickiego 60' },
       ].map(pk => ({
         label: pk.label, onClick: () => this.selectPaczkomat(pk.code),
-        color: selectedPaczkomat === pk.code ? '#E8E7DE' : '#67705D',
+        isSelected: selectedPaczkomat === pk.code,
+        color: selectedPaczkomat === pk.code ? '#E8E7DE' : '#9CA68C',
         bg: selectedPaczkomat === pk.code ? '#A5131D' : 'transparent',
         border: selectedPaczkomat === pk.code ? '1px solid #A5131D' : '1px solid rgba(232,231,222,0.2)',
       })),
