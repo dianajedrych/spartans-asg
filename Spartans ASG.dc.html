@@ -50,11 +50,15 @@
       </sc-if>
 
       <div style="display:flex;align-items:center;gap:18px">
-        <sc-if value="{{ showDesktopNav }}" hint-placeholder-val="{{ true }}">
-          <span aria-hidden="true" title="Konto" style="cursor:pointer;display:flex;alignItems:center">
-            <svg width="19" height="19" viewBox="0 0 24 24" fill="none" stroke="#E8E7DE" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"></path><circle cx="12" cy="7" r="4"></circle></svg>
-          </span>
-        </sc-if>
+        <span tabIndex="0" role="button" aria-label="{{ favoritesAriaLabel }}" onClick="{{ goFavorites }}" title="Ulubione" style="cursor:pointer;position:relative;display:flex;alignItems:center">
+          <svg width="19" height="19" viewBox="0 0 24 24" fill="none" stroke="#E8E7DE" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M20.8 4.6a5.5 5.5 0 0 0-7.8 0L12 5.6l-1-1a5.5 5.5 0 0 0-7.8 7.8l1 1L12 21l7.8-7.6 1-1a5.5 5.5 0 0 0 0-7.8z"></path></svg>
+          <sc-if value="{{ hasFavorites }}" hint-placeholder-val="{{ false }}">
+            <span key="{{ favoritesCount }}" style="position:absolute;top:-8px;right:-12px;background:#A5131D;color:#fff;fontSize:10px;fontFamily:'Oswald',sans-serif;borderRadius:20px;width:16px;height:16px;display:flex;alignItems:center;justifyContent:center">{{ favoritesCount }}</span>
+          </sc-if>
+        </span>
+        <span tabIndex="0" role="button" aria-label="{{ accountAriaLabel }}" onClick="{{ onAccountClick }}" title="Konto" style="cursor:pointer;display:flex;alignItems:center">
+          <svg width="19" height="19" viewBox="0 0 24 24" fill="none" stroke="#E8E7DE" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"></path><circle cx="12" cy="7" r="4"></circle></svg>
+        </span>
         <span tabIndex="0" role="button" aria-label="{{ cartAriaLabel }}" onClick="{{ toggleCart }}" title="Koszyk" style="cursor:pointer;position:relative;font-size:18px;color:#E8E7DE">
           &#128722;
           <sc-if value="{{ cartCount }}" hint-placeholder-val="{{ 0 }}">
@@ -86,7 +90,7 @@
         </div>
         <div style="position:absolute;inset:0;background:linear-gradient(90deg,rgba(13,14,10,0.92) 0%,rgba(13,14,10,0.75) 38%,rgba(13,14,10,0.15) 62%,rgba(13,14,10,0) 100%);zIndex:1;pointerEvents:none"></div>
         <div style="position:relative;zIndex:2;height:100%;display:flex;flexDirection:column;justifyContent:center;gap:22px;padding:120px 5vw 60px;maxWidth:640px">
-          <img src="assets/spartans-logo.png" alt="Spartans ASG" style="height:64px;width:64px;object-fit:contain;marginBottom:6px">
+          <img src="assets/spartans-logo.png" alt="Spartans ASG" style="height:clamp(84px,12vw,140px);width:clamp(84px,12vw,140px);object-fit:contain;marginBottom:6px">
           <h1 style="font-family:'Oswald',sans-serif;font-weight:700;font-size:clamp(38px,6vw,68px);letter-spacing:1px;lineHeight:1.05;color:#E8E7DE">WEJDŹ<br/>DO GRY.</h1>
           <p style="font-family:'Oswald',sans-serif;font-size:15px;letter-spacing:2px;color:rgba(232,231,222,0.65);fontWeight:500">SKLEP &bull; SERWIS &bull; ROZGRYWKI ASG</p>
           <p style="color:#9CA68C;fontSize:15px;lineHeight:1.7;maxWidth:420px">Sprzęt, zaopatrzenie i rozgrywki ASG w jednym miejscu. Dołącz do ekipy Spartans i zagraj w najbliższym terminie.</p>
@@ -98,15 +102,15 @@
       </div>
 
       <!-- USLUGI I WSPARCIE -->
-      <div style="padding:0 40px">
+      <div style="padding:{{ wsparciePadding }}">
       <div style="background:#33392B;display:flex;flexWrap:wrap;alignItems:stretch;borderTop:4px solid #A5131D">
-        <div style="background:#A5131D;flex:1;minWidth:280px;padding:60px 44px;display:flex;flexDirection:column;gap:16px;justifyContent:center">
+        <div style="background:#A5131D;flex:1;minWidth:{{ wsparcieMinWidth }};padding:60px 44px;display:flex;flexDirection:column;gap:16px;justifyContent:center">
           <p style="font-family:'Oswald',sans-serif;fontSize:13px;letterSpacing:2px;color:rgba(232,231,222,0.75)">WSPARCIE</p>
           <h2 style="font-family:'Oswald',sans-serif;fontWeight:700;fontSize:32px;letterSpacing:1px;color:#fff;lineHeight:1.15">USŁUGI I<br/>OBSŁUGA</h2>
           <p style="color:rgba(232,231,222,0.85);fontSize:14px;lineHeight:1.7;maxWidth:320px">Od zakupu sprzętu po serwis i organizację rozgrywek — pełne wsparcie dla graczy ASG w Lublinie.</p>
           <button onClick="{{ scrollKontakt }}" style="align-self:flex-start;background:#0F0F0D;color:#E8E7DE;border:none;padding:14px 26px;fontFamily:'Oswald',sans-serif;fontSize:13px;letterSpacing:1.2px;fontWeight:600;cursor:pointer;marginTop:8px" style-hover="background:#000">KONTAKT</button>
         </div>
-        <div style="flex:2;minWidth:320px;display:grid;gridTemplateColumns:repeat(3,1fr)">
+        <div style="flex:2;minWidth:{{ wsparcieMinWidth }};display:grid;gridTemplateColumns:{{ serviceGridColumns }}">
           <sc-for list="{{ serviceHighlights }}" as="s" hint-placeholder-count="6">
             <div tabIndex="0" role="button" onClick="{{ s.onClick }}" style="padding:34px 26px;display:flex;flexDirection:column;gap:12px;background:{{ s.tileBg }};borderRight:3px solid #0F0F0D;borderBottom:3px solid #0F0F0D;cursor:pointer" style-hover="background:#431517">
               <span style="font-size:24px;color:#F2846D">{{ s.icon }}</span>
@@ -121,7 +125,7 @@
       <!-- NAJBLIŻSZA ROZGRYWKA -->
       <div style="background:#0F0F0D;padding:70px 24px;borderTop:4px solid #431517;borderBottom:4px solid #431517">
         <div style="max-width:1100px;margin:0 auto;display:flex;gap:48px;alignItems:center;flexWrap:wrap">
-          <div style="flex:1;minWidth:280px">
+          <div style="flex:1;minWidth:min(280px,100%)">
             <p style="font-family:'Oswald',sans-serif;font-size:13px;letterSpacing:2px;color:rgba(232,231,222,0.65);marginBottom:10px">NAJBLIŻSZA ROZGRYWKA</p>
             <h2 style="font-family:'Oswald',sans-serif;font-weight:700;font-size:38px;letterSpacing:1px;marginBottom:16px">NIEDZIELNE U3</h2>
             <div style="display:flex;flexDirection:column;gap:6px;color:#E8E7DE;fontSize:15px;marginBottom:18px">
@@ -134,7 +138,7 @@
               <button onClick="{{ goEvents }}" style="background:transparent;color:#E8E7DE;border:1.5px solid rgba(232,231,222,0.4);padding:14px 26px;font-family:'Oswald',sans-serif;fontSize:13px;letterSpacing:1.5px;fontWeight:600;cursor:pointer" style-hover="border-color:#E8E7DE">SZCZEGÓŁY</button>
             </div>
           </div>
-          <div style="flex:1;minWidth:280px;maxWidth:440px">
+          <div style="flex:1;minWidth:min(280px,100%);maxWidth:440px">
             <div style="width:100%;height:280px">
               <image-slot id="nearest-event-img" shape="rounded" radius="4" placeholder="Zdjęcie: gracze na Niedzielnym U3"></image-slot>
             </div>
@@ -170,9 +174,9 @@
           </div>
           <span tabIndex="0" role="button" onClick="{{ goShop }}" style="color:#E8E7DE;fontFamily:'Oswald',sans-serif;fontSize:12px;letterSpacing:1.2px;fontWeight:600;cursor:pointer;borderBottom:1.5px solid #A5131D" style-hover="color:#F2846D">ZOBACZ CAŁY SKLEP &rarr;</span>
         </div>
-        <div style="display:grid;gridTemplateColumns:repeat(4,1fr);gap:12px">
+        <div style="display:grid;gridTemplateColumns:{{ homeFeaturedColumns }};gap:12px">
           <sc-for list="{{ homeFeatured }}" as="p" hint-placeholder-count="8">
-            <div tabIndex="0" role="button" onClick="{{ p.onOpen }}" style="background:#33392B;border:1px solid rgba(232,231,222,0.08);cursor:pointer;display:flex;flexDirection:column;position:relative" style-hover="border-color:#F2846D">
+            <div tabIndex="0" role="button" onClick="{{ p.onOpen }}" style="background:#33392B;border:1px solid rgba(232,231,222,0.08);cursor:pointer;display:flex;flexDirection:column;position:relative;minWidth:0" style-hover="border-color:#F2846D">
               <sc-if value="{{ p.badge }}" hint-placeholder-val="{{ false }}">
                 <span style="position:absolute;top:6px;left:6px;background:{{ p.badgeBg }};color:#E8E7DE;fontFamily:'Oswald',sans-serif;fontSize:9px;letterSpacing:0.5px;fontWeight:600;padding:4px 7px;zIndex:2">{{ p.badge }}</span>
               </sc-if>
@@ -238,7 +242,7 @@
       <!-- KONTAKT -->
       <div id="kontakt" style="background:#33392B;padding:80px 24px;borderTop:1px solid rgba(232,231,222,0.08)">
         <div style="max-width:1100px;margin:0 auto;display:flex;gap:48px;flexWrap:wrap">
-          <div style="flex:1;minWidth:280px">
+          <div style="flex:1;minWidth:min(280px,100%)">
             <p style="font-family:'Oswald',sans-serif;fontSize:13px;letterSpacing:2px;color:rgba(232,231,222,0.65);marginBottom:10px">KONTAKT</p>
             <h2 style="font-family:'Oswald',sans-serif;fontWeight:700;fontSize:30px;marginBottom:22px">SPARTANS ASG</h2>
             <div style="display:flex;flexDirection:column;gap:10px;color:#E8E7DE;fontSize:15px;lineHeight:1.7;marginBottom:22px">
@@ -252,14 +256,12 @@
                 <span style="color:#9CA68C;fontSize:13px;display:block;marginTop:4px">Godziny mogą się zmieniać w dni świąteczne — przed przyjazdem zalecany kontakt telefoniczny.</span>
               </div>
             </div>
-            <div style="display:flex;gap:14px;flexWrap:wrap">
-              <a href="tel:514206664" style="background:#A5131D;color:#fff;border:none;padding:14px 24px;fontFamily:'Oswald',sans-serif;fontSize:13px;letterSpacing:1.2px;fontWeight:600;textDecoration:none">ZADZWOŃ</a>
-              <a href="#" style="background:transparent;color:#E8E7DE;border:1.5px solid rgba(232,231,222,0.4);padding:14px 24px;fontFamily:'Oswald',sans-serif;fontSize:13px;letterSpacing:1.2px;fontWeight:600;textDecoration:none" style-hover="border-color:#E8E7DE">NAPISZ</a>
-              <a href="https://maps.google.com/?q=Kunickiego+54,+Lublin" target="_blank" style="background:transparent;color:#E8E7DE;border:1.5px solid rgba(232,231,222,0.4);padding:14px 24px;fontFamily:'Oswald',sans-serif;fontSize:13px;letterSpacing:1.2px;fontWeight:600;textDecoration:none" style-hover="border-color:#E8E7DE">WYZNACZ TRASĘ</a>
-            </div>
           </div>
-          <div style="flex:1;minWidth:280px;height:300px">
-            <image-slot id="map-img" shape="rect" placeholder="Mapa: Google Maps – Kunickiego 54, 20-412 Lublin"></image-slot>
+          <div style="flex:1;minWidth:min(280px,100%);display:flex;flexDirection:column;gap:14px">
+            <div style="height:300px">
+              <image-slot id="map-img" shape="rect" placeholder="Mapa: Google Maps – Kunickiego 54, 20-412 Lublin"></image-slot>
+            </div>
+            <a href="https://maps.google.com/?q=Kunickiego+54,+Lublin" target="_blank" style="align-self:flex-start;background:transparent;color:#E8E7DE;border:1.5px solid rgba(232,231,222,0.4);padding:14px 24px;fontFamily:'Oswald',sans-serif;fontSize:13px;letterSpacing:1.2px;fontWeight:600;textDecoration:none" style-hover="border-color:#E8E7DE">WYZNACZ TRASĘ</a>
           </div>
         </div>
       </div>
@@ -299,9 +301,9 @@
         <h2 style="fontFamily:'Oswald',sans-serif;fontWeight:700;fontSize:20px;letterSpacing:0.5px;color:#E8E7DE;marginBottom:18px">Najpopularniejsze marki</h2>
         <div style="display:flex;alignItems:center;gap:16px">
           <span tabIndex="0" role="button" aria-label="Przewiń marki w lewo" onClick="{{ scrollBrandsLeft }}" style="cursor:pointer;color:#9CA68C;fontSize:20px;flexShrink:0" style-hover="color:#E8E7DE">&lsaquo;</span>
-          <div ref="{{ setBrandsRef }}" class="brands-scroll" style="display:flex;gap:16px;overflowX:auto;flex:1;scrollbarWidth:none;msOverflowStyle:none">
+          <div ref="{{ setBrandsRef }}" onMouseEnter="{{ pauseBrandsScroll }}" onMouseLeave="{{ resumeBrandsScroll }}" class="brands-scroll" style="display:flex;gap:16px;overflowX:auto;flex:1;scrollbarWidth:none;msOverflowStyle:none">
             <sc-for list="{{ categoryBrands }}" as="brand" hint-placeholder-count="8">
-              <div tabIndex="0" role="button" onClick="{{ brand.onClick }}" style="background:#E8E7DE;padding:22px 30px;display:flex;alignItems:center;justifyContent:center;minWidth:150px;flexShrink:0;cursor:pointer" style-hover="background:#D8D7CE">
+              <div tabIndex="0" role="button" onClick="{{ brand.onClick }}" style="background:#E8E7DE;padding:22px 30px;display:flex;alignItems:center;justifyContent:center;minWidth:min(150px,100%);flexShrink:0;cursor:pointer" style-hover="background:#D8D7CE">
                 <span style="color:#0F0F0D;fontSize:15px;fontFamily:'Oswald',sans-serif;fontWeight:600;letterSpacing:0.5px;whiteSpace:nowrap">{{ brand.name }}</span>
               </div>
             </sc-for>
@@ -325,7 +327,17 @@
       </div>
 
       <div style="display:flex;gap:36px;alignItems:flex-start;flexDirection:{{ shopBodyDirection }}">
-        <div class="sidebar-scroll" style="width:{{ shopSidebarWidth }};flexShrink:0;display:flex;flexDirection:column;gap:22px;position:{{ shopSidebarPosition }};top:{{ shopSidebarTop }};maxHeight:{{ shopSidebarMaxHeight }};overflowY:auto;paddingRight:8px">
+        <sc-if value="{{ mobileFiltersOpen }}" hint-placeholder-val="{{ false }}">
+          <div onClick="{{ closeMobileFilters }}" style="position:fixed;inset:0;background:rgba(0,0,0,0.6);zIndex:60"></div>
+        </sc-if>
+        <sc-if value="{{ shopSidebarVisible }}" hint-placeholder-val="{{ true }}">
+        <div class="sidebar-scroll" style="width:{{ shopSidebarWidth }};flexShrink:0;display:flex;flexDirection:column;gap:22px;position:{{ shopSidebarPosition }};top:{{ shopSidebarTop }};bottom:{{ shopSidebarBottom }};left:{{ shopSidebarLeft }};right:{{ shopSidebarRight }};maxHeight:{{ shopSidebarMaxHeight }};zIndex:{{ shopSidebarZ }};background:{{ shopSidebarBg }};boxShadow:{{ shopSidebarShadow }};borderRadius:{{ shopSidebarRadius }};overflowY:auto;paddingRight:8px;padding:{{ shopSidebarExtraPadding }}">
+          <sc-if value="{{ isMobile }}" hint-placeholder-val="{{ false }}">
+            <div style="display:flex;alignItems:center;justifyContent:space-between">
+              <span style="fontFamily:'Oswald',sans-serif;fontSize:16px;letterSpacing:1px;color:#E8E7DE">FILTRY</span>
+              <span tabIndex="0" role="button" aria-label="Zamknij filtry" onClick="{{ closeMobileFilters }}" style="cursor:pointer;fontSize:26px;lineHeight:1;color:#E8E7DE">&times;</span>
+            </div>
+          </sc-if>
           <label style="display:flex;flexDirection:column;gap:4px">
             <span style="fontSize:11px;letterSpacing:0.4px;color:#9CA68C">Szukaj produktu...</span>
             <input value="{{ search }}" onChange="{{ onSearchChange }}" placeholder="Szukaj produktu..." list="product-suggestions" style="background:#33392B;border:1px solid rgba(232,231,222,0.15);color:#E8E7DE;padding:12px 14px;fontSize:14px;width:100%"/>
@@ -413,7 +425,11 @@
           <div style="display:flex;flexDirection:column;gap:10px">
             <button onClick="{{ clearAllFilters }}" style="background:transparent;color:#E8E7DE;border:1px solid rgba(232,231,222,0.3);padding:13px;fontSize:12px;letterSpacing:0.5px;fontWeight:600;cursor:pointer" style-hover="border-color:#E8E7DE">USUŃ WSZYSTKIE FILTRY</button>
           </div>
+          <sc-if value="{{ isMobile }}" hint-placeholder-val="{{ false }}">
+            <button onClick="{{ closeMobileFilters }}" style="background:#A5131D;color:#fff;border:none;padding:15px;fontFamily:'Oswald',sans-serif;fontSize:13px;letterSpacing:1px;fontWeight:600;cursor:pointer;position:sticky;bottom:0" style-hover="background:#431517">POKAŻ WYNIKI ({{ productCount }})</button>
+          </sc-if>
         </div>
+        </sc-if>
 
         <div style="flex:1;minWidth:0">
           <div style="display:flex;gap:16px;flexWrap:wrap;marginBottom:26px;alignItems:center;justifyContent:flex-end">
@@ -425,22 +441,22 @@
           </div>
 
           <sc-if value="{{ hasProducts }}" hint-placeholder-val="{{ true }}">
-            <div style="display:grid;gridTemplateColumns:repeat(auto-fill,minmax(230px,1fr));gap:20px">
+            <div style="display:grid;gridTemplateColumns:{{ shopGridColumns }};gap:{{ shopGridGap }}">
               <sc-for list="{{ products }}" as="p" hint-placeholder-count="8">
-                <div tabIndex="0" role="button" style="background:#33392B;border:1px solid rgba(232,231,222,0.08);cursor:pointer;display:flex;flexDirection:column;position:relative" onClick="{{ p.onOpen }}" style-hover="border-color:#F2846D">
+                <div tabIndex="0" role="button" style="background:#33392B;border:1px solid rgba(232,231,222,0.08);cursor:pointer;display:flex;flexDirection:column;position:relative;minWidth:0" onClick="{{ p.onOpen }}" style-hover="border-color:#F2846D">
                   <sc-if value="{{ p.badge }}" hint-placeholder-val="{{ false }}">
                     <span style="position:absolute;top:10px;left:10px;background:{{ p.badgeBg }};color:#E8E7DE;fontFamily:'Oswald',sans-serif;fontSize:10px;letterSpacing:1px;fontWeight:600;padding:5px 10px;zIndex:2">{{ p.badge }}</span>
                   </sc-if>
-                  <div style="height:190px;width:100%">
+                  <div style="height:{{ shopCardImgHeight }};width:100%">
                     <image-slot id="{{ p.slotId }}" shape="rect" placeholder="{{ p.imgHint }}"></image-slot>
                   </div>
-                  <div style="padding:16px;display:flex;flexDirection:column;gap:8px;flex:1">
+                  <div style="padding:{{ shopCardPadding }};display:flex;flexDirection:column;gap:8px;flex:1">
                     <span style="fontSize:11px;letterSpacing:1px;color:#9CA68C;fontFamily:'Oswald',sans-serif">{{ p.category }}</span>
-                    <span style="fontSize:15px;fontWeight:500;lineHeight:1.3;flex:1">{{ p.name }}</span>
+                    <span style="fontSize:{{ shopCardNamePx }};fontWeight:500;lineHeight:1.3;flex:1">{{ p.name }}</span>
                     <span style="fontSize:12px;color:{{ p.stockColor }}">{{ p.stockLabel }}</span>
-                    <div style="display:flex;justifyContent:space-between;alignItems:center;marginTop:6px">
-                      <span style="fontFamily:'Oswald',sans-serif;fontSize:18px;fontWeight:600">{{ p.priceLabel }}</span>
-                      <button onClick="{{ p.onAdd }}" disabled="{{ p.outOfStock }}" style="background:{{ p.addBtnBg }};color:#fff;border:none;padding:8px 14px;fontFamily:'Oswald',sans-serif;fontSize:12px;letterSpacing:1px;fontWeight:600;cursor:{{ p.addBtnCursor }}" style-hover="background:#431517">{{ p.addBtnLabel }}</button>
+                    <div style="display:flex;justifyContent:space-between;alignItems:center;marginTop:6px;flexWrap:wrap;gap:6px">
+                      <span style="fontFamily:'Oswald',sans-serif;fontSize:{{ shopCardPricePx }};fontWeight:600">{{ p.priceLabel }}</span>
+                      <button onClick="{{ p.onAdd }}" disabled="{{ p.outOfStock }}" style="background:{{ p.addBtnBg }};color:#fff;border:none;padding:{{ shopCardAddPad }};fontFamily:'Oswald',sans-serif;fontSize:{{ shopCardAddPx }};letterSpacing:1px;fontWeight:600;cursor:{{ p.addBtnCursor }}" style-hover="background:#431517">{{ p.addBtnLabel }}</button>
                     </div>
                   </div>
                 </div>
@@ -455,6 +471,14 @@
           </sc-if>
         </div>
       </div>
+      <sc-if value="{{ showMobileFilterFab }}" hint-placeholder-val="{{ false }}">
+        <button tabIndex="0" onClick="{{ openMobileFilters }}" aria-label="Otwórz filtry" style="position:fixed;bottom:22px;right:20px;zIndex:55;background:#A5131D;color:#fff;border:none;padding:14px 22px;fontFamily:'Oswald',sans-serif;fontSize:13px;letterSpacing:1px;fontWeight:600;cursor:pointer;boxShadow:0 4px 18px rgba(0,0,0,0.5);display:flex;alignItems:center;gap:8px" style-hover="background:#431517">
+          FILTRY
+          <sc-if value="{{ hasActiveFilters }}" hint-placeholder-val="{{ false }}">
+            <span aria-hidden="true" style="background:#fff;color:#A5131D;borderRadius:50%;width:18px;height:18px;fontSize:11px;display:flex;alignItems:center;justifyContent:center;fontWeight:700">{{ activeFilterCount }}</span>
+          </sc-if>
+        </button>
+      </sc-if>
     </div>
   </sc-if>
 
@@ -464,7 +488,7 @@
       <div style="paddingTop:96px;maxWidth:1200px;margin:0 auto;padding:96px 24px 80px">
         <span tabIndex="0" role="button" onClick="{{ goShop }}" style="color:#9CA68C;fontSize:13px;cursor:pointer;marginBottom:24px;display:inline-block" style-hover="color:#E8E7DE">&larr; Wróć do sklepu</span>
         <div style="display:flex;gap:48px;flexWrap:wrap;marginTop:20px">
-          <div style="flex:1;minWidth:300px;maxWidth:480px;display:flex;flexDirection:column;gap:12px">
+          <div style="flex:1;minWidth:min(300px,100%);maxWidth:480px;display:flex;flexDirection:column;gap:12px">
             <div style="position:relative;height:380px;width:100%;background:#33392B">
               <image-slot id="{{ selectedProduct.detailSlotMain }}" shape="rect" placeholder="{{ selectedProduct.imgHint }}"></image-slot>
               <span style="position:absolute;top:50%;left:8px;transform:translateY(-50%);color:#E8E7DE;fontSize:20px;cursor:pointer;background:rgba(15,15,13,0.6);width:32px;height:32px;display:flex;alignItems:center;justifyContent:center">&lsaquo;</span>
@@ -479,7 +503,7 @@
               </div>
             </div>
           </div>
-          <div style="flex:1;minWidth:280px;maxWidth:480px;display:flex;flexDirection:column;gap:14px">
+          <div style="flex:1;minWidth:min(280px,100%);maxWidth:480px;display:flex;flexDirection:column;gap:14px">
             <h1 style="font-family:'Oswald',sans-serif;fontWeight:700;fontSize:28px;lineHeight:1.2">{{ selectedProduct.name }}</h1>
 
             <div style="display:grid;gridTemplateColumns:1fr 1fr;gap:10px 24px;padding:16px 0;borderTop:1px solid rgba(232,231,222,0.1);borderBottom:1px solid rgba(232,231,222,0.1)">
@@ -520,8 +544,8 @@
 
             <button onClick="{{ addSelectedToCart }}" disabled="{{ selectedProduct.outOfStock }}" style="background:{{ selectedProduct.addBtnBg }};color:#fff;border:none;padding:16px;fontFamily:'Oswald',sans-serif;fontSize:14px;letterSpacing:1.5px;fontWeight:600;cursor:{{ selectedProduct.addBtnCursor }}" style-hover="background:#431517">{{ selectedProduct.addBtnLabel }}</button>
             <div style="display:flex;gap:12px">
-              <button style="flex:1;background:#0F0F0D;color:#E8E7DE;border:1px solid rgba(232,231,222,0.15);padding:13px;fontFamily:'Oswald',sans-serif;fontSize:12px;letterSpacing:1px;cursor:pointer" style-hover="border-color:#E8E7DE">DODAJ DO ULUBIONYCH</button>
-              <button style="flex:1;background:#0F0F0D;color:#E8E7DE;border:1px solid rgba(232,231,222,0.15);padding:13px;fontFamily:'Oswald',sans-serif;fontSize:12px;letterSpacing:1px;cursor:pointer" style-hover="border-color:#E8E7DE">DODAJ DO PORÓWNANIA</button>
+              <button onClick="{{ toggleSelectedFavorite }}" aria-pressed="{{ isSelectedFavorite }}" style="flex:1;background:#0F0F0D;color:{{ selectedFavoriteColor }};border:{{ selectedFavoriteBorder }};padding:13px;fontFamily:'Oswald',sans-serif;fontSize:12px;letterSpacing:1px;cursor:pointer" style-hover="border-color:#F2846D">{{ selectedFavoriteLabel }}</button>
+              <button onClick="{{ toggleSelectedCompare }}" aria-pressed="{{ isSelectedInCompare }}" style="flex:1;background:#0F0F0D;color:{{ selectedCompareColor }};border:{{ selectedCompareBorder }};padding:13px;fontFamily:'Oswald',sans-serif;fontSize:12px;letterSpacing:1px;cursor:pointer" style-hover="border-color:#F2846D">{{ selectedCompareLabel }}</button>
             </div>
 
             <div style="color:#9CA68C;fontSize:13px;display:flex;flexDirection:column;gap:6px;marginTop:6px">
@@ -583,10 +607,10 @@
       <sc-if value="{{ showingNearest }}" hint-placeholder-val="{{ true }}">
         <div style="display:flex;flexDirection:column;gap:24px">
           <div tabIndex="0" role="button" style="background:#33392B;border:1px solid rgba(232,231,222,0.08);display:flex;flexWrap:wrap;cursor:pointer" onClick="{{ goU3 }}" style-hover="border-color:rgba(165,19,29,0.5)">
-            <div style="flex:1;minWidth:260px;maxWidth:380px;alignSelf:stretch">
+            <div style="flex:1;minWidth:min(260px,100%);maxWidth:380px;alignSelf:stretch">
               <image-slot id="event-u3-img" shape="rect" placeholder="Zdjęcie: Niedzielne U3 w akcji"></image-slot>
             </div>
-            <div style="flex:2;minWidth:280px;padding:30px;display:flex;flexDirection:column;gap:10px;justifyContent:center">
+            <div style="flex:2;minWidth:min(280px,100%);padding:30px;display:flex;flexDirection:column;gap:10px;justifyContent:center">
               <span style="fontSize:11px;letterSpacing:1.5px;color:#9CA68C;fontFamily:'Oswald',sans-serif">{{ nearestEvent.level }}</span>
               <h3 style="font-family:'Oswald',sans-serif;fontSize:26px;fontWeight:700">{{ nearestEvent.title }}</h3>
               <span style="color:#9CA68C;fontSize:14px">{{ nearestEvent.subtitle }}</span>
@@ -643,24 +667,6 @@
           </div>
         </sc-if>
       </sc-if>
-
-      <div style="marginTop:60px;background:#33392B;border:1px solid rgba(232,231,222,0.08);padding:32px;display:flex;flexDirection:column;gap:14px;maxWidth:560px">
-        <span style="fontFamily:'Oswald',sans-serif;fontSize:13px;letterSpacing:2px;color:rgba(232,231,222,0.65)">NIE PRZEGAP TERMINU</span>
-        <h3 style="fontFamily:'Oswald',sans-serif;fontWeight:700;fontSize:22px">Przypomnimy Ci o najbliższej rozgrywce</h3>
-        <sc-if value="{{ reminderSubmitted }}" hint-placeholder-val="{{ false }}">
-          <p style="color:#9CA68C;fontSize:14px;lineHeight:1.6">Zapisano (demo) — damy znać przed najbliższym wydarzeniem.</p>
-        </sc-if>
-        <sc-if value="{{ !reminderSubmitted }}" hint-placeholder-val="{{ true }}">
-          <p style="color:#9CA68C;fontSize:14px;lineHeight:1.6">Zostaw e-mail, a przypomnimy przed każdym Niedzielnym U3 i większymi wydarzeniami jak Korengal.</p>
-          <div style="display:flex;gap:10px;flexWrap:wrap">
-            <label style="flex:1;minWidth:220px;display:flex;flexDirection:column;gap:4px">
-              <span style="fontSize:11px;letterSpacing:0.4px;color:#9CA68C">Adres e-mail</span>
-              <input value="{{ reminderEmail }}" onChange="{{ onReminderEmailChange }}" type="email" placeholder="twoj@email.pl" style="background:#0F0F0D;border:1px solid rgba(232,231,222,0.15);color:#E8E7DE;padding:12px 14px;fontSize:14px;width:100%"/>
-            </label>
-            <button onClick="{{ submitReminder }}" style="background:#A5131D;color:#fff;border:none;padding:0 24px;fontFamily:'Oswald',sans-serif;fontSize:13px;letterSpacing:1px;fontWeight:600;cursor:pointer;minHeight:47px" style-hover="background:#431517">ZAPISZ MNIE</button>
-          </div>
-        </sc-if>
-      </div>
     </div>
   </sc-if>
 
@@ -680,7 +686,7 @@
       </div>
 
       <div style="max-width:1200px;margin:0 auto;padding:36px 24px 60px;display:flex;gap:48px;alignItems:flex-start;flexWrap:wrap">
-        <div style="flex:2;minWidth:320px;display:flex;flexDirection:column;gap:32px">
+        <div style="flex:2;minWidth:min(320px,100%);display:flex;flexDirection:column;gap:32px">
 
           <div style="display:flex;gap:24px;flexWrap:wrap;borderBottom:1px solid rgba(232,231,222,0.12)">
             <sc-for list="{{ u3Tabs }}" as="t" hint-placeholder-count="5">
@@ -778,7 +784,7 @@
           </sc-if>
         </div>
 
-        <div style="flex:1;minWidth:280px;maxWidth:340px;background:#33392B;padding:28px;display:flex;flexDirection:column;gap:14px;position:sticky;top:120px">
+        <div style="flex:1;minWidth:min(280px,100%);maxWidth:340px;background:#33392B;padding:28px;display:flex;flexDirection:column;gap:14px;position:sticky;top:120px">
           <span style="fontFamily:'Oswald',sans-serif;fontSize:12px;letterSpacing:2px;color:rgba(232,231,222,0.65)">NAJBLIŻSZY TERMIN</span>
           <h3 style="font-family:'Oswald',sans-serif;fontWeight:700;fontSize:24px;letterSpacing:0.5px">NIEDZIELNE U3</h3>
           <div style="display:flex;flexDirection:column;gap:4px;color:#E8E7DE;fontSize:15px;paddingTop:6px;borderTop:1px solid rgba(232,231,222,0.12)">
@@ -808,7 +814,7 @@
       </div>
 
       <div style="max-width:1200px;margin:0 auto;padding:36px 24px 60px;display:flex;gap:48px;alignItems:flex-start;flexWrap:wrap">
-        <div style="flex:2;minWidth:320px;display:flex;flexDirection:column;gap:32px">
+        <div style="flex:2;minWidth:min(320px,100%);display:flex;flexDirection:column;gap:32px">
 
           <div style="display:flex;gap:24px;flexWrap:wrap;borderBottom:1px solid rgba(232,231,222,0.12)">
             <sc-for list="{{ korengalTabs }}" as="t" hint-placeholder-count="5">
@@ -855,7 +861,7 @@
                 <div style="display:flex;flexDirection:column;gap:12px">
                   <sc-for list="{{ korengal.schedule }}" as="s" hint-placeholder-count="4">
                     <div style="display:flex;gap:20px;borderLeft:2px solid #67705D;paddingLeft:16px">
-                      <span style="fontFamily:'Oswald',sans-serif;fontSize:13px;letterSpacing:1px;color:#9CA68C;minWidth:100px">{{ s.day }}</span>
+                      <span style="fontFamily:'Oswald',sans-serif;fontSize:13px;letterSpacing:1px;color:#9CA68C;minWidth:min(100px,100%)">{{ s.day }}</span>
                       <span style="color:#E8E7DE;fontSize:14px;lineHeight:1.6">{{ s.text }}</span>
                     </div>
                   </sc-for>
@@ -1017,7 +1023,7 @@
           </sc-if>
         </div>
 
-        <div style="flex:1;minWidth:280px;maxWidth:340px;background:#33392B;padding:28px;display:flex;flexDirection:column;gap:14px;position:sticky;top:120px">
+        <div style="flex:1;minWidth:min(280px,100%);maxWidth:340px;background:#33392B;padding:28px;display:flex;flexDirection:column;gap:14px;position:sticky;top:120px">
           <span style="fontFamily:'Oswald',sans-serif;fontSize:12px;letterSpacing:2px;color:rgba(232,231,222,0.65)">WYDARZENIE SPECJALNE</span>
           <h3 style="font-family:'Oswald',sans-serif;fontWeight:700;fontSize:24px;letterSpacing:0.5px">KORENGAL</h3>
           <div style="display:flex;flexDirection:column;gap:4px;color:#E8E7DE;fontSize:15px;paddingTop:6px;borderTop:1px solid rgba(232,231,222,0.12)">
@@ -1112,10 +1118,10 @@
   <!-- ABOUT -->
   <sc-if value="{{ isAbout }}" hint-placeholder-val="{{ false }}">
     <div style="paddingTop:96px;maxWidth:1100px;margin:0 auto;padding:96px 24px 100px;display:flex;gap:48px;alignItems:center;flexWrap:wrap">
-      <div style="flex:1;minWidth:280px;maxWidth:460px;height:360px">
+      <div style="flex:1;minWidth:min(280px,100%);maxWidth:460px;height:360px">
         <image-slot id="about-img" shape="rect" placeholder="Zdjęcie: wnętrze sklepu lub zespół Spartans ASG"></image-slot>
       </div>
-      <div style="flex:1;minWidth:280px">
+      <div style="flex:1;minWidth:min(280px,100%)">
         <p style="font-family:'Oswald',sans-serif;fontSize:13px;letterSpacing:2px;color:rgba(232,231,222,0.65);marginBottom:10px">O NAS</p>
         <h1 style="font-family:'Oswald',sans-serif;fontWeight:700;fontSize:36px;marginBottom:20px">SPARTANS ASG</h1>
         <p style="color:#E8E7DE;fontSize:16px;lineHeight:1.8">Spartans ASG to lubelska marka zbudowana wokół rozgrywek ASG. Prowadzimy sklep ze sprzętem i akcesoriami, wypożyczalnię dla osób bez własnej repliki oraz serwis. Organizujemy cotygodniowe i większe wydarzenia — od Niedzielnych U3 po Korengal. Najważniejsza jest dla nas społeczność, która co tydzień spotyka się na polu gry.</p>
@@ -1145,7 +1151,7 @@
                     <button onClick="{{ c.onDecrease }}" style="background:none;border:1px solid rgba(232,231,222,0.2);color:#E8E7DE;width:24px;height:24px;cursor:pointer;fontSize:13px">−</button>
                     <span style="fontSize:13px">{{ c.qty }}</span>
                     <button onClick="{{ c.onIncrease }}" style="background:none;border:1px solid rgba(232,231,222,0.2);color:#E8E7DE;width:24px;height:24px;cursor:pointer;fontSize:13px">+</button>
-                    <span tabIndex="0" role="button" onClick="{{ c.onRemove }}" style="marginLeft:auto;color:#9CA68C;fontSize:12px;cursor:pointer" style-hover="color:#F2846D">Usuń</span>
+                    <span tabIndex="0" role="button" onClick="{{ c.onRemove }}" style="marginLeft:auto;color:#F2846D;fontSize:13px;fontWeight:700;letterSpacing:0.3px;textDecoration:underline;cursor:pointer" style-hover="color:#fff">USUŃ</span>
                   </div>
                 </div>
                 <span style="fontFamily:'Oswald',sans-serif;fontSize:14px;fontWeight:600">{{ c.lineTotalLabel }}</span>
@@ -1175,7 +1181,7 @@
       <div style="background:#33392B;width:min(400px,100%);padding:32px;position:relative" onClick="{{ stopProp }}">
         <span tabIndex="0" role="button" aria-label="Zamknij okno logowania" onClick="{{ closeAuthModal }}" style="position:absolute;top:16px;right:20px;cursor:pointer;fontSize:20px;color:#9CA68C" style-hover="color:#E8E7DE">&times;</span>
         <h2 style="font-family:'Oswald',sans-serif;fontWeight:700;fontSize:22px;letterSpacing:0.5px;marginBottom:6px">ZALOGUJ SIĘ</h2>
-        <p style="color:#9CA68C;fontSize:13px;marginBottom:22px">Zaloguj się lub kontynuuj jako gość, aby przejść do dostawy.</p>
+        <p style="color:#9CA68C;fontSize:13px;marginBottom:22px">{{ authModalSubtitle }}</p>
 
         <div style="display:flex;gap:20px;marginBottom:22px;borderBottom:1px solid rgba(232,231,222,0.12)">
           <span tabIndex="0" role="button" onClick="{{ onLoginTab }}" style="fontFamily:'Oswald',sans-serif;fontSize:13px;letterSpacing:1px;padding:0 0 12px;cursor:pointer;color:{{ loginTabColor }};borderBottom:{{ loginTabBorder }}">LOGOWANIE</span>
@@ -1202,8 +1208,13 @@
             <input value="{{ authPassword }}" onChange="{{ onAuthPasswordChange }}" type="password" placeholder="Hasło" style="background:#0F0F0D;border:1px solid rgba(232,231,222,0.15);color:#E8E7DE;padding:12px 14px;fontSize:14px;width:100%"/>
           </label>
 
+          <sc-if value="{{ hasAuthError }}" hint-placeholder-val="{{ false }}">
+            <span style="color:#F2846D;fontSize:13px">{{ authError }}</span>
+          </sc-if>
           <button onClick="{{ submitAuth }}" style="background:#A5131D;color:#fff;border:none;padding:14px;fontFamily:'Oswald',sans-serif;fontSize:13px;letterSpacing:1.2px;fontWeight:600;cursor:pointer;marginTop:6px" style-hover="background:#431517">{{ authSubmitLabel }}</button>
-          <span tabIndex="0" role="button" onClick="{{ continueAsGuest }}" style="textAlign:center;color:#9CA68C;fontSize:13px;cursor:pointer;marginTop:4px" style-hover="color:#E8E7DE">Kontynuuj jako gość &rarr;</span>
+          <sc-if value="{{ isCheckoutIntent }}" hint-placeholder-val="{{ true }}">
+            <span tabIndex="0" role="button" onClick="{{ continueAsGuest }}" style="textAlign:center;color:#9CA68C;fontSize:13px;cursor:pointer;marginTop:4px" style-hover="color:#E8E7DE">Kontynuuj jako gość &rarr;</span>
+          </sc-if>
         </div>
       </div>
     </div>
@@ -1228,14 +1239,14 @@
 
       <sc-if value="{{ hasCartItems }}" hint-placeholder-val="{{ false }}">
         <div style="display:flex;gap:36px;alignItems:flex-start;flexWrap:wrap">
-          <div style="flex:2;minWidth:320px;display:flex;flexDirection:column;gap:2px">
+          <div style="flex:2;minWidth:min(320px,100%);display:flex;flexDirection:column;gap:2px">
             <sc-for list="{{ cartItems }}" as="c" hint-placeholder-count="2">
-              <div style="display:flex;gap:16px;alignItems:center;background:#33392B;padding:16px;marginBottom:2px">
-                <div style="width:80px;height:80px;flexShrink:0;background:#0F0F0D">
+              <div style="display:flex;gap:{{ cartRowGap }};alignItems:center;flexWrap:wrap;background:#33392B;padding:16px;marginBottom:2px">
+                <div style="width:{{ cartImgSize }};height:{{ cartImgSize }};flexShrink:0;background:#0F0F0D">
                   <image-slot id="{{ c.cartSlotId }}" shape="rect" placeholder="{{ c.imgHint }}"></image-slot>
                 </div>
-                <span style="flex:1;fontSize:15px;fontWeight:500">{{ c.name }}</span>
-                <span style="fontFamily:'Oswald',sans-serif;fontSize:15px;fontWeight:600;minWidth:70px">{{ c.lineTotalLabel }}</span>
+                <span style="flex:1;minWidth:min(110px,100%);fontSize:15px;fontWeight:500">{{ c.name }}</span>
+                <span style="fontFamily:'Oswald',sans-serif;fontSize:15px;fontWeight:600;minWidth:min(70px,100%)">{{ c.lineTotalLabel }}</span>
                 <div style="display:flex;alignItems:center;border:1px solid rgba(232,231,222,0.2)">
                   <button onClick="{{ c.onDecrease }}" style="background:none;border:none;color:#E8E7DE;width:28px;height:28px;cursor:pointer;fontSize:14px">−</button>
                   <span style="fontSize:13px;padding:0 8px">{{ c.qty }}</span>
@@ -1246,7 +1257,7 @@
             </sc-for>
           </div>
 
-          <div style="flex:1;minWidth:280px;background:#33392B;padding:24px;display:flex;flexDirection:column;gap:16px;position:sticky;top:120px">
+          <div style="flex:1;minWidth:min(280px,100%);background:#33392B;padding:24px;display:flex;flexDirection:column;gap:16px;position:sticky;top:120px">
             <div style="display:flex;justifyContent:space-between;alignItems:center;fontFamily:'Oswald',sans-serif;fontSize:18px;fontWeight:600;paddingBottom:16px;borderBottom:1px solid rgba(232,231,222,0.12)">
               <span>DO ZAPŁATY</span><span>{{ cartTotalLabel }}</span>
             </div>
@@ -1303,7 +1314,7 @@
         <h1 style="font-family:'Oswald',sans-serif;fontWeight:700;fontSize:28px;letterSpacing:1px;marginBottom:32px">DOSTAWA I PŁATNOŚĆ</h1>
 
         <div style="display:flex;gap:36px;alignItems:flex-start;flexWrap:wrap">
-          <div style="flex:2;minWidth:340px;display:flex;flexDirection:column;gap:32px">
+          <div style="flex:2;minWidth:min(340px,100%);display:flex;flexDirection:column;gap:32px">
 
             <div>
               <span style="display:block;fontFamily:'Oswald',sans-serif;fontSize:13px;letterSpacing:1.5px;color:#9CA68C;marginBottom:14px">KUPUJESZ JAKO</span>
@@ -1316,7 +1327,7 @@
             <div>
               <span style="display:block;fontFamily:'Oswald',sans-serif;fontSize:13px;letterSpacing:1.5px;color:#9CA68C;marginBottom:14px">DANE OSOBY ODBIERAJĄCEJ</span>
               <div style="background:#33392B;padding:20px;display:flex;flexDirection:column;gap:14px">
-                <div style="display:grid;gridTemplateColumns:1fr 1fr;gap:14px">
+                <div style="display:grid;gridTemplateColumns:{{ checkoutGridColumns }};gap:14px">
                   <label style="display:flex;flexDirection:column;gap:4px">
                     <span style="fontSize:11px;letterSpacing:0.4px;color:#9CA68C">Imię</span>
                     <input value="{{ buyerForm.imie }}" onChange="{{ onBuyerImieChange }}" placeholder="Imię" style="background:#0F0F0D;border:1px solid rgba(232,231,222,0.15);color:#E8E7DE;padding:12px 14px;fontSize:14px"/>
@@ -1326,7 +1337,7 @@
                     <input value="{{ buyerForm.nazwisko }}" onChange="{{ onBuyerNazwiskoChange }}" placeholder="Nazwisko" style="background:#0F0F0D;border:1px solid rgba(232,231,222,0.15);color:#E8E7DE;padding:12px 14px;fontSize:14px"/>
                   </label>
                 </div>
-                <div style="display:grid;gridTemplateColumns:1fr 1fr;gap:14px">
+                <div style="display:grid;gridTemplateColumns:{{ checkoutGridColumns }};gap:14px">
                   <label style="display:flex;flexDirection:column;gap:4px">
                     <span style="fontSize:11px;letterSpacing:0.4px;color:#9CA68C">Telefon</span>
                     <input value="{{ buyerForm.telefon }}" onChange="{{ onBuyerTelefonChange }}" placeholder="Telefon" style="background:#0F0F0D;border:1px solid rgba(232,231,222,0.15);color:#E8E7DE;padding:12px 14px;fontSize:14px"/>
@@ -1355,7 +1366,7 @@
                     <span style="fontSize:11px;letterSpacing:0.4px;color:#9CA68C">Ulica i numer</span>
                     <input value="{{ invoiceForm.adres }}" onChange="{{ onInvoiceAdresChange }}" placeholder="Ulica i numer" style="background:#0F0F0D;border:1px solid rgba(232,231,222,0.15);color:#E8E7DE;padding:12px 14px;fontSize:14px"/>
                   </label>
-                  <div style="display:grid;gridTemplateColumns:1fr 1fr;gap:14px">
+                  <div style="display:grid;gridTemplateColumns:{{ checkoutGridColumns }};gap:14px">
                     <label style="display:flex;flexDirection:column;gap:4px">
                       <span style="fontSize:11px;letterSpacing:0.4px;color:#9CA68C">Kod pocztowy</span>
                       <input value="{{ invoiceForm.kod }}" onChange="{{ onInvoiceKodChange }}" placeholder="Kod pocztowy" style="background:#0F0F0D;border:1px solid rgba(232,231,222,0.15);color:#E8E7DE;padding:12px 14px;fontSize:14px"/>
@@ -1383,7 +1394,7 @@
                         <span style="fontSize:11px;letterSpacing:0.4px;color:#9CA68C">Ulica i numer</span>
                         <input value="{{ invoiceForm.adres }}" onChange="{{ onInvoiceAdresChange }}" placeholder="Ulica i numer" style="background:#0F0F0D;border:1px solid rgba(232,231,222,0.15);color:#E8E7DE;padding:12px 14px;fontSize:14px"/>
                       </label>
-                      <div style="display:grid;gridTemplateColumns:1fr 1fr;gap:14px">
+                      <div style="display:grid;gridTemplateColumns:{{ checkoutGridColumns }};gap:14px">
                         <label style="display:flex;flexDirection:column;gap:4px">
                           <span style="fontSize:11px;letterSpacing:0.4px;color:#9CA68C">Kod pocztowy</span>
                           <input value="{{ invoiceForm.kod }}" onChange="{{ onInvoiceKodChange }}" placeholder="Kod pocztowy" style="background:#0F0F0D;border:1px solid rgba(232,231,222,0.15);color:#E8E7DE;padding:12px 14px;fontSize:14px"/>
@@ -1424,7 +1435,7 @@
             <sc-if value="{{ isCourierOption }}" hint-placeholder-val="{{ false }}">
               <div style="background:#33392B;border:1px solid rgba(232,231,222,0.08);padding:28px;display:flex;flexDirection:column;gap:16px">
                 <span style="fontFamily:'Oswald',sans-serif;fontSize:13px;letterSpacing:1.5px;color:#9CA68C">ADRES DOSTAWY</span>
-                <div style="display:grid;gridTemplateColumns:1fr 1fr;gap:14px">
+                <div style="display:grid;gridTemplateColumns:{{ checkoutGridColumns }};gap:14px">
                   <label style="display:flex;flexDirection:column;gap:4px">
                     <span style="fontSize:11px;letterSpacing:0.4px;color:#9CA68C">Imię</span>
                     <input value="{{ courierForm.imie }}" onChange="{{ onCourierChange_imie }}" placeholder="Imię" style="background:#0F0F0D;border:1px solid rgba(232,231,222,0.15);color:#E8E7DE;padding:12px 14px;fontSize:14px"/>
@@ -1438,7 +1449,7 @@
                   <span style="fontSize:11px;letterSpacing:0.4px;color:#9CA68C">Ulica i numer</span>
                   <input value="{{ courierForm.adres }}" onChange="{{ onCourierChange_adres }}" placeholder="Ulica i numer" style="background:#0F0F0D;border:1px solid rgba(232,231,222,0.15);color:#E8E7DE;padding:12px 14px;fontSize:14px"/>
                 </label>
-                <div style="display:grid;gridTemplateColumns:1fr 1fr;gap:14px">
+                <div style="display:grid;gridTemplateColumns:{{ checkoutGridColumns }};gap:14px">
                   <label style="display:flex;flexDirection:column;gap:4px">
                     <span style="fontSize:11px;letterSpacing:0.4px;color:#9CA68C">Kod pocztowy</span>
                     <input value="{{ courierForm.kod }}" onChange="{{ onCourierChange_kod }}" placeholder="Kod pocztowy" style="background:#0F0F0D;border:1px solid rgba(232,231,222,0.15);color:#E8E7DE;padding:12px 14px;fontSize:14px"/>
@@ -1458,7 +1469,7 @@
             <sc-if value="{{ isPaczkomatOption }}" hint-placeholder-val="{{ false }}">
               <div style="background:#33392B;border:1px solid rgba(232,231,222,0.08);padding:28px;display:flex;flexDirection:column;gap:16px">
                 <span style="fontFamily:'Oswald',sans-serif;fontSize:13px;letterSpacing:1.5px;color:#9CA68C">DANE ODBIORCY</span>
-                <div style="display:grid;gridTemplateColumns:1fr 1fr;gap:14px">
+                <div style="display:grid;gridTemplateColumns:{{ checkoutGridColumns }};gap:14px">
                   <label style="display:flex;flexDirection:column;gap:4px">
                     <span style="fontSize:11px;letterSpacing:0.4px;color:#9CA68C">Imię</span>
                     <input value="{{ paczkomatForm.imie }}" onChange="{{ onPaczkomatChange_imie }}" placeholder="Imię" style="background:#0F0F0D;border:1px solid rgba(232,231,222,0.15);color:#E8E7DE;padding:12px 14px;fontSize:14px"/>
@@ -1498,7 +1509,7 @@
             </div>
           </div>
 
-          <div style="flex:1;minWidth:280px;background:#33392B;padding:24px;display:flex;flexDirection:column;gap:16px;position:sticky;top:120px">
+          <div style="flex:1;minWidth:min(280px,100%);background:#33392B;padding:24px;display:flex;flexDirection:column;gap:16px;position:sticky;top:120px">
             <sc-for list="{{ cartItems }}" as="c" hint-placeholder-count="1">
               <div style="display:flex;gap:12px;alignItems:center">
                 <div style="width:56px;height:56px;flexShrink:0;background:#0F0F0D">
@@ -1518,6 +1529,9 @@
             <div style="display:flex;justifyContent:space-between;alignItems:center;fontFamily:'Oswald',sans-serif;fontSize:18px;fontWeight:600;paddingTop:12px;borderTop:1px solid rgba(232,231,222,0.12)">
               <span>DO ZAPŁATY</span><span>{{ cartTotalLabel }}</span>
             </div>
+            <sc-if value="{{ hasCheckoutError }}" hint-placeholder-val="{{ false }}">
+              <span style="color:#F2846D;fontSize:13px;lineHeight:1.5">{{ checkoutError }}</span>
+            </sc-if>
             <button onClick="{{ confirmOrder }}" style="background:#A5131D;color:#fff;border:none;padding:16px;fontFamily:'Oswald',sans-serif;fontSize:14px;letterSpacing:1.2px;fontWeight:600;cursor:pointer" style-hover="background:#431517">POTWIERDŹ ZAMÓWIENIE</button>
             <span style="color:#9CA68C;fontSize:12px">Nie zwlekaj, produkty w koszyku nie są rezerwowane.</span>
           </div>
@@ -1529,6 +1543,140 @@
           <span style="fontFamily:'Oswald',sans-serif;fontSize:30px;fontWeight:700">DZIĘKUJEMY!</span>
           <p style="color:#9CA68C;fontSize:15px;lineHeight:1.7;maxWidth:520px">Zamówienie zostało zarejestrowane (demo). Sposób dostawy: {{ deliveryOption }}. Suma: {{ cartTotalLabel }}. Potwierdzenie wyślemy telefonicznie lub e-mailem.</p>
           <button onClick="{{ closeCartFully }}" style="background:transparent;color:#E8E7DE;border:1.5px solid rgba(232,231,222,0.4);padding:14px 26px;fontFamily:'Oswald',sans-serif;fontSize:13px;letterSpacing:1px;fontWeight:600;cursor:pointer" style-hover="border-color:#E8E7DE">WRÓĆ DO SKLEPU</button>
+        </div>
+      </sc-if>
+    </div>
+  </sc-if>
+
+  <!-- ACCOUNT -->
+  <sc-if value="{{ isAccount }}" hint-placeholder-val="{{ false }}">
+    <div style="paddingTop:96px;maxWidth:900px;margin:0 auto;padding:96px 24px 60px">
+      <sc-if value="{{ isLoggedIn }}" hint-placeholder-val="{{ false }}">
+        <p style="font-family:'Oswald',sans-serif;fontSize:13px;letterSpacing:2px;color:rgba(232,231,222,0.65);marginBottom:8px">SPARTANS ASG</p>
+        <h1 style="font-family:'Oswald',sans-serif;fontWeight:700;fontSize:32px;letterSpacing:1px;marginBottom:30px">MOJE KONTO</h1>
+
+        <div style="display:flex;flexWrap:wrap;gap:32px">
+          <div style="flex:2;minWidth:min(280px,100%);display:flex;flexDirection:column;gap:24px">
+            <div style="background:#33392B;padding:24px">
+              <span style="fontFamily:'Oswald',sans-serif;fontSize:13px;letterSpacing:1.5px;color:#E8E7DE;display:block;marginBottom:16px">DANE PROFILU</span>
+              <sc-if value="{{ hasAccountName }}" hint-placeholder-val="{{ false }}">
+                <p style="color:#E8E7DE;fontSize:15px;marginBottom:6px">{{ accountImie }} {{ accountNazwisko }}</p>
+              </sc-if>
+              <p style="color:#9CA68C;fontSize:14px">{{ accountEmail }}</p>
+            </div>
+
+            <div style="background:#33392B;padding:24px">
+              <span style="fontFamily:'Oswald',sans-serif;fontSize:13px;letterSpacing:1.5px;color:#E8E7DE;display:block;marginBottom:16px">HISTORIA ZAMÓWIEŃ</span>
+              <sc-if value="{{ hasAccountOrders }}" hint-placeholder-val="{{ false }}">
+                <div style="display:flex;flexDirection:column;gap:12px">
+                  <sc-for list="{{ accountOrders }}" as="o" hint-placeholder-count="2">
+                    <div style="border:1px solid rgba(232,231,222,0.1);padding:14px 16px;display:flex;justifyContent:space-between;flexWrap:wrap;gap:8px">
+                      <div>
+                        <span style="display:block;fontSize:14px;color:#E8E7DE;fontWeight:500">{{ o.id }}</span>
+                        <span style="display:block;fontSize:12px;color:#9CA68C">{{ o.date }}</span>
+                      </div>
+                      <div style="textAlign:right">
+                        <span style="display:block;fontSize:14px;color:#E8E7DE;fontFamily:'Oswald',sans-serif">{{ o.total }} zł</span>
+                        <span style="display:block;fontSize:12px;color:#9CA68C">{{ o.status }}</span>
+                      </div>
+                    </div>
+                  </sc-for>
+                </div>
+              </sc-if>
+              <sc-if value="{{ !hasAccountOrders }}" hint-placeholder-val="{{ true }}">
+                <p style="color:#9CA68C;fontSize:14px">Nie masz jeszcze żadnych zamówień.</p>
+              </sc-if>
+            </div>
+          </div>
+
+          <div style="flex:1;minWidth:min(220px,100%);display:flex;flexDirection:column;gap:14px">
+            <span tabIndex="0" role="button" onClick="{{ goFavorites }}" style="background:#33392B;padding:16px;cursor:pointer;display:flex;justifyContent:space-between;alignItems:center" style-hover="background:#3d4432">
+              <span style="fontSize:14px;color:#E8E7DE">Ulubione</span>
+              <span style="fontFamily:'Oswald',sans-serif;fontSize:14px;color:#F2846D">{{ favoritesCount }}</span>
+            </span>
+            <span tabIndex="0" role="button" onClick="{{ goCompare }}" style="background:#33392B;padding:16px;cursor:pointer;display:flex;justifyContent:space-between;alignItems:center" style-hover="background:#3d4432">
+              <span style="fontSize:14px;color:#E8E7DE">Porównanie</span>
+              <span style="fontFamily:'Oswald',sans-serif;fontSize:14px;color:#F2846D">{{ compareCount }}</span>
+            </span>
+            <button onClick="{{ goShop }}" style="background:transparent;color:#E8E7DE;border:1px solid rgba(232,231,222,0.3);padding:13px;fontSize:12px;letterSpacing:0.5px;fontWeight:600;cursor:pointer" style-hover="border-color:#E8E7DE">PRZEJDŹ DO SKLEPU</button>
+            <button onClick="{{ logout }}" style="background:transparent;color:#F2846D;border:1px solid rgba(165,19,29,0.4);padding:13px;fontSize:12px;letterSpacing:0.5px;fontWeight:600;cursor:pointer" style-hover="border-color:#F2846D">WYLOGUJ SIĘ</button>
+          </div>
+        </div>
+      </sc-if>
+      <sc-if value="{{ !isLoggedIn }}" hint-placeholder-val="{{ true }}">
+        <div style="display:flex;flexDirection:column;alignItems:flex-start;gap:16px;paddingTop:20px">
+          <h1 style="font-family:'Oswald',sans-serif;fontWeight:700;fontSize:28px;letterSpacing:1px">MOJE KONTO</h1>
+          <p style="color:#9CA68C;fontSize:14px">Zaloguj się, aby zobaczyć swój profil i historię zamówień.</p>
+          <button onClick="{{ onAccountClick }}" style="background:#A5131D;color:#fff;border:none;padding:14px 26px;fontFamily:'Oswald',sans-serif;fontSize:13px;letterSpacing:1.2px;fontWeight:600;cursor:pointer" style-hover="background:#431517">ZALOGUJ SIĘ</button>
+        </div>
+      </sc-if>
+    </div>
+  </sc-if>
+
+  <!-- FAVORITES -->
+  <sc-if value="{{ isFavorites }}" hint-placeholder-val="{{ false }}">
+    <div style="paddingTop:96px;maxWidth:1200px;margin:0 auto;padding:96px 24px 60px">
+      <p style="font-family:'Oswald',sans-serif;fontSize:13px;letterSpacing:2px;color:rgba(232,231,222,0.65);marginBottom:8px">SPARTANS ASG</p>
+      <h1 style="font-family:'Oswald',sans-serif;fontWeight:700;fontSize:32px;letterSpacing:1px;marginBottom:30px">ULUBIONE</h1>
+      <sc-if value="{{ hasFavorites }}" hint-placeholder-val="{{ false }}">
+        <div style="display:grid;gridTemplateColumns:repeat(auto-fill,minmax(220px,1fr));gap:20px">
+          <sc-for list="{{ favoriteProducts }}" as="p" hint-placeholder-count="4">
+            <div tabIndex="0" role="button" style="background:#33392B;border:1px solid rgba(232,231,222,0.08);cursor:pointer;position:relative" onClick="{{ p.onOpen }}" style-hover="border-color:#F2846D">
+              <span tabIndex="0" role="button" aria-label="Usuń z ulubionych" onClick="{{ p.onRemove }}" style="position:absolute;top:10px;right:10px;zIndex:2;width:28px;height:28px;background:rgba(15,15,13,0.7);color:#F2846D;display:flex;alignItems:center;justifyContent:center;cursor:pointer;fontSize:16px">&times;</span>
+              <div style="height:160px;width:100%">
+                <image-slot id="{{ p.slotId }}" shape="rect" placeholder="{{ p.imgHint }}"></image-slot>
+              </div>
+              <div style="padding:14px;display:flex;flexDirection:column;gap:6px">
+                <span style="fontSize:11px;color:#9CA68C;letterSpacing:0.5px">{{ p.brand }}</span>
+                <span style="fontSize:14px;display:block">{{ p.name }}</span>
+                <div style="display:flex;justifyContent:space-between;alignItems:center;marginTop:4px">
+                  <span style="fontFamily:'Oswald',sans-serif;fontSize:16px;fontWeight:600">{{ p.priceLabel }}</span>
+                  <button onClick="{{ p.onAdd }}" style="background:#A5131D;color:#fff;border:none;padding:7px 12px;fontFamily:'Oswald',sans-serif;fontSize:11px;letterSpacing:0.8px;fontWeight:600;cursor:pointer" style-hover="background:#431517">DODAJ</button>
+                </div>
+              </div>
+            </div>
+          </sc-for>
+        </div>
+      </sc-if>
+      <sc-if value="{{ !hasFavorites }}" hint-placeholder-val="{{ true }}">
+        <div style="display:flex;flexDirection:column;alignItems:center;gap:14px;padding:60px 0">
+          <p style="color:#9CA68C;textAlign:center">Nie masz jeszcze żadnych ulubionych produktów.</p>
+          <button onClick="{{ goShop }}" style="background:transparent;color:#E8E7DE;border:1px solid rgba(232,231,222,0.3);padding:12px 22px;fontSize:12px;letterSpacing:0.5px;fontWeight:600;cursor:pointer" style-hover="border-color:#E8E7DE">PRZEJDŹ DO SKLEPU</button>
+        </div>
+      </sc-if>
+    </div>
+  </sc-if>
+
+  <!-- COMPARE -->
+  <sc-if value="{{ isCompare }}" hint-placeholder-val="{{ false }}">
+    <div style="paddingTop:96px;maxWidth:1100px;margin:0 auto;padding:96px 24px 60px">
+      <p style="font-family:'Oswald',sans-serif;fontSize:13px;letterSpacing:2px;color:rgba(232,231,222,0.65);marginBottom:8px">SPARTANS ASG</p>
+      <h1 style="font-family:'Oswald',sans-serif;fontWeight:700;fontSize:32px;letterSpacing:1px;marginBottom:30px">PORÓWNANIE PRODUKTÓW</h1>
+      <sc-if value="{{ hasCompareItems }}" hint-placeholder-val="{{ false }}">
+        <div style="display:grid;gridTemplateColumns:repeat(auto-fit,minmax(220px,1fr));gap:20px">
+          <sc-for list="{{ compareProducts }}" as="p" hint-placeholder-count="2">
+            <div style="background:#33392B;border:1px solid rgba(232,231,222,0.08);position:relative">
+              <span tabIndex="0" role="button" aria-label="Usuń z porównania" onClick="{{ p.onRemove }}" style="position:absolute;top:10px;right:10px;zIndex:2;width:28px;height:28px;background:rgba(15,15,13,0.7);color:#F2846D;display:flex;alignItems:center;justifyContent:center;cursor:pointer;fontSize:16px">&times;</span>
+              <div tabIndex="0" role="button" onClick="{{ p.onOpen }}" style="cursor:pointer;height:150px;width:100%">
+                <image-slot id="{{ p.slotId }}" shape="rect" placeholder="{{ p.imgHint }}"></image-slot>
+              </div>
+              <div style="padding:16px;display:flex;flexDirection:column;gap:8px">
+                <span tabIndex="0" role="button" onClick="{{ p.onOpen }}" style="fontSize:15px;fontWeight:500;cursor:pointer">{{ p.name }}</span>
+                <div style="display:flex;justifyContent:space-between;fontSize:13px;color:#9CA68C"><span>Marka</span><span style="color:#E8E7DE">{{ p.brand }}</span></div>
+                <div style="display:flex;justifyContent:space-between;fontSize:13px;color:#9CA68C"><span>Kategoria</span><span style="color:#E8E7DE">{{ p.category }}</span></div>
+                <div style="display:flex;justifyContent:space-between;fontSize:13px;color:#9CA68C"><span>Dostępność</span><span style="color:#E8E7DE">{{ p.stockLabel }}</span></div>
+                <div style="display:flex;justifyContent:space-between;alignItems:center;marginTop:6px">
+                  <span style="fontFamily:'Oswald',sans-serif;fontSize:18px;fontWeight:600">{{ p.priceLabel }}</span>
+                </div>
+              </div>
+            </div>
+          </sc-for>
+        </div>
+      </sc-if>
+      <sc-if value="{{ !hasCompareItems }}" hint-placeholder-val="{{ true }}">
+        <div style="display:flex;flexDirection:column;alignItems:center;gap:14px;padding:60px 0">
+          <p style="color:#9CA68C;textAlign:center">Nie wybrano jeszcze żadnych produktów do porównania.</p>
+          <button onClick="{{ goShop }}" style="background:transparent;color:#E8E7DE;border:1px solid rgba(232,231,222,0.3);padding:12px 22px;fontSize:12px;letterSpacing:0.5px;fontWeight:600;cursor:pointer" style-hover="border-color:#E8E7DE">PRZEJDŹ DO SKLEPU</button>
         </div>
       </sc-if>
     </div>
@@ -1648,6 +1796,9 @@
         </div>
         <span style="color:#6b6e60;fontSize:12px">&copy; Spartans ASG</span>
       </div>
+      <div style="textAlign:center;paddingTop:16px">
+        <span style="color:#6b6e60;fontSize:12px">Strona stworzona przez <a href="https://danonserver.com" target="_blank" rel="noopener" style="color:#9CA68C;textDecoration:underline">Danon Server</a></span>
+      </div>
     </div>
   </footer>
 
@@ -1706,8 +1857,11 @@ class Component extends DCLogic {
     expandedSidebarCat: null,
     isLoggedIn: false,
     showAuthModal: false,
+    authIntent: 'checkout',
     authTab: 'login',
     authForm: { email: '', password: '', imie: '', nazwisko: '' },
+    authError: null,
+    checkoutError: null,
     u3Tab: 'opis',
     korengalTab: 'opis',
     buyerType: 'Osoba prywatna',
@@ -1727,8 +1881,10 @@ class Component extends DCLogic {
     selectedArchiveEvent: null,
     bannerPaused: false,
     reviewsPaused: false,
-    reminderEmail: '',
-    reminderSubmitted: false,
+    mobileFiltersOpen: false,
+    showAccountMenu: false,
+    favorites: [],
+    compareList: [],
   };
 
   products = [
@@ -2060,6 +2216,16 @@ class Component extends DCLogic {
     };
     document.addEventListener('keydown', this._onKeydownActivate);
 
+    // Brand strip: always the full static list (doesn't reshuffle when a
+    // category filter narrows it), auto-advances one card at a time, loops
+    // back to the start at the end, and pauses while the pointer is over it.
+    this._brandsTimer = setInterval(() => {
+      const el = this._brandsRef;
+      if (!el || this._brandsHover) return;
+      if (el.scrollLeft + el.clientWidth >= el.scrollWidth - 4) el.scrollTo({ left: 0, behavior: 'smooth' });
+      else el.scrollBy({ left: 182, behavior: 'smooth' });
+    }, 3000);
+
     // Cart survives a refresh instead of silently emptying.
     const savedCart = this.loadPersistedCart();
     if (savedCart && savedCart.length) this.setState({ cart: savedCart });
@@ -2087,7 +2253,7 @@ class Component extends DCLogic {
   parseRoute = () => {
     const raw = (typeof window !== 'undefined' ? window.location.hash : '').replace(/^#\/?/, '');
     const parts = raw.split('/').filter(Boolean).map((p) => { try { return decodeURIComponent(p); } catch (e) { return p; } });
-    const known = ['home', 'shop', 'product', 'events', 'korengal', 'u3', 'about', 'gallery', 'eventy', 'info', 'checkout', 'cart'];
+    const known = ['home', 'shop', 'product', 'events', 'korengal', 'u3', 'about', 'gallery', 'eventy', 'info', 'checkout', 'cart', 'account', 'favorites', 'compare'];
     if (parts[0] === 'product' && parts[1]) return { view: 'product', selectedProductId: parts[1] };
     if (parts[0] === 'shop' && parts[1]) return { view: 'shop', category: parts[1] };
     if (known.includes(parts[0])) return { view: parts[0] };
@@ -2133,6 +2299,7 @@ class Component extends DCLogic {
     window.removeEventListener('resize', this._onResize);
     window.removeEventListener('hashchange', this._onHashChange);
     document.removeEventListener('keydown', this._onKeydownActivate);
+    clearInterval(this._brandsTimer);
   }
 
   setView = (v) => {
@@ -2151,6 +2318,48 @@ class Component extends DCLogic {
   };
 
   toggleMobileMenu = () => this.setState(s => ({ mobileMenuOpen: !s.mobileMenuOpen }));
+  openMobileFilters = () => this.setState({ mobileFiltersOpen: true });
+  closeMobileFilters = () => this.setState({ mobileFiltersOpen: false });
+
+  // Account / profile: the header icon used to be decorative. It now opens
+  // the login modal for a guest, or the account page once logged in.
+  onAccountClick = () => {
+    if (!this.state.isLoggedIn) { this.setState({ showAuthModal: true, authIntent: 'account' }); return; }
+    this.setView('account');
+  };
+  logout = () => { this.setState({ isLoggedIn: false }); this.setView('home'); };
+
+  // Favorites / comparison: both are gated behind login, same pattern as
+  // checkout — clicking while logged out opens the auth modal instead of
+  // silently doing nothing. authIntent remembers which of these opened the
+  // modal so submitAuth can land back on the right page instead of always
+  // jumping to checkout.
+  toggleFavorite = (id) => {
+    if (!this.state.isLoggedIn) { this.setState({ showAuthModal: true, authIntent: 'favorites' }); return; }
+    this.setState(s => {
+      const has = s.favorites.includes(id);
+      return { favorites: has ? s.favorites.filter(f => f !== id) : [...s.favorites, id] };
+    });
+  };
+  removeFavorite = (id) => this.setState(s => ({ favorites: s.favorites.filter(f => f !== id) }));
+  goFavorites = () => {
+    if (!this.state.isLoggedIn) { this.setState({ showAuthModal: true, authIntent: 'favorites' }); return; }
+    this.setView('favorites');
+  };
+  toggleCompare = (id) => {
+    if (!this.state.isLoggedIn) { this.setState({ showAuthModal: true, authIntent: 'compare' }); return; }
+    this.setState(s => {
+      const has = s.compareList.includes(id);
+      if (has) return { compareList: s.compareList.filter(f => f !== id) };
+      const next = s.compareList.length >= 4 ? s.compareList.slice(1) : s.compareList;
+      return { compareList: [...next, id] };
+    });
+  };
+  removeCompare = (id) => this.setState(s => ({ compareList: s.compareList.filter(f => f !== id) }));
+  goCompare = () => {
+    if (!this.state.isLoggedIn) { this.setState({ showAuthModal: true, authIntent: 'compare' }); return; }
+    this.setView('compare');
+  };
   toggleCart = () => this.setState(s => ({ cartOpen: !s.cartOpen }));
   goShopFromCart = () => { this.setState({ cartOpen: false }); this.setView('shop'); };
   stopProp = (e) => e.stopPropagation();
@@ -2184,19 +2393,29 @@ class Component extends DCLogic {
     this._toastTimer = setTimeout(() => this.setState({ toast: null }), 2200);
   };
   goToCheckout = () => {
-    if (!this.state.isLoggedIn) { this.setState({ showAuthModal: true }); return; }
+    if (!this.state.isLoggedIn) { this.setState({ showAuthModal: true, authIntent: 'checkout' }); return; }
     this.setState({ cartOpen: false, checkoutStep: 'delivery' }); this.setView('checkout');
   };
   goToCartPage = () => { this.setState({ cartOpen: false }); this.setView('cart'); };
   clearCart = () => this.setState({ cart: [] }, this.persistCart);
-  setAuthTab = (t) => this.setState({ authTab: t });
+  setAuthTab = (t) => this.setState({ authTab: t, authError: null });
   updateAuthField = (field, value) => this.setState(s => ({ authForm: { ...s.authForm, [field]: value } }));
   submitAuth = () => {
+    const { authForm, authTab } = this.state;
+    const email = (authForm.email || '').trim(), password = (authForm.password || '').trim();
+    const imie = (authForm.imie || '').trim(), nazwisko = (authForm.nazwisko || '').trim();
+    const missingRegisterFields = authTab === 'register' && (!imie || !nazwisko);
+    if (!email || !password || missingRegisterFields) {
+      this.setState({ authError: 'Uzupełnij wszystkie pola, aby kontynuować.' });
+      return;
+    }
+    const intent = this.state.authIntent || 'checkout';
     this.setState(s => ({
-      isLoggedIn: true, showAuthModal: false, cartOpen: false, checkoutStep: 'delivery',
-      buyerForm: { imie: s.authForm.imie || 'Jan', nazwisko: s.authForm.nazwisko || 'Kowalski', telefon: '500 100 200', email: s.authForm.email || 'jan.kowalski@gmail.com' },
+      isLoggedIn: true, showAuthModal: false, cartOpen: false,
+      checkoutStep: intent === 'checkout' ? 'delivery' : s.checkoutStep, authError: null,
+      buyerForm: { ...s.buyerForm, imie: imie || s.buyerForm.imie, nazwisko: nazwisko || s.buyerForm.nazwisko, email },
     }));
-    this.setView('checkout');
+    this.setView(intent);
   };
   continueAsGuest = () => { this.setState({ showAuthModal: false, cartOpen: false, checkoutStep: 'delivery' }); this.setView('checkout'); };
   closeAuthModal = () => this.setState({ showAuthModal: false });
@@ -2211,6 +2430,20 @@ class Component extends DCLogic {
   setDeliveryOption = (v) => this.setState({ deliveryOption: v, selectedPaczkomat: null });
   confirmOrder = () => {
     const { cart, buyerForm, deliveryOption, courierForm, paczkomatForm, selectedPaczkomat, paymentMethod } = this.state;
+    const missing = (v) => !(v || '').trim();
+    if (missing(buyerForm.imie) || missing(buyerForm.nazwisko) || missing(buyerForm.telefon) || missing(buyerForm.email)) {
+      this.setState({ checkoutError: 'Podaj imię, nazwisko, numer telefonu i e-mail, aby złożyć zamówienie.' });
+      return;
+    }
+    if (deliveryOption === 'Kurier' && (missing(courierForm.imie) || missing(courierForm.nazwisko) || missing(courierForm.adres) || missing(courierForm.kod) || missing(courierForm.miasto) || missing(courierForm.telefon))) {
+      this.setState({ checkoutError: 'Uzupełnij pełny adres i telefon do dostawy kurierem.' });
+      return;
+    }
+    if (deliveryOption === 'Paczkomat' && (missing(paczkomatForm.imie) || missing(paczkomatForm.nazwisko) || missing(paczkomatForm.telefon) || !selectedPaczkomat)) {
+      this.setState({ checkoutError: 'Uzupełnij dane odbiorcy i wybierz paczkomat.' });
+      return;
+    }
+    this.setState({ checkoutError: null });
     const items = cart.map(c => {
       const p = this.products.find(pp => pp.id === c.id);
       return { name: p ? p.name : c.id, qty: c.qty, price: p ? p.price : 0 };
@@ -2238,47 +2471,57 @@ class Component extends DCLogic {
   changeQty = (id, delta) => this.setState(s => ({ cart: s.cart.map(c => c.id === id ? { ...c, qty: Math.max(1, c.qty + delta) } : c) }), this.persistCart);
 
   setSearch = (v) => this.setState({ search: v });
+  // Any filter changing the result set jumps back to the top of the shop —
+  // otherwise the grid refreshes off-screen and looks like nothing happened.
+  scrollShopTop = () => window.scrollTo({ top: 0, behavior: 'smooth' });
   setCategory = (v) => {
     this.setState({ category: v, weightFilter: 'Wszystkie', akcSubFilter: 'Wszystkie', subFilter: 'Wszystkie', brandFilter: [], brandsExpanded: false });
     if (this.state.view === 'shop') this.syncRoute(v === 'Wszystkie' ? '#/shop' : '#/shop/' + encodeURIComponent(v), false);
+    this.scrollShopTop();
   };
   selectSidebarCategory = (cat, hasSubs) => { this.setCategory(cat); if (hasSubs) this.toggleSidebarCat(cat); };
-  setWeightFilter = (v) => this.setState({ weightFilter: v });
+  setWeightFilter = (v) => { this.setState({ weightFilter: v }); this.scrollShopTop(); };
   setAkcSubFilter = (v) => this.setState({ akcSubFilter: v });
-  setSubFilter = (v) => this.setState({ subFilter: v });
+  setSubFilter = (v) => { this.setState({ subFilter: v }); this.scrollShopTop(); };
   toggleSidebarCat = (cat) => this.setState(s => ({ expandedSidebarCat: s.expandedSidebarCat === cat ? null : cat }));
-  toggleBrandFilter = (b) => this.setState(s => ({ brandFilter: s.brandFilter.includes(b) ? s.brandFilter.filter(x => x !== b) : [...s.brandFilter, b] }));
+  toggleBrandFilter = (b) => { this.setState(s => ({ brandFilter: s.brandFilter.includes(b) ? s.brandFilter.filter(x => x !== b) : [...s.brandFilter, b] })); this.scrollShopTop(); };
   // Only-by-brand pills (top of shop): must ignore category, showing that brand across the whole catalog.
-  filterByBrandOnly = (b) => this.setState({
-    category: 'Wszystkie', weightFilter: 'Wszystkie', akcSubFilter: 'Wszystkie', subFilter: 'Wszystkie',
-    brandFilter: [b], brandsExpanded: false,
-  });
+  filterByBrandOnly = (b) => {
+    this.setState({
+      category: 'Wszystkie', weightFilter: 'Wszystkie', akcSubFilter: 'Wszystkie', subFilter: 'Wszystkie',
+      brandFilter: [b], brandsExpanded: false,
+    });
+    this.scrollShopTop();
+  };
   toggleBrandsExpanded = () => this.setState(s => ({ brandsExpanded: !s.brandsExpanded }));
   setPriceDraft = (which, v) => this.setState({ [which]: v });
-  applyPriceRange = () => this.setState(s => ({
-    priceRange: [Number(s.priceMinDraft) || 0, Number(s.priceMaxDraft) || 999999],
-  }));
-  toggleOnly = (key) => this.setState(s => ({ [key]: !s[key] }));
-  resetPriceRange = () => this.setState({ priceRange: [0, 1400], priceMinDraft: '', priceMaxDraft: '' });
-  clearAllFilters = () => this.setState({
-    category: 'Wszystkie', weightFilter: 'Wszystkie', akcSubFilter: 'Wszystkie', subFilter: 'Wszystkie',
-    brandFilter: [], priceRange: [0, 1400], priceMinDraft: '', priceMaxDraft: '',
-    onlyBestseller: false, onlyPromocja: false, onlyDostepne: false, search: '',
-  });
+  applyPriceRange = () => {
+    this.setState(s => ({
+      priceRange: [Number(s.priceMinDraft) || 0, Number(s.priceMaxDraft) || 999999],
+    }));
+    this.scrollShopTop();
+  };
+  toggleOnly = (key) => { this.setState(s => ({ [key]: !s[key] })); this.scrollShopTop(); };
+  resetPriceRange = () => { this.setState({ priceRange: [0, 1400], priceMinDraft: '', priceMaxDraft: '' }); this.scrollShopTop(); };
+  clearAllFilters = () => {
+    this.setState({
+      category: 'Wszystkie', weightFilter: 'Wszystkie', akcSubFilter: 'Wszystkie', subFilter: 'Wszystkie',
+      brandFilter: [], priceRange: [0, 1400], priceMinDraft: '', priceMaxDraft: '',
+      onlyBestseller: false, onlyPromocja: false, onlyDostepne: false, search: '',
+    });
+    this.scrollShopTop();
+  };
   setSort = (v) => this.setState({ sort: v });
   goBanner = (i) => this.setState({ bannerIndex: i });
   toggleBannerPause = () => this.setState(s => ({ bannerPaused: !s.bannerPaused }));
   toggleReviewsPause = () => this.setState(s => ({ reviewsPaused: !s.reviewsPaused }));
-  onReminderEmailChange = (e) => this.setState({ reminderEmail: e.target.value });
-  // No backend behind this demo shop (checkout is the same — see confirmOrder),
-  // so this only captures the intent locally rather than silently pretending
-  // to send real reminders.
-  submitReminder = () => { if (this.state.reminderEmail.trim()) this.setState({ reminderSubmitted: true }); };
   nextBanner = () => this.setState(s => ({ bannerIndex: (s.bannerIndex + 1) % this.shopBanners.length }));
   prevBanner = () => this.setState(s => ({ bannerIndex: (s.bannerIndex - 1 + this.shopBanners.length) % this.shopBanners.length }));
   setBrandsRef = (el) => { this._brandsRef = el; };
   scrollBrandsLeft = () => { if (this._brandsRef) this._brandsRef.scrollBy({ left: -200, behavior: 'smooth' }); };
   scrollBrandsRight = () => { if (this._brandsRef) this._brandsRef.scrollBy({ left: 200, behavior: 'smooth' }); };
+  pauseBrandsScroll = () => { this._brandsHover = true; };
+  resumeBrandsScroll = () => { this._brandsHover = false; };
 
   openProduct = (id) => {
     window.scrollTo(0, 0);
@@ -2296,7 +2539,7 @@ class Component extends DCLogic {
   openArchiveEvent = (i) => { window.scrollTo(0, 0); this.setState({ selectedArchiveEvent: i }); };
   closeArchiveEvent = () => this.setState({ selectedArchiveEvent: null });
   renderVals() {
-    const { view, scrolled, isMobile, mobileMenuOpen, cartOpen, cart, search, category, sort, selectedProductId, eventsTab, productQty, productVariant, selectedAlbum, lightboxSlotId, checkoutStep, deliveryOption, toast, weightFilter, akcSubFilter, subFilter, bannerIndex, expandedSidebarCat, brandFilter, brandsExpanded, priceMinDraft, priceMaxDraft, priceRange, onlyBestseller, onlyPromocja, onlyDostepne, courierForm, paczkomatForm, selectedPaczkomat, selectedArchiveEvent, bannerPaused, reviewsPaused, reminderEmail, reminderSubmitted } = this.state;
+    const { view, scrolled, isMobile, mobileMenuOpen, cartOpen, cart, search, category, sort, selectedProductId, eventsTab, productQty, productVariant, selectedAlbum, lightboxSlotId, checkoutStep, deliveryOption, toast, weightFilter, akcSubFilter, subFilter, bannerIndex, expandedSidebarCat, brandFilter, brandsExpanded, priceMinDraft, priceMaxDraft, priceRange, onlyBestseller, onlyPromocja, onlyDostepne, courierForm, paczkomatForm, selectedPaczkomat, selectedArchiveEvent, bannerPaused, reviewsPaused } = this.state;
 
     const badgeFor = (p) => {
       if (p.bestseller) return { badge: 'BESTSELLER', badgeBg: '#A5131D' };
@@ -2405,13 +2648,14 @@ class Component extends DCLogic {
     }
 
     const navItems = [
-      { label: 'STRONA GŁÓWNA', onClick: () => this.setView('home'), color: view === 'home' ? '#E8E7DE' : '#67705D' },
-      { label: 'SKLEP', onClick: () => this.setView('shop'), color: (view === 'shop' || view === 'product') ? '#E8E7DE' : '#67705D' },
-      { label: 'WYDARZENIA', onClick: () => this.setView('events'), color: (view === 'events' || view === 'korengal') ? '#E8E7DE' : '#67705D' },
-      { label: 'GALERIA', onClick: () => this.setView('gallery'), color: view === 'gallery' ? '#E8E7DE' : '#67705D' },
-      { label: 'EVENTY', onClick: () => this.setView('eventy'), color: view === 'eventy' ? '#E8E7DE' : '#67705D' },
-      { label: 'O NAS', onClick: () => this.setView('about'), color: view === 'about' ? '#E8E7DE' : '#67705D' },
-      { label: 'KONTAKT', onClick: () => this.scrollToHome('kontakt'), color: '#67705D' },
+      { label: 'STRONA GŁÓWNA', onClick: () => this.setView('home'), color: view === 'home' ? '#E8E7DE' : '#9CA68C' },
+      // Sklep stays red at all times — it's the nav item that actually drives sales.
+      { label: 'SKLEP', onClick: () => this.setView('shop'), color: '#F2846D' },
+      { label: 'WYDARZENIA', onClick: () => this.setView('events'), color: (view === 'events' || view === 'korengal') ? '#E8E7DE' : '#9CA68C' },
+      { label: 'GALERIA', onClick: () => this.setView('gallery'), color: view === 'gallery' ? '#E8E7DE' : '#9CA68C' },
+      { label: 'EVENTY', onClick: () => this.setView('eventy'), color: view === 'eventy' ? '#E8E7DE' : '#9CA68C' },
+      { label: 'O NAS', onClick: () => this.setView('about'), color: view === 'about' ? '#E8E7DE' : '#9CA68C' },
+      { label: 'KONTAKT', onClick: () => this.scrollToHome('kontakt'), color: '#9CA68C' },
     ];
 
     const serviceHighlights = [
@@ -2439,14 +2683,49 @@ class Component extends DCLogic {
     return {
       view, isMobile, mobileMenuOpen, cartOpen,
       showDesktopNav: !isMobile,
-      // Shop layout: the filter sidebar sits beside the product grid on desktop but has
-      // nowhere to go on a phone-width viewport (no room to shrink, nothing to wrap to),
-      // so it stacks above the grid instead below the isMobile breakpoint.
+      // Shop layout: on desktop the filter sidebar sits beside the product grid.
+      // On mobile it would otherwise eat the whole screen before a single product
+      // shows, so it's hidden by default and opens as a bottom sheet instead.
       shopBodyDirection: isMobile ? 'column' : 'row',
       shopSidebarWidth: isMobile ? '100%' : '250px',
-      shopSidebarPosition: isMobile ? 'static' : 'sticky',
+      shopSidebarPosition: isMobile ? 'fixed' : 'sticky',
       shopSidebarTop: isMobile ? 'auto' : '120px',
-      shopSidebarMaxHeight: isMobile ? 'none' : 'calc(100vh - 140px)',
+      shopSidebarBottom: isMobile ? '0' : 'auto',
+      shopSidebarLeft: isMobile ? '0' : 'auto',
+      shopSidebarRight: isMobile ? '0' : 'auto',
+      shopSidebarMaxHeight: isMobile ? '82vh' : 'calc(100vh - 140px)',
+      shopSidebarZ: isMobile ? 65 : 1,
+      shopSidebarBg: isMobile ? '#171812' : 'transparent',
+      shopSidebarExtraPadding: isMobile ? '18px 18px 24px' : '0',
+      shopSidebarShadow: isMobile ? '0 -10px 30px rgba(0,0,0,0.55)' : 'none',
+      shopSidebarRadius: isMobile ? '16px 16px 0 0' : '0',
+      shopSidebarVisible: !isMobile || this.state.mobileFiltersOpen,
+      showMobileFilterFab: isMobile && !this.state.mobileFiltersOpen,
+      mobileFiltersOpen: this.state.mobileFiltersOpen,
+      openMobileFilters: this.openMobileFilters,
+      closeMobileFilters: this.closeMobileFilters,
+      shopGridColumns: isMobile ? 'repeat(2,1fr)' : 'repeat(auto-fill,minmax(230px,1fr))',
+      shopGridGap: isMobile ? '10px' : '20px',
+      // Home page: two hardcoded fixed-column grids (services, featured products)
+      // used to force the whole page wider than the viewport on mobile instead
+      // of reflowing, since a flex/grid item's min-content width wins over its
+      // container even inside flex-wrap.
+      wsparciePadding: isMobile ? '0 16px' : '0 40px',
+      wsparcieMinWidth: isMobile ? '100%' : '280px',
+      serviceGridColumns: isMobile ? 'repeat(2,1fr)' : 'repeat(3,1fr)',
+      homeFeaturedColumns: isMobile ? 'repeat(2,1fr)' : 'repeat(4,1fr)',
+      cartImgSize: isMobile ? '64px' : '80px',
+      cartRowGap: isMobile ? '10px' : '16px',
+      // Checkout forms (buyer / courier / paczkomat / invoice) all use a 2-column
+      // grid whose inputs don't shrink below their default min-content width,
+      // forcing the whole page wider than a phone viewport. Single column on mobile.
+      checkoutGridColumns: isMobile ? '1fr' : '1fr 1fr',
+      shopCardImgHeight: isMobile ? '120px' : '190px',
+      shopCardPadding: isMobile ? '10px' : '16px',
+      shopCardNamePx: isMobile ? '13px' : '15px',
+      shopCardPricePx: isMobile ? '15px' : '18px',
+      shopCardAddPad: isMobile ? '7px 10px' : '8px 14px',
+      shopCardAddPx: isMobile ? '10px' : '12px',
       navBg: (scrolled || view !== 'home' || isMobile) ? 'rgba(13,14,10,0.96)' : 'rgba(13,14,10,0.15)',
       navBorder: (scrolled || view !== 'home' || isMobile) ? '1px solid rgba(232,231,222,0.12)' : '1px solid transparent',
       mobileMenuIcon: mobileMenuOpen ? '\u2715' : '\u2630',
@@ -2463,15 +2742,17 @@ class Component extends DCLogic {
       korengalTabs: [
         { key: 'opis', label: 'OPIS WYDARZENIA' },
         { key: 'cennik', label: 'CENNIK' },
-        { key: 'zapisy', label: 'ZAPISY' },
         { key: 'organizator', label: 'CO ZAPEWNIA ORGANIZATOR' },
         { key: 'moderatorzy', label: 'MODERATORZY' },
         { key: 'wymagania', label: 'WYMAGANIA FRAKCJI' },
         { key: 'zasady', label: 'ZASADY GRY I BEZPIECZEŃSTWO' },
         { key: 'mapa', label: 'MAPA' },
+        { key: 'zapisy', label: 'ZAPISY' },
       ].map(t => ({
         label: t.label, onClick: () => this.setKorengalTab(t.key),
-        color: this.state.korengalTab === t.key ? '#E8E7DE' : '#67705D',
+        // Zapisy stays red at all times — it's the tab that actually converts,
+        // so it keeps its own visual weight instead of blending in until active.
+        color: t.key === 'zapisy' ? '#F2846D' : (this.state.korengalTab === t.key ? '#E8E7DE' : '#9CA68C'),
         border: this.state.korengalTab === t.key ? '2px solid #A5131D' : '2px solid transparent',
       })),
 
@@ -2529,17 +2810,57 @@ class Component extends DCLogic {
         { key: 'bezpieczenstwo', label: 'ZASADY BEZPIECZEŃSTWA' },
       ].map(t => ({
         label: t.label, onClick: () => this.setU3Tab(t.key),
-        color: this.state.u3Tab === t.key ? '#E8E7DE' : '#67705D',
+        color: this.state.u3Tab === t.key ? '#E8E7DE' : '#9CA68C',
         border: this.state.u3Tab === t.key ? '2px solid #A5131D' : '2px solid transparent',
       })),
       isGallery: view === 'gallery', isCheckout: view === 'checkout', isCart: view === 'cart', isEventy: view === 'eventy',
+      isAccount: view === 'account', isFavorites: view === 'favorites', isCompare: view === 'compare',
+      onAccountClick: this.onAccountClick, logout: this.logout,
+      accountAriaLabel: this.state.isLoggedIn ? 'Moje konto' : 'Zaloguj się',
+      accountImie: this.state.buyerForm.imie, accountNazwisko: this.state.buyerForm.nazwisko,
+      accountEmail: this.state.buyerForm.email, hasAccountName: !!(this.state.buyerForm.imie || this.state.buyerForm.nazwisko),
+      accountOrders: this.state.orders, hasAccountOrders: this.state.orders.length > 0,
+      goFavorites: this.goFavorites, goCompare: this.goCompare,
+      favoritesCount: this.state.favorites.length, hasFavorites: this.state.favorites.length > 0,
+      favoritesAriaLabel: this.state.favorites.length > 0 ? 'Ulubione, liczba produktów: ' + this.state.favorites.length : 'Ulubione (puste)',
+      compareCount: this.state.compareList.length, hasCompareItems: this.state.compareList.length > 0,
+      favoriteProducts: this.state.favorites.map(id => {
+        const p = this.products.find(pp => pp.id === id);
+        if (!p) return null;
+        return {
+          id: p.id, name: p.name, brand: p.brand, category: p.category, priceLabel: p.price + ' zł',
+          slotId: p.slotId, imgHint: p.imgHint,
+          onOpen: () => this.openProduct(p.id),
+          onAdd: (e) => { e.stopPropagation(); this.addToCart(p.id, 1, true); },
+          onRemove: (e) => { e.stopPropagation(); this.removeFavorite(p.id); },
+        };
+      }).filter(Boolean),
+      compareProducts: this.state.compareList.map(id => {
+        const p = this.products.find(pp => pp.id === id);
+        if (!p) return null;
+        return {
+          id: p.id, name: p.name, brand: p.brand, category: p.category, weight: p.weight || '—',
+          priceLabel: p.price + ' zł', stockLabel: p.stan > 0 ? 'Dostępny' : 'Niedostępny',
+          slotId: p.slotId, imgHint: p.imgHint,
+          onOpen: () => this.openProduct(p.id),
+          onRemove: (e) => { e.stopPropagation(); this.removeCompare(p.id); },
+        };
+      }).filter(Boolean),
       goToCartPage: this.goToCartPage, clearCart: this.clearCart,
       showAuthModal: this.state.showAuthModal, closeAuthModal: this.closeAuthModal,
+      authError: this.state.authError, hasAuthError: !!this.state.authError,
+      isCheckoutIntent: (this.state.authIntent || 'checkout') === 'checkout',
+      authModalSubtitle: {
+        checkout: 'Zaloguj się lub kontynuuj jako gość, aby przejść do dostawy.',
+        account: 'Zaloguj się, aby zobaczyć swój profil i historię zamówień.',
+        favorites: 'Zaloguj się, aby zapisywać ulubione produkty.',
+        compare: 'Zaloguj się, aby porównywać produkty.',
+      }[this.state.authIntent || 'checkout'],
       isLoginTab: this.state.authTab === 'login', isRegisterTab: this.state.authTab === 'register',
       onLoginTab: () => this.setAuthTab('login'), onRegisterTab: () => this.setAuthTab('register'),
-      loginTabColor: this.state.authTab === 'login' ? '#E8E7DE' : '#67705D',
+      loginTabColor: this.state.authTab === 'login' ? '#E8E7DE' : '#9CA68C',
       loginTabBorder: this.state.authTab === 'login' ? '2px solid #A5131D' : '2px solid transparent',
-      registerTabColor: this.state.authTab === 'register' ? '#E8E7DE' : '#67705D',
+      registerTabColor: this.state.authTab === 'register' ? '#E8E7DE' : '#9CA68C',
       registerTabBorder: this.state.authTab === 'register' ? '2px solid #A5131D' : '2px solid transparent',
       authEmail: this.state.authForm.email, authPassword: this.state.authForm.password,
       authImie: this.state.authForm.imie, authNazwisko: this.state.authForm.nazwisko,
@@ -2569,7 +2890,7 @@ class Component extends DCLogic {
       onSortChange: (e) => this.setSort(e.target.value),
       onSearchChange: (e) => this.setSearch(e.target.value),
       products: productsOut, hasProducts: productsOut.length > 0, hasNoProducts: productsOut.length === 0, productCount: productsOut.length,
-      activeFilterChips, hasActiveFilters: activeFilterChips.length > 0,
+      activeFilterChips, hasActiveFilters: activeFilterChips.length > 0, activeFilterCount: activeFilterChips.length,
       isAmunicjaCategory: category === 'Kulki ASG',
       isAkcesoriaCategory: false,
       weightOptions: ['Wszystkie', '0.20g', '0.25g', '0.28g', '0.32g'].map(w => ({
@@ -2597,6 +2918,9 @@ class Component extends DCLogic {
         bg: i === bannerIndex ? '#A5131D' : 'rgba(232,231,222,0.3)',
         ariaLabel: 'Baner ' + (i + 1) + ': ' + b.title,
       })),
+      // Bug fix: these were defined as class methods but never actually
+      // exposed to the template, so the arrows silently did nothing.
+      prevBanner: this.prevBanner, nextBanner: this.nextBanner,
       toggleBannerPause: this.toggleBannerPause,
       bannerPauseIcon: bannerPaused ? '▶' : '⏸',
       bannerPauseLabel: bannerPaused ? 'Wznów automatyczne przewijanie banerów' : 'Zatrzymaj automatyczne przewijanie banerów',
@@ -2604,11 +2928,11 @@ class Component extends DCLogic {
       reviewsPauseIcon: reviewsPaused ? '▶' : '⏸',
       reviewsPauseText: reviewsPaused ? 'Wznów' : 'Pauza',
       reviewsPauseLabel: reviewsPaused ? 'Wznów automatyczne przewijanie opinii' : 'Zatrzymaj automatyczne przewijanie opinii',
-      reminderEmail, reminderSubmitted,
-      onReminderEmailChange: this.onReminderEmailChange,
-      submitReminder: this.submitReminder,
-      categoryBrands: [...new Set(this.products.filter(p => category === 'Wszystkie' || (category === 'Promocje' ? p.promo === true : p.category === category)).map(p => p.brand))].sort().map(b => ({ name: b, onClick: () => this.filterByBrandOnly(b) })),
+      // Static regardless of the active category filter — this strip is a
+      // browse-by-brand shortcut, not a live reflection of the current filter.
+      categoryBrands: this.shopBrands.map(b => ({ name: b, onClick: () => this.filterByBrandOnly(b) })),
       setBrandsRef: this.setBrandsRef, scrollBrandsLeft: this.scrollBrandsLeft, scrollBrandsRight: this.scrollBrandsRight,
+      pauseBrandsScroll: this.pauseBrandsScroll, resumeBrandsScroll: this.resumeBrandsScroll,
       brandFilterOptions: [...new Set(this.products.filter(p => category === 'Wszystkie' || (category === 'Promocje' ? p.promo === true : p.category === category)).map(p => p.brand))].sort().map(b => ({
         label: b, count: this.products.filter(p => p.brand === b && (category === 'Wszystkie' || (category === 'Promocje' ? p.promo === true : p.category === category))).length,
         isChecked: brandFilter.includes(b), onClick: () => this.toggleBrandFilter(b),
@@ -2665,6 +2989,7 @@ class Component extends DCLogic {
       cartItems, hasCartItems: cartItems.length > 0, hasNoCartItems: cartItems.length === 0, goShopFromCart: this.goShopFromCart,
       toast, hasToast: !!toast,
       checkoutStep, isDeliveryFormStep: checkoutStep === 'delivery', isConfirmedStep: checkoutStep === 'confirmed',
+      checkoutError: this.state.checkoutError, hasCheckoutError: !!this.state.checkoutError,
       goToCheckout: this.goToCheckout, backToShop: this.backToShop, confirmOrder: this.confirmOrder, closeCartFully: this.closeCartFully,
       deliveryOptions: [
         { label: 'Kurier', desc: 'Dostawa pod wskazany adres', price: '14,99 zł' },
@@ -2736,12 +3061,22 @@ class Component extends DCLogic {
       productVariant: productVariant || (selectedProduct ? selectedProduct.variants[0] : null),
       onVariantChange: (e) => this.setProductVariant(e.target.value),
       addSelectedToCart: () => selectedProduct && this.addToCart(selectedProduct.id, productQty || 1, true),
+      isSelectedFavorite: !!(selectedProduct && this.state.favorites.includes(selectedProduct.id)),
+      selectedFavoriteLabel: (selectedProduct && this.state.favorites.includes(selectedProduct.id)) ? 'USUŃ Z ULUBIONYCH' : 'DODAJ DO ULUBIONYCH',
+      selectedFavoriteBorder: (selectedProduct && this.state.favorites.includes(selectedProduct.id)) ? '1px solid #F2846D' : '1px solid rgba(232,231,222,0.15)',
+      selectedFavoriteColor: (selectedProduct && this.state.favorites.includes(selectedProduct.id)) ? '#F2846D' : '#E8E7DE',
+      toggleSelectedFavorite: () => selectedProduct && this.toggleFavorite(selectedProduct.id),
+      isSelectedInCompare: !!(selectedProduct && this.state.compareList.includes(selectedProduct.id)),
+      selectedCompareLabel: (selectedProduct && this.state.compareList.includes(selectedProduct.id)) ? 'USUŃ Z PORÓWNANIA' : 'DODAJ DO PORÓWNANIA',
+      selectedCompareBorder: (selectedProduct && this.state.compareList.includes(selectedProduct.id)) ? '1px solid #F2846D' : '1px solid rgba(232,231,222,0.15)',
+      selectedCompareColor: (selectedProduct && this.state.compareList.includes(selectedProduct.id)) ? '#F2846D' : '#E8E7DE',
+      toggleSelectedCompare: () => selectedProduct && this.toggleCompare(selectedProduct.id),
       related,
       eventsTab, showingNearest: eventsTab === 'nearest', showingArchive: eventsTab === 'archive',
       showNearest: () => this.setEventsTab('nearest'), showArchive: () => this.setEventsTab('archive'),
-      nearestTabColor: eventsTab === 'nearest' ? '#E8E7DE' : '#67705D',
+      nearestTabColor: eventsTab === 'nearest' ? '#E8E7DE' : '#9CA68C',
       nearestTabBorder: eventsTab === 'nearest' ? '2px solid #A5131D' : '2px solid transparent',
-      archiveTabColor: eventsTab === 'archive' ? '#E8E7DE' : '#67705D',
+      archiveTabColor: eventsTab === 'archive' ? '#E8E7DE' : '#9CA68C',
       archiveTabBorder: eventsTab === 'archive' ? '2px solid #A5131D' : '2px solid transparent',
     };
   }
