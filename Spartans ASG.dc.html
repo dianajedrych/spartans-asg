@@ -1420,85 +1420,6 @@
     </div>
   </sc-if>
 
-  <!-- ADMIN PANEL -->
-  <sc-if value="{{ isAdmin }}" hint-placeholder-val="{{ false }}">
-    <div style="paddingTop:40px;maxWidth:1400px;margin:0 auto;padding:40px 24px 100px">
-      <div style="display:flex;justifyContent:space-between;alignItems:center;flexWrap:wrap;gap:16px;marginBottom:28px">
-        <h1 style="font-family:'Oswald',sans-serif;fontWeight:700;fontSize:26px;letterSpacing:1px">PANEL ADMINISTRATORA</h1>
-        <span onClick="{{ goHome }}" style="color:#67705D;fontSize:13px;cursor:pointer" style-hover="color:#E8E7DE">&larr; Wróć do sklepu</span>
-      </div>
-      <div style="display:flex;gap:24px;marginBottom:32px;borderBottom:1px solid rgba(232,231,222,0.12)">
-        <span onClick="{{ onAdminTabOrders }}" style="fontFamily:'Oswald',sans-serif;fontSize:13px;letterSpacing:1px;padding:0 0 14px;cursor:pointer;color:{{ isAdminOrders ? '#E8E7DE' : '#67705D' }};borderBottom:{{ isAdminOrders ? '2px solid #A5131D' : '2px solid transparent' }}">ZAMÓWIENIA ({{ adminOrdersCount }})</span>
-        <span onClick="{{ onAdminTabProducts }}" style="fontFamily:'Oswald',sans-serif;fontSize:13px;letterSpacing:1px;padding:0 0 14px;cursor:pointer;color:{{ isAdminProducts ? '#E8E7DE' : '#67705D' }};borderBottom:{{ isAdminProducts ? '2px solid #A5131D' : '2px solid transparent' }}">PRODUKTY</span>
-      </div>
-
-      <sc-if value="{{ isAdminOrders }}" hint-placeholder-val="{{ true }}">
-        <sc-if value="{{ hasAdminOrders }}" hint-placeholder-val="{{ false }}">
-          <div style="display:flex;flexDirection:column;gap:2px">
-            <sc-for list="{{ adminOrders }}" as="o" hint-placeholder-count="3">
-              <div style="background:#33392B;padding:20px;display:flex;flexDirection:column;gap:10px;marginBottom:2px">
-                <div style="display:flex;justifyContent:space-between;flexWrap:wrap;gap:12px">
-                  <span style="fontFamily:'Oswald',sans-serif;fontSize:15px;fontWeight:600">{{ o.id }}</span>
-                  <span style="color:#67705D;fontSize:13px">{{ o.date }}</span>
-                </div>
-                <div style="display:grid;gridTemplateColumns:1fr 1fr;gap:10px 24px">
-                  <div><span style="display:block;fontSize:11px;color:#67705D;letterSpacing:0.5px">KLIENT</span><span style="fontSize:14px;color:#E8E7DE">{{ o.buyerName }}</span></div>
-                  <div><span style="display:block;fontSize:11px;color:#67705D;letterSpacing:0.5px">KONTAKT</span><span style="fontSize:14px;color:#E8E7DE">{{ o.contact }}</span></div>
-                  <div><span style="display:block;fontSize:11px;color:#67705D;letterSpacing:0.5px">DOSTAWA</span><span style="fontSize:14px;color:#E8E7DE">{{ o.deliveryMethod }} — {{ o.address }}</span></div>
-                  <div><span style="display:block;fontSize:11px;color:#67705D;letterSpacing:0.5px">PŁATNOŚĆ</span><span style="fontSize:14px;color:#E8E7DE">{{ o.paymentMethod }}</span></div>
-                </div>
-                <div><span style="display:block;fontSize:11px;color:#67705D;letterSpacing:0.5px;marginBottom:2px">PRODUKTY</span><span style="fontSize:14px;color:#E8E7DE">{{ o.itemsLabel }}</span></div>
-                <div style="display:flex;justifyContent:space-between;alignItems:center;marginTop:6px;flexWrap:wrap;gap:12px">
-                  <span style="fontFamily:'Oswald',sans-serif;fontSize:16px;fontWeight:600">{{ o.totalLabel }}</span>
-                  <div style="display:flex;gap:6px">
-                    <sc-for list="{{ o.statusOptions }}" as="st" hint-placeholder-count="3">
-                      <span onClick="{{ st.onClick }}" style="fontSize:11px;letterSpacing:0.5px;padding:6px 12px;cursor:pointer;background:{{ st.bg }};color:{{ st.color }};border:1px solid rgba(232,231,222,0.15)">{{ st.label }}</span>
-                    </sc-for>
-                  </div>
-                </div>
-              </div>
-            </sc-for>
-          </div>
-        </sc-if>
-      </sc-if>
-      <sc-if value="{{ isNoAdminOrders }}" hint-placeholder-val="{{ false }}">
-        <p style="color:#67705D;textAlign:center;padding:60px 0">Brak zamówień w tej sesji. Nowe zamówienia złożone w sklepie pojawią się tutaj.</p>
-      </sc-if>
-
-      <sc-if value="{{ isAdminProducts }}" hint-placeholder-val="{{ false }}">
-        <div style="display:flex;justifyContent:flex-end;marginBottom:16px">
-          <button onClick="{{ addProduct }}" style="background:#A5131D;color:#fff;border:none;padding:12px 22px;fontFamily:'Oswald',sans-serif;fontSize:12px;letterSpacing:1px;fontWeight:600;cursor:pointer" style-hover="background:#431517">+ DODAJ PRODUKT</button>
-        </div>
-        <div style="display:flex;flexDirection:column;gap:2px">
-          <sc-for list="{{ adminProducts }}" as="p" hint-placeholder-count="6">
-            <div style="background:#33392B;padding:20px;display:flex;gap:20px;flexWrap:wrap;marginBottom:2px">
-              <div style="width:120px;height:120px;flexShrink:0">
-                <image-slot id="{{ p.slotId }}" shape="rect" placeholder="{{ p.imgHint }}"></image-slot>
-              </div>
-              <div style="flex:1;minWidth:280px;display:grid;gridTemplateColumns:1fr 1fr;gap:10px">
-                <input value="{{ p.name }}" onChange="{{ p.onNameChange }}" placeholder="Nazwa" style="background:#0F0F0D;border:1px solid rgba(232,231,222,0.15);color:#E8E7DE;padding:9px 10px;fontSize:13px"/>
-                <input value="{{ p.brand }}" onChange="{{ p.onBrandChange }}" placeholder="Marka" style="background:#0F0F0D;border:1px solid rgba(232,231,222,0.15);color:#E8E7DE;padding:9px 10px;fontSize:13px"/>
-                <select value="{{ p.category }}" onChange="{{ p.onCategoryChange }}" style="background:#0F0F0D;border:1px solid rgba(232,231,222,0.15);color:#E8E7DE;padding:9px 10px;fontSize:13px">
-                  <sc-for list="{{ p.categoryOptions }}" as="co" hint-placeholder-count="6">
-                    <option value="{{ co }}">{{ co }}</option>
-                  </sc-for>
-                </select>
-                <input value="{{ p.stanStr }}" onChange="{{ p.onStanChange }}" placeholder="Stan magazynowy" style="background:#0F0F0D;border:1px solid rgba(232,231,222,0.15);color:#E8E7DE;padding:9px 10px;fontSize:13px"/>
-                <input value="{{ p.priceStr }}" onChange="{{ p.onPriceChange }}" placeholder="Cena (zł)" style="background:#0F0F0D;border:1px solid rgba(232,231,222,0.15);color:#E8E7DE;padding:9px 10px;fontSize:13px"/>
-                <input value="{{ p.oldPriceStr }}" onChange="{{ p.onOldPriceChange }}" placeholder="Cena regularna (zł, opcjonalnie)" style="background:#0F0F0D;border:1px solid rgba(232,231,222,0.15);color:#E8E7DE;padding:9px 10px;fontSize:13px"/>
-                <textarea value="{{ p.desc }}" onChange="{{ p.onDescChange }}" placeholder="Opis" style="grid-column:1 / -1;background:#0F0F0D;border:1px solid rgba(232,231,222,0.15);color:#E8E7DE;padding:9px 10px;fontSize:13px;minHeight:56px;resize:vertical"></textarea>
-              </div>
-              <div style="display:flex;flexDirection:column;alignItems:flex-end;justifyContent:space-between;gap:10px">
-                <span style="fontSize:12px;color:{{ p.activeColor }};letterSpacing:0.5px">{{ p.activeLabel }}</span>
-                <button onClick="{{ p.onToggleActive }}" style="background:transparent;color:#E8E7DE;border:1px solid rgba(232,231,222,0.3);padding:9px 16px;fontSize:11px;letterSpacing:0.5px;cursor:pointer;whiteSpace:nowrap" style-hover="border-color:#E8E7DE">{{ p.toggleLabel }}</button>
-              </div>
-            </div>
-          </sc-for>
-        </div>
-      </sc-if>
-    </div>
-  </sc-if>
-
   <!-- INFO / FAQ -->
   <sc-if value="{{ isInfo }}" hint-placeholder-val="{{ false }}">
     <div style="paddingTop:96px;maxWidth:1100px;margin:0 auto;padding:96px 24px 100px">
@@ -1604,7 +1525,6 @@
           <span onClick="{{ goInfoFaq }}" style="color:#6b6e60;fontSize:12px;cursor:pointer" style-hover="color:#67705D">FAQ</span>
         </div>
         <span style="color:#6b6e60;fontSize:12px">&copy; Spartans ASG</span>
-        <span onClick="{{ goAdmin }}" style="color:#3a3d33;fontSize:11px;cursor:pointer" style-hover="color:#67705D">Panel administratora</span>
       </div>
     </div>
   </footer>
@@ -1642,7 +1562,6 @@ class Component extends DCLogic {
     selectedAlbum: null,
     lightboxSlotId: null,
     orders: [],
-    adminTab: 'orders',
     checkoutStep: 'delivery',
     deliveryOption: 'Odbiór osobisty',
     toast: null,
@@ -1976,9 +1895,6 @@ class Component extends DCLogic {
     this._onResize = () => this.setState({ isMobile: window.innerWidth < 900 });
     window.addEventListener('scroll', this._onScroll);
     window.addEventListener('resize', this._onResize);
-    if (typeof window !== 'undefined' && window.location.hash === '#admin') {
-      this.setState({ view: 'admin' });
-    }
   }
   normalizeReviewIndex = (i) => {
     const n = this.reviewsData.length;
@@ -2092,26 +2008,6 @@ class Component extends DCLogic {
   updatePaczkomatField = (field, value) => this.setState(s => ({ paczkomatForm: { ...s.paczkomatForm, [field]: value } }));
   selectPaczkomat = (code) => this.setState({ selectedPaczkomat: code });
   removeFromCart = (id) => this.setState(s => ({ cart: s.cart.filter(c => c.id !== id) }));
-  setAdminTab = (t) => this.setState({ adminTab: t });
-  updateOrderStatus = (orderId, status) => this.setState(s => ({ orders: s.orders.map(o => o.id === orderId ? { ...o, status } : o) }));
-  updateProductField = (id, field, value) => {
-    const numeric = ['price', 'oldPrice', 'stan'].includes(field);
-    this.products = this.products.map(p => p.id === id ? { ...p, [field]: numeric ? (parseFloat(value) || 0) : value } : p);
-    this.forceUpdate();
-  };
-  toggleProductActive = (id) => {
-    this.products = this.products.map(p => p.id === id ? { ...p, active: p.active === false } : p);
-    this.forceUpdate();
-  };
-  addProduct = () => {
-    const id = 'new-' + Date.now();
-    this.products = [{
-      id, brand: 'Nowa marka', name: 'Nowy produkt', category: this.categories[1], subcategory: null,
-      weight: null, price: 0, oldPrice: null, slotId: 'prod-' + id, imgHint: 'Zdjęcie nowego produktu',
-      desc: '', variants: ['Standard'], promo: false, bestseller: false, nowosc: false, stan: 0, active: true,
-    }, ...this.products];
-    this.forceUpdate();
-  };
   changeQty = (id, delta) => this.setState(s => ({ cart: s.cart.map(c => c.id === id ? { ...c, qty: Math.max(1, c.qty + delta) } : c) }));
 
   setSearch = (v) => this.setState({ search: v });
@@ -2321,7 +2217,6 @@ class Component extends DCLogic {
       goInfoDostawa: () => { this.setState({ infoSection: 'dostawa' }); this.setView('info'); },
       goInfoZwroty: () => { this.setState({ infoSection: 'zwroty' }); this.setView('info'); },
       goInfoFaq: () => { this.setState({ infoSection: 'faq' }); this.setView('info'); },
-      goAdmin: () => this.setView('admin'),
       isInfo: view === 'info',
       searchSuggestions, korengalIncludes,
       infoTabs: [
@@ -2341,42 +2236,6 @@ class Component extends DCLogic {
       isInfoDostawa: this.state.infoSection === 'dostawa',
       isInfoZwroty: this.state.infoSection === 'zwroty',
       isInfoFaq: this.state.infoSection === 'faq',
-      isAdmin: view === 'admin',
-      adminTab: this.state.adminTab,
-      isAdminOrders: this.state.adminTab === 'orders',
-      isAdminProducts: this.state.adminTab === 'products',
-      onAdminTabOrders: () => this.setAdminTab('orders'),
-      onAdminTabProducts: () => this.setAdminTab('products'),
-      adminOrdersCount: this.state.orders.length,
-      hasAdminOrders: this.state.orders.length > 0,
-      isNoAdminOrders: this.state.adminTab === 'orders' && this.state.orders.length === 0,
-      adminOrders: this.state.orders.map(o => ({
-        ...o,
-        itemsLabel: o.items.map(it => it.name + ' ×' + it.qty).join(', '),
-        totalLabel: o.total + ' zł',
-        statusOptions: ['Nowe', 'Wysłane', 'Dostarczone'].map(st => ({
-          label: st, onClick: () => this.updateOrderStatus(o.id, st),
-          bg: o.status === st ? '#A5131D' : 'transparent',
-          color: o.status === st ? '#E8E7DE' : '#67705D',
-        })),
-      })),
-      addProduct: this.addProduct,
-      adminProducts: this.products.map(p => ({
-        ...p,
-        priceStr: String(p.price), oldPriceStr: p.oldPrice === null || p.oldPrice === undefined ? '' : String(p.oldPrice), stanStr: String(p.stan),
-        activeLabel: p.active === false ? 'Nieaktywny' : 'Aktywny',
-        activeColor: p.active === false ? '#67705D' : '#4a7a3f',
-        toggleLabel: p.active === false ? 'AKTYWUJ' : 'DEZAKTYWUJ',
-        onToggleActive: () => this.toggleProductActive(p.id),
-        onNameChange: (e) => this.updateProductField(p.id, 'name', e.target.value),
-        onBrandChange: (e) => this.updateProductField(p.id, 'brand', e.target.value),
-        onCategoryChange: (e) => this.updateProductField(p.id, 'category', e.target.value),
-        onPriceChange: (e) => this.updateProductField(p.id, 'price', e.target.value),
-        onOldPriceChange: (e) => this.updateProductField(p.id, 'oldPrice', e.target.value),
-        onStanChange: (e) => this.updateProductField(p.id, 'stan', e.target.value),
-        onDescChange: (e) => this.updateProductField(p.id, 'desc', e.target.value),
-        categoryOptions: this.categories.filter(c => c !== 'Wszystkie' && c !== 'Promocje'),
-      })),
       faqItems: [
         { q: 'Czy do gry potrzebuję pozwolenia na broń?', a: 'Nie. Repliki ASG o energii do 6 J nie są bronią w rozumieniu ustawy i nie wymagają pozwolenia. Do zakupu repliki wymagane jest ukończenie 18 lat.' },
         { q: 'Czy muszę mieć własny sprzęt, żeby zagrać na Niedzielnym U3 lub Korengal?', a: 'Nie — na Niedzielne U3 możesz wypożyczyć replikę i osłonę oczu na miejscu. Na Korengal zalecany jest własny, sprawny sprzęt zgodny z limitami FPS opisanymi w zakładce Wymagania.' },
