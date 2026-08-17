@@ -1107,6 +1107,13 @@
         };
       }
       this._cap.textContent = this.getAttribute('placeholder') || 'Drop an image';
+      // Screen-reader description: the placeholder text authored for this
+      // slot (e.g. "Zdjęcie: Replika M4 CQB – CYMA") already describes what
+      // belongs here, so it doubles as the filled image's alt text instead
+      // of shipping every photo on the page with alt="". A user-dropped
+      // replacement has no separate caption workflow, so it inherits the
+      // same description — better than no description at all.
+      this._img.alt = this.getAttribute('placeholder') || '';
       // Toggle via style.display — the [hidden] attribute alone loses to
       // the display:flex / display:block rules in the stylesheet above.
       // An Unsplash src with no credit attribute must NOT render — showing

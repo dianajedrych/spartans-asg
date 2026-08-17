@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html>
+<html lang="pl">
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
@@ -51,18 +51,18 @@
 
       <div style="display:flex;align-items:center;gap:18px">
         <sc-if value="{{ showDesktopNav }}" hint-placeholder-val="{{ true }}">
-          <span title="Konto" style="cursor:pointer;display:flex;alignItems:center">
+          <span aria-hidden="true" title="Konto" style="cursor:pointer;display:flex;alignItems:center">
             <svg width="19" height="19" viewBox="0 0 24 24" fill="none" stroke="#E8E7DE" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"></path><circle cx="12" cy="7" r="4"></circle></svg>
           </span>
         </sc-if>
-        <span tabIndex="0" role="button" onClick="{{ toggleCart }}" title="Koszyk" style="cursor:pointer;position:relative;font-size:18px;color:#E8E7DE">
+        <span tabIndex="0" role="button" aria-label="{{ cartAriaLabel }}" onClick="{{ toggleCart }}" title="Koszyk" style="cursor:pointer;position:relative;font-size:18px;color:#E8E7DE">
           &#128722;
           <sc-if value="{{ cartCount }}" hint-placeholder-val="{{ 0 }}">
             <span key="{{ cartCount }}" style="position:absolute;top:-8px;right:-12px;background:#A5131D;color:#fff;fontSize:10px;fontFamily:'Oswald',sans-serif;borderRadius:20px;width:16px;height:16px;display:flex;alignItems:center;justifyContent:center;animation:cartBump 0.35s ease">{{ cartCount }}</span>
           </sc-if>
         </span>
         <sc-if value="{{ isMobile }}" hint-placeholder-val="{{ false }}">
-          <span tabIndex="0" role="button" onClick="{{ toggleMobileMenu }}" style="cursor:pointer;font-size:20px;color:#E8E7DE;fontFamily:monospace">{{ mobileMenuIcon }}</span>
+          <span tabIndex="0" role="button" aria-label="{{ mobileMenuAriaLabel }}" onClick="{{ toggleMobileMenu }}" style="cursor:pointer;font-size:20px;color:#E8E7DE;fontFamily:monospace">{{ mobileMenuIcon }}</span>
         </sc-if>
       </div>
     </div>
@@ -88,7 +88,7 @@
         <div style="position:relative;zIndex:2;height:100%;display:flex;flexDirection:column;justifyContent:center;gap:22px;padding:120px 5vw 60px;maxWidth:640px">
           <img src="assets/spartans-logo.png" alt="Spartans ASG" style="height:64px;width:64px;object-fit:contain;marginBottom:6px">
           <h1 style="font-family:'Oswald',sans-serif;font-weight:700;font-size:clamp(38px,6vw,68px);letter-spacing:1px;lineHeight:1.05;color:#E8E7DE">WEJDŹ<br/>DO GRY.</h1>
-          <p style="font-family:'Oswald',sans-serif;font-size:15px;letter-spacing:2px;color:#F2846D;fontWeight:500">SKLEP &bull; SERWIS &bull; ROZGRYWKI ASG</p>
+          <p style="font-family:'Oswald',sans-serif;font-size:15px;letter-spacing:2px;color:rgba(232,231,222,0.65);fontWeight:500">SKLEP &bull; SERWIS &bull; ROZGRYWKI ASG</p>
           <p style="color:#9CA68C;fontSize:15px;lineHeight:1.7;maxWidth:420px">Sprzęt, zaopatrzenie i rozgrywki ASG w jednym miejscu. Dołącz do ekipy Spartans i zagraj w najbliższym terminie.</p>
           <div style="display:flex;gap:16px;flexWrap:wrap;marginTop:10px">
             <button onClick="{{ goEvents }}" style="background:#A5131D;color:#fff;border:none;padding:16px 30px;font-family:'Oswald',sans-serif;fontSize:14px;letterSpacing:1.5px;fontWeight:600;cursor:pointer" style-hover="background:#431517">NAJBLIŻSZE WYDARZENIE</button>
@@ -122,7 +122,7 @@
       <div style="background:#0F0F0D;padding:70px 24px;borderTop:4px solid #431517;borderBottom:4px solid #431517">
         <div style="max-width:1100px;margin:0 auto;display:flex;gap:48px;alignItems:center;flexWrap:wrap">
           <div style="flex:1;minWidth:280px">
-            <p style="font-family:'Oswald',sans-serif;font-size:13px;letterSpacing:2px;color:#F2846D;marginBottom:10px">NAJBLIŻSZA ROZGRYWKA</p>
+            <p style="font-family:'Oswald',sans-serif;font-size:13px;letterSpacing:2px;color:rgba(232,231,222,0.65);marginBottom:10px">NAJBLIŻSZA ROZGRYWKA</p>
             <h2 style="font-family:'Oswald',sans-serif;font-weight:700;font-size:38px;letterSpacing:1px;marginBottom:16px">NIEDZIELNE U3</h2>
             <div style="display:flex;flexDirection:column;gap:6px;color:#E8E7DE;fontSize:15px;marginBottom:18px">
               <span>{{ nearestEvent.date }}</span>
@@ -165,7 +165,7 @@
       <div id="sklep-podglad" style="padding:0 24px 80px;maxWidth:1300px;margin:0 auto">
         <div style="display:flex;justifyContent:space-between;alignItems:flex-end;marginBottom:30px;flexWrap:wrap;gap:14px">
           <div>
-            <p style="font-family:'Oswald',sans-serif;fontSize:13px;letterSpacing:2px;color:#F2846D;marginBottom:8px">SKLEP</p>
+            <p style="font-family:'Oswald',sans-serif;fontSize:13px;letterSpacing:2px;color:rgba(232,231,222,0.65);marginBottom:8px">SKLEP</p>
             <h2 style="font-family:'Oswald',sans-serif;fontWeight:700;fontSize:28px;letterSpacing:1px">WYBRANE PRODUKTY</h2>
           </div>
           <span tabIndex="0" role="button" onClick="{{ goShop }}" style="color:#E8E7DE;fontFamily:'Oswald',sans-serif;fontSize:12px;letterSpacing:1.2px;fontWeight:600;cursor:pointer;borderBottom:1.5px solid #A5131D" style-hover="color:#F2846D">ZOBACZ CAŁY SKLEP &rarr;</span>
@@ -191,11 +191,11 @@
       <!-- OPINIE -->
       <div id="opinie" style="background:#33392B;padding:80px 24px;borderTop:1px solid rgba(232,231,222,0.08)">
         <div style="maxWidth:1300px;margin:0 auto">
-          <p style="font-family:'Oswald',sans-serif;fontSize:13px;letterSpacing:2px;color:#F2846D;marginBottom:8px;textAlign:center">OPINIE</p>
+          <p style="font-family:'Oswald',sans-serif;fontSize:13px;letterSpacing:2px;color:rgba(232,231,222,0.65);marginBottom:8px;textAlign:center">OPINIE</p>
           <h2 style="font-family:'Oswald',sans-serif;fontWeight:700;fontSize:32px;letterSpacing:1px;textAlign:center;marginBottom:50px">CO MÓWIĄ NASI GRACZE</h2>
           <div style="position:relative">
-          <span tabIndex="0" role="button" onClick="{{ onReviewPrev }}" style="position:absolute;left:-14px;top:50%;transform:translateY(-50%);zIndex:2;width:40px;height:40px;background:#0F0F0D;border:1px solid rgba(232,231,222,0.15);color:#E8E7DE;display:flex;alignItems:center;justifyContent:center;cursor:pointer;fontSize:18px" style-hover="borderColor:#A5131D;color:#F2846D">&lsaquo;</span>
-          <span tabIndex="0" role="button" onClick="{{ onReviewNext }}" style="position:absolute;right:-14px;top:50%;transform:translateY(-50%);zIndex:2;width:40px;height:40px;background:#0F0F0D;border:1px solid rgba(232,231,222,0.15);color:#E8E7DE;display:flex;alignItems:center;justifyContent:center;cursor:pointer;fontSize:18px" style-hover="borderColor:#A5131D;color:#F2846D">&rsaquo;</span>
+          <span tabIndex="0" role="button" aria-label="Poprzednia opinia" onClick="{{ onReviewPrev }}" style="position:absolute;left:-14px;top:50%;transform:translateY(-50%);zIndex:2;width:40px;height:40px;background:#0F0F0D;border:1px solid rgba(232,231,222,0.15);color:#E8E7DE;display:flex;alignItems:center;justifyContent:center;cursor:pointer;fontSize:18px" style-hover="borderColor:#A5131D;color:#F2846D">&lsaquo;</span>
+          <span tabIndex="0" role="button" aria-label="Następna opinia" onClick="{{ onReviewNext }}" style="position:absolute;right:-14px;top:50%;transform:translateY(-50%);zIndex:2;width:40px;height:40px;background:#0F0F0D;border:1px solid rgba(232,231,222,0.15);color:#E8E7DE;display:flex;alignItems:center;justifyContent:center;cursor:pointer;fontSize:18px" style-hover="borderColor:#A5131D;color:#F2846D">&rsaquo;</span>
           <div style="overflow:hidden">
             <div style="display:flex;width:{{ reviewTrackWidth }};transform:{{ reviewTrackTransform }};transition:{{ reviewTrackTransition }}">
             <sc-for list="{{ reviewTrack }}" as="r" hint-placeholder-count="3">
@@ -212,6 +212,9 @@
             </sc-for>
             </div>
           </div>
+          </div>
+          <div style="display:flex;justifyContent:center;marginTop:20px">
+            <span tabIndex="0" role="button" aria-label="{{ reviewsPauseLabel }}" onClick="{{ toggleReviewsPause }}" style="display:flex;alignItems:center;gap:8px;color:#9CA68C;fontSize:12px;letterSpacing:0.5px;cursor:pointer;padding:6px 12px;border:1px solid rgba(232,231,222,0.15)" style-hover="color:#E8E7DE;borderColor:rgba(232,231,222,0.4)">{{ reviewsPauseIcon }} {{ reviewsPauseText }}</span>
           </div>
         </div>
       </div>
@@ -236,7 +239,7 @@
       <div id="kontakt" style="background:#33392B;padding:80px 24px;borderTop:1px solid rgba(232,231,222,0.08)">
         <div style="max-width:1100px;margin:0 auto;display:flex;gap:48px;flexWrap:wrap">
           <div style="flex:1;minWidth:280px">
-            <p style="font-family:'Oswald',sans-serif;fontSize:13px;letterSpacing:2px;color:#F2846D;marginBottom:10px">KONTAKT</p>
+            <p style="font-family:'Oswald',sans-serif;fontSize:13px;letterSpacing:2px;color:rgba(232,231,222,0.65);marginBottom:10px">KONTAKT</p>
             <h2 style="font-family:'Oswald',sans-serif;fontWeight:700;fontSize:30px;marginBottom:22px">SPARTANS ASG</h2>
             <div style="display:flex;flexDirection:column;gap:10px;color:#E8E7DE;fontSize:15px;lineHeight:1.7;marginBottom:22px">
               <span>Kunickiego 54, lokal B<br/>20-412 Lublin</span>
@@ -272,13 +275,13 @@
         <span style="color:#E8E7DE;fontSize:12px">Sklep</span>
       </div>
       <div style="position:relative;height:280px;overflow:hidden;marginBottom:32px">
-        <span tabIndex="0" role="button" onClick="{{ prevBanner }}" style="position:absolute;left:14px;top:50%;transform:translateY(-50%);zIndex:3;width:40px;height:40px;background:rgba(15,15,13,0.6);border:1px solid rgba(232,231,222,0.25);color:#E8E7DE;display:flex;alignItems:center;justifyContent:center;cursor:pointer;fontSize:18px" style-hover="borderColor:#A5131D;color:#F2846D">&lsaquo;</span>
-        <span tabIndex="0" role="button" onClick="{{ nextBanner }}" style="position:absolute;right:14px;top:50%;transform:translateY(-50%);zIndex:3;width:40px;height:40px;background:rgba(15,15,13,0.6);border:1px solid rgba(232,231,222,0.25);color:#E8E7DE;display:flex;alignItems:center;justifyContent:center;cursor:pointer;fontSize:18px" style-hover="borderColor:#A5131D;color:#F2846D">&rsaquo;</span>
+        <span tabIndex="0" role="button" aria-label="Poprzedni baner" onClick="{{ prevBanner }}" style="position:absolute;left:14px;top:50%;transform:translateY(-50%);zIndex:3;width:40px;height:40px;background:rgba(15,15,13,0.6);border:1px solid rgba(232,231,222,0.25);color:#E8E7DE;display:flex;alignItems:center;justifyContent:center;cursor:pointer;fontSize:18px" style-hover="borderColor:#A5131D;color:#F2846D">&lsaquo;</span>
+        <span tabIndex="0" role="button" aria-label="Następny baner" onClick="{{ nextBanner }}" style="position:absolute;right:14px;top:50%;transform:translateY(-50%);zIndex:3;width:40px;height:40px;background:rgba(15,15,13,0.6);border:1px solid rgba(232,231,222,0.25);color:#E8E7DE;display:flex;alignItems:center;justifyContent:center;cursor:pointer;fontSize:18px" style-hover="borderColor:#A5131D;color:#F2846D">&rsaquo;</span>
         <sc-for list="{{ shopBanners }}" as="b" hint-placeholder-count="5">
           <div tabIndex="0" role="button" onClick="{{ b.onClick }}" style="position:absolute;inset:0;cursor:pointer;opacity:{{ b.opacity }};zIndex:{{ b.zIndex }};transition:opacity 0.7s ease">
             <image-slot id="{{ b.slotId }}" shape="rect" placeholder="Baner kategorii: {{ b.title }}"></image-slot>
             <div style="position:absolute;inset:0;background:linear-gradient(90deg,rgba(15,15,13,0.88) 0%,rgba(15,15,13,0.35) 55%,rgba(15,15,13,0.1) 100%);display:flex;flexDirection:column;justifyContent:center;padding:40px 40px 40px 80px;pointerEvents:none">
-              <span style="fontFamily:'Oswald',sans-serif;fontSize:12px;letterSpacing:2px;color:#F2846D;marginBottom:8px">KATEGORIA</span>
+              <span style="fontFamily:'Oswald',sans-serif;fontSize:12px;letterSpacing:2px;color:rgba(232,231,222,0.65);marginBottom:8px">KATEGORIA</span>
               <h2 style="fontFamily:'Oswald',sans-serif;fontWeight:700;fontSize:34px;letterSpacing:1px;color:#E8E7DE;marginBottom:8px">{{ b.title }}</h2>
               <span style="color:#E8E7DE;opacity:0.75;fontSize:14px;maxWidth:360px">{{ b.desc }}</span>
             </div>
@@ -286,15 +289,16 @@
         </sc-for>
         <div style="position:absolute;bottom:16px;left:50%;transform:translateX(-50%);display:flex;gap:8px;zIndex:3">
           <sc-for list="{{ bannerDots }}" as="d" hint-placeholder-count="5">
-            <span tabIndex="0" role="button" onClick="{{ d.onClick }}" style="width:9px;height:9px;borderRadius:50%;background:{{ d.bg }};cursor:pointer"></span>
+            <span tabIndex="0" role="button" aria-label="{{ d.ariaLabel }}" onClick="{{ d.onClick }}" style="width:9px;height:9px;borderRadius:50%;background:{{ d.bg }};cursor:pointer"></span>
           </sc-for>
         </div>
+        <span tabIndex="0" role="button" aria-label="{{ bannerPauseLabel }}" onClick="{{ toggleBannerPause }}" style="position:absolute;bottom:12px;right:16px;zIndex:3;width:32px;height:32px;background:rgba(15,15,13,0.6);border:1px solid rgba(232,231,222,0.25);color:#E8E7DE;display:flex;alignItems:center;justifyContent:center;cursor:pointer;fontSize:13px" style-hover="borderColor:#A5131D;color:#F2846D">{{ bannerPauseIcon }}</span>
       </div>
 
       <div style="marginBottom:36px">
         <h2 style="fontFamily:'Oswald',sans-serif;fontWeight:700;fontSize:20px;letterSpacing:0.5px;color:#E8E7DE;marginBottom:18px">Najpopularniejsze marki</h2>
         <div style="display:flex;alignItems:center;gap:16px">
-          <span tabIndex="0" role="button" onClick="{{ scrollBrandsLeft }}" style="cursor:pointer;color:#9CA68C;fontSize:20px;flexShrink:0" style-hover="color:#E8E7DE">&lsaquo;</span>
+          <span tabIndex="0" role="button" aria-label="Przewiń marki w lewo" onClick="{{ scrollBrandsLeft }}" style="cursor:pointer;color:#9CA68C;fontSize:20px;flexShrink:0" style-hover="color:#E8E7DE">&lsaquo;</span>
           <div ref="{{ setBrandsRef }}" class="brands-scroll" style="display:flex;gap:16px;overflowX:auto;flex:1;scrollbarWidth:none;msOverflowStyle:none">
             <sc-for list="{{ categoryBrands }}" as="brand" hint-placeholder-count="8">
               <div tabIndex="0" role="button" onClick="{{ brand.onClick }}" style="background:#E8E7DE;padding:22px 30px;display:flex;alignItems:center;justifyContent:center;minWidth:150px;flexShrink:0;cursor:pointer" style-hover="background:#D8D7CE">
@@ -302,9 +306,19 @@
               </div>
             </sc-for>
           </div>
-          <span tabIndex="0" role="button" onClick="{{ scrollBrandsRight }}" style="cursor:pointer;color:#9CA68C;fontSize:20px;flexShrink:0" style-hover="color:#E8E7DE">&rsaquo;</span>
+          <span tabIndex="0" role="button" aria-label="Przewiń marki w prawo" onClick="{{ scrollBrandsRight }}" style="cursor:pointer;color:#9CA68C;fontSize:20px;flexShrink:0" style-hover="color:#E8E7DE">&rsaquo;</span>
         </div>
       </div>
+
+      <sc-if value="{{ hasActiveFilters }}" hint-placeholder-val="{{ false }}">
+        <div style="display:flex;flexWrap:wrap;gap:8px;alignItems:center;marginBottom:16px">
+          <span style="color:#9CA68C;fontSize:12px;marginRight:2px">Aktywne filtry:</span>
+          <sc-for list="{{ activeFilterChips }}" as="chip" hint-placeholder-count="3">
+            <span tabIndex="0" role="button" aria-label="{{ chip.removeLabel }}" onClick="{{ chip.onRemove }}" style="display:flex;alignItems:center;gap:6px;background:#33392B;border:1px solid rgba(232,231,222,0.15);color:#E8E7DE;fontSize:12px;padding:6px 10px;cursor:pointer" style-hover="borderColor:#F2846D">{{ chip.label }}<span aria-hidden="true">✕</span></span>
+          </sc-for>
+          <span tabIndex="0" role="button" onClick="{{ clearAllFilters }}" style="color:#F2846D;fontSize:12px;cursor:pointer;padding:6px 4px">Wyczyść wszystkie</span>
+        </div>
+      </sc-if>
 
       <div style="display:flex;justifyContent:flex-end;marginBottom:28px">
         <span style="color:#9CA68C;fontSize:13px">Znaleziono: {{ productCount }} produktów</span>
@@ -312,7 +326,10 @@
 
       <div style="display:flex;gap:36px;alignItems:flex-start;flexDirection:{{ shopBodyDirection }}">
         <div class="sidebar-scroll" style="width:{{ shopSidebarWidth }};flexShrink:0;display:flex;flexDirection:column;gap:22px;position:{{ shopSidebarPosition }};top:{{ shopSidebarTop }};maxHeight:{{ shopSidebarMaxHeight }};overflowY:auto;paddingRight:8px">
-          <input value="{{ search }}" onChange="{{ onSearchChange }}" placeholder="Szukaj produktu..." list="product-suggestions" style="background:#33392B;border:1px solid rgba(232,231,222,0.15);color:#E8E7DE;padding:12px 14px;fontSize:14px;width:100%"/>
+          <label style="display:flex;flexDirection:column;gap:4px">
+            <span style="fontSize:11px;letterSpacing:0.4px;color:#9CA68C">Szukaj produktu...</span>
+            <input value="{{ search }}" onChange="{{ onSearchChange }}" placeholder="Szukaj produktu..." list="product-suggestions" style="background:#33392B;border:1px solid rgba(232,231,222,0.15);color:#E8E7DE;padding:12px 14px;fontSize:14px;width:100%"/>
+          </label>
           <datalist id="product-suggestions">
             <sc-for list="{{ searchSuggestions }}" as="s" hint-placeholder-count="5">
               <option value="{{ s }}"></option>
@@ -326,7 +343,7 @@
                   <div tabIndex="0" role="button" onClick="{{ cat.onClick }}" style="padding:9px 10px;fontSize:14px;cursor:pointer;color:{{ cat.color }};background:{{ cat.bg }};borderLeft:{{ cat.borderLeft }};display:flex;alignItems:center;justifyContent:space-between" style-hover="color:#E8E7DE">
                     <span>{{ cat.label }}</span>
                     <sc-if value="{{ cat.hasSubs }}" hint-placeholder-val="{{ false }}">
-                      <span tabIndex="0" role="button" onClick="{{ cat.onToggleArrow }}" style="fontSize:11px;color:#9CA68C;padding:4px">{{ cat.arrowIcon }}</span>
+                      <span aria-hidden="true" style="fontSize:11px;color:#9CA68C;padding:4px">{{ cat.arrowIcon }}</span>
                     </sc-if>
                   </div>
                   <sc-if value="{{ cat.showSubs }}" hint-placeholder-val="{{ false }}">
@@ -370,8 +387,14 @@
           <div style="background:#33392B;padding:20px">
             <span style="fontFamily:'Oswald',sans-serif;fontSize:12px;letterSpacing:1.5px;color:#E8E7DE;display:block;marginBottom:14px">CENA</span>
             <div style="display:flex;gap:8px;marginBottom:12px">
-              <input value="{{ priceMinDraft }}" onChange="{{ onPriceMinChange }}" placeholder="0 PLN" style="background:#0F0F0D;border:1px solid rgba(232,231,222,0.15);color:#E8E7DE;padding:10px;fontSize:13px;width:50%"/>
-              <input value="{{ priceMaxDraft }}" onChange="{{ onPriceMaxChange }}" placeholder="1400 PLN" style="background:#0F0F0D;border:1px solid rgba(232,231,222,0.15);color:#E8E7DE;padding:10px;fontSize:13px;width:50%"/>
+              <label style="display:flex;flexDirection:column;gap:4px">
+                <span style="fontSize:11px;letterSpacing:0.4px;color:#9CA68C">0 PLN</span>
+                <input value="{{ priceMinDraft }}" onChange="{{ onPriceMinChange }}" placeholder="0 PLN" style="background:#0F0F0D;border:1px solid rgba(232,231,222,0.15);color:#E8E7DE;padding:10px;fontSize:13px;width:50%"/>
+              </label>
+              <label style="display:flex;flexDirection:column;gap:4px">
+                <span style="fontSize:11px;letterSpacing:0.4px;color:#9CA68C">1400 PLN</span>
+                <input value="{{ priceMaxDraft }}" onChange="{{ onPriceMaxChange }}" placeholder="1400 PLN" style="background:#0F0F0D;border:1px solid rgba(232,231,222,0.15);color:#E8E7DE;padding:10px;fontSize:13px;width:50%"/>
+              </label>
             </div>
             <button onClick="{{ applyPriceRange }}" style="background:#0F0F0D;color:#E8E7DE;border:none;padding:10px;fontSize:12px;letterSpacing:0.5px;width:100%;cursor:pointer" style-hover="background:#000">Zastosuj zakres cen</button>
           </div>
@@ -549,7 +572,7 @@
   <!-- EVENTS -->
   <sc-if value="{{ isEvents }}" hint-placeholder-val="{{ false }}">
     <div style="paddingTop:96px;maxWidth:1200px;margin:0 auto;padding:96px 24px 60px">
-      <p style="font-family:'Oswald',sans-serif;fontSize:13px;letterSpacing:2px;color:#F2846D;marginBottom:8px">SPARTANS ASG</p>
+      <p style="font-family:'Oswald',sans-serif;fontSize:13px;letterSpacing:2px;color:rgba(232,231,222,0.65);marginBottom:8px">SPARTANS ASG</p>
       <h1 style="font-family:'Oswald',sans-serif;fontWeight:700;fontSize:36px;letterSpacing:1px;marginBottom:30px">WYDARZENIA</h1>
 
       <div style="display:flex;gap:28px;borderBottom:1px solid rgba(232,231,222,0.12);marginBottom:40px">
@@ -581,7 +604,7 @@
               <image-slot id="korengal-hero-thumb" shape="rect" placeholder="Zdjęcie: Korengal – kadr z poprzedniej edycji, duża skala wydarzenia"></image-slot>
             </div>
             <div style="position:absolute;inset:0;background:linear-gradient(180deg,rgba(13,14,10,0) 30%,rgba(13,14,10,0.92) 100%);display:flex;flexDirection:column;justifyContent:flex-end;padding:32px;pointerEvents:none">
-              <span style="fontSize:12px;letterSpacing:2px;color:#F2846D;fontFamily:'Oswald',sans-serif;marginBottom:8px">WYDARZENIE SPECJALNE</span>
+              <span style="fontSize:12px;letterSpacing:2px;color:rgba(232,231,222,0.65);fontFamily:'Oswald',sans-serif;marginBottom:8px">WYDARZENIE SPECJALNE</span>
               <h3 style="font-family:'Oswald',sans-serif;fontWeight:700;fontSize:34px">KORENGAL</h3>
               <span style="color:#E8E7DE;fontSize:14px;marginTop:6px">3-dniowa impreza milsim &mdash; zobacz szczegóły</span>
             </div>
@@ -620,6 +643,24 @@
           </div>
         </sc-if>
       </sc-if>
+
+      <div style="marginTop:60px;background:#33392B;border:1px solid rgba(232,231,222,0.08);padding:32px;display:flex;flexDirection:column;gap:14px;maxWidth:560px">
+        <span style="fontFamily:'Oswald',sans-serif;fontSize:13px;letterSpacing:2px;color:rgba(232,231,222,0.65)">NIE PRZEGAP TERMINU</span>
+        <h3 style="fontFamily:'Oswald',sans-serif;fontWeight:700;fontSize:22px">Przypomnimy Ci o najbliższej rozgrywce</h3>
+        <sc-if value="{{ reminderSubmitted }}" hint-placeholder-val="{{ false }}">
+          <p style="color:#9CA68C;fontSize:14px;lineHeight:1.6">Zapisano (demo) — damy znać przed najbliższym wydarzeniem.</p>
+        </sc-if>
+        <sc-if value="{{ !reminderSubmitted }}" hint-placeholder-val="{{ true }}">
+          <p style="color:#9CA68C;fontSize:14px;lineHeight:1.6">Zostaw e-mail, a przypomnimy przed każdym Niedzielnym U3 i większymi wydarzeniami jak Korengal.</p>
+          <div style="display:flex;gap:10px;flexWrap:wrap">
+            <label style="flex:1;minWidth:220px;display:flex;flexDirection:column;gap:4px">
+              <span style="fontSize:11px;letterSpacing:0.4px;color:#9CA68C">Adres e-mail</span>
+              <input value="{{ reminderEmail }}" onChange="{{ onReminderEmailChange }}" type="email" placeholder="twoj@email.pl" style="background:#0F0F0D;border:1px solid rgba(232,231,222,0.15);color:#E8E7DE;padding:12px 14px;fontSize:14px;width:100%"/>
+            </label>
+            <button onClick="{{ submitReminder }}" style="background:#A5131D;color:#fff;border:none;padding:0 24px;fontFamily:'Oswald',sans-serif;fontSize:13px;letterSpacing:1px;fontWeight:600;cursor:pointer;minHeight:47px" style-hover="background:#431517">ZAPISZ MNIE</button>
+          </div>
+        </sc-if>
+      </div>
     </div>
   </sc-if>
 
@@ -633,7 +674,7 @@
         <div style="position:absolute;inset:0;background:linear-gradient(180deg,rgba(15,15,13,0.2) 0%,rgba(15,15,13,0.95) 100%);zIndex:1;pointerEvents:none"></div>
         <div style="position:relative;zIndex:2;maxWidth:1200px;margin:0 auto;width:100%">
           <span tabIndex="0" role="button" onClick="{{ goEvents }}" style="color:#E8E7DE;fontSize:13px;cursor:pointer;display:inline-block;marginBottom:16px" style-hover="color:#F2846D">&larr; Wróć do wydarzeń</span>
-          <span style="display:block;fontSize:13px;letterSpacing:2px;color:#F2846D;fontFamily:'Oswald',sans-serif;marginBottom:10px">ROZGRYWKA CYKLICZNA</span>
+          <span style="display:block;fontSize:13px;letterSpacing:2px;color:rgba(232,231,222,0.65);fontFamily:'Oswald',sans-serif;marginBottom:10px">ROZGRYWKA CYKLICZNA</span>
           <h1 style="font-family:'Oswald',sans-serif;fontWeight:700;fontSize:clamp(32px,6vw,52px);letterSpacing:1px">NIEDZIELNE U3</h1>
         </div>
       </div>
@@ -738,7 +779,7 @@
         </div>
 
         <div style="flex:1;minWidth:280px;maxWidth:340px;background:#33392B;padding:28px;display:flex;flexDirection:column;gap:14px;position:sticky;top:120px">
-          <span style="fontFamily:'Oswald',sans-serif;fontSize:12px;letterSpacing:2px;color:#F2846D">NAJBLIŻSZY TERMIN</span>
+          <span style="fontFamily:'Oswald',sans-serif;fontSize:12px;letterSpacing:2px;color:rgba(232,231,222,0.65)">NAJBLIŻSZY TERMIN</span>
           <h3 style="font-family:'Oswald',sans-serif;fontWeight:700;fontSize:24px;letterSpacing:0.5px">NIEDZIELNE U3</h3>
           <div style="display:flex;flexDirection:column;gap:4px;color:#E8E7DE;fontSize:15px;paddingTop:6px;borderTop:1px solid rgba(232,231,222,0.12)">
             <span>{{ nearestEvent.date }}</span>
@@ -760,7 +801,7 @@
         <div style="position:absolute;inset:0;background:linear-gradient(180deg,rgba(13,14,10,0.2) 0%,rgba(13,14,10,0.95) 100%);zIndex:1;pointerEvents:none"></div>
         <div style="position:relative;zIndex:2;maxWidth:1200px;margin:0 auto;width:100%">
           <span tabIndex="0" role="button" onClick="{{ goEvents }}" style="color:#E8E7DE;fontSize:13px;cursor:pointer;display:inline-block;marginBottom:16px" style-hover="color:#F2846D">&larr; Wróć do wydarzeń</span>
-          <span style="display:block;fontSize:13px;letterSpacing:2px;color:#F2846D;fontFamily:'Oswald',sans-serif;marginBottom:10px">WYDARZENIE SPECJALNE</span>
+          <span style="display:block;fontSize:13px;letterSpacing:2px;color:rgba(232,231,222,0.65);fontFamily:'Oswald',sans-serif;marginBottom:10px">WYDARZENIE SPECJALNE</span>
           <h1 style="font-family:'Oswald',sans-serif;fontWeight:700;fontSize:clamp(34px,6vw,60px);letterSpacing:1px">KORENGAL: FINAL CHAPTER</h1>
           <span style="color:#E8E7DE;fontSize:16px">3-dniowa impreza LARP / MILSIM</span>
         </div>
@@ -780,7 +821,7 @@
             <div style="display:flex;flexDirection:column;gap:8px">
 
               <div style="marginBottom:8px">
-                <span style="display:block;fontFamily:'Oswald',sans-serif;fontSize:11px;letterSpacing:3px;color:#F2846D;marginBottom:10px">AKTA SPRAWY &mdash; KORENGAL: OSTATNI ROZDZIAŁ</span>
+                <span style="display:block;fontFamily:'Oswald',sans-serif;fontSize:11px;letterSpacing:3px;color:rgba(232,231,222,0.65);marginBottom:10px">AKTA SPRAWY &mdash; KORENGAL: OSTATNI ROZDZIAŁ</span>
                 <h2 style="font-family:'Oswald',sans-serif;fontWeight:700;fontSize:26px;letterSpacing:0.5px;lineHeight:1.3;color:#E8E7DE">Trzy dni. Jeden wąwóz. Sprawy, które nigdy nie zostały zamknięte.</h2>
               </div>
 
@@ -977,7 +1018,7 @@
         </div>
 
         <div style="flex:1;minWidth:280px;maxWidth:340px;background:#33392B;padding:28px;display:flex;flexDirection:column;gap:14px;position:sticky;top:120px">
-          <span style="fontFamily:'Oswald',sans-serif;fontSize:12px;letterSpacing:2px;color:#F2846D">WYDARZENIE SPECJALNE</span>
+          <span style="fontFamily:'Oswald',sans-serif;fontSize:12px;letterSpacing:2px;color:rgba(232,231,222,0.65)">WYDARZENIE SPECJALNE</span>
           <h3 style="font-family:'Oswald',sans-serif;fontWeight:700;fontSize:24px;letterSpacing:0.5px">KORENGAL</h3>
           <div style="display:flex;flexDirection:column;gap:4px;color:#E8E7DE;fontSize:15px;paddingTop:6px;borderTop:1px solid rgba(232,231,222,0.12)">
             <span>28&ndash;30 sierpnia 2026</span>
@@ -999,7 +1040,7 @@
   <sc-if value="{{ isGallery }}" hint-placeholder-val="{{ false }}">
     <div style="paddingTop:96px;maxWidth:1200px;margin:0 auto;padding:96px 24px 80px">
       <sc-if value="{{ showAlbumList }}" hint-placeholder-val="{{ true }}">
-        <p style="font-family:'Oswald',sans-serif;fontSize:13px;letterSpacing:2px;color:#F2846D;marginBottom:8px">SPARTANS ASG</p>
+        <p style="font-family:'Oswald',sans-serif;fontSize:13px;letterSpacing:2px;color:rgba(232,231,222,0.65);marginBottom:8px">SPARTANS ASG</p>
         <h1 style="font-family:'Oswald',sans-serif;fontWeight:700;fontSize:36px;letterSpacing:1px;marginBottom:36px">GALERIA</h1>
         <div style="display:grid;gridTemplateColumns:repeat(auto-fill,minmax(260px,1fr));gap:22px">
           <sc-for list="{{ albums }}" as="a" hint-placeholder-count="4">
@@ -1039,7 +1080,7 @@
         </div>
         <div style="position:absolute;inset:0;background:linear-gradient(180deg,rgba(15,15,13,0.2) 0%,rgba(15,15,13,0.95) 100%);zIndex:1;pointerEvents:none"></div>
         <div style="position:relative;zIndex:2;maxWidth:1100px;margin:0 auto;width:100%">
-          <p style="font-family:'Oswald',sans-serif;fontSize:13px;letterSpacing:2px;color:#F2846D;marginBottom:10px">DLA GRUP I FIRM</p>
+          <p style="font-family:'Oswald',sans-serif;fontSize:13px;letterSpacing:2px;color:rgba(232,231,222,0.65);marginBottom:10px">DLA GRUP I FIRM</p>
           <h1 style="font-family:'Oswald',sans-serif;fontWeight:700;fontSize:clamp(32px,5vw,48px);letterSpacing:1px">EVENTY</h1>
           <p style="color:#E8E7DE;opacity:0.8;fontSize:15px;maxWidth:560px;marginTop:10px">Wieczór kawalerski, panieński, integracja firmowa czy prywatna impreza — przygotujemy rozgrywkę ASG dopasowaną do grupy.</p>
         </div>
@@ -1075,7 +1116,7 @@
         <image-slot id="about-img" shape="rect" placeholder="Zdjęcie: wnętrze sklepu lub zespół Spartans ASG"></image-slot>
       </div>
       <div style="flex:1;minWidth:280px">
-        <p style="font-family:'Oswald',sans-serif;fontSize:13px;letterSpacing:2px;color:#F2846D;marginBottom:10px">O NAS</p>
+        <p style="font-family:'Oswald',sans-serif;fontSize:13px;letterSpacing:2px;color:rgba(232,231,222,0.65);marginBottom:10px">O NAS</p>
         <h1 style="font-family:'Oswald',sans-serif;fontWeight:700;fontSize:36px;marginBottom:20px">SPARTANS ASG</h1>
         <p style="color:#E8E7DE;fontSize:16px;lineHeight:1.8">Spartans ASG to lubelska marka zbudowana wokół rozgrywek ASG. Prowadzimy sklep ze sprzętem i akcesoriami, wypożyczalnię dla osób bez własnej repliki oraz serwis. Organizujemy cotygodniowe i większe wydarzenia — od Niedzielnych U3 po Korengal. Najważniejsza jest dla nas społeczność, która co tydzień spotyka się na polu gry.</p>
       </div>
@@ -1088,7 +1129,7 @@
       <div style="position:absolute;top:0;right:0;height:100%;width:min(420px,100%);background:#33392B;padding:28px;display:flex;flexDirection:column;gap:20px;overflow:auto" onClick="{{ stopProp }}">
         <div style="display:flex;justifyContent:space-between;alignItems:center">
           <h3 style="font-family:'Oswald',sans-serif;fontSize:20px;letterSpacing:1px">KOSZYK</h3>
-          <span tabIndex="0" role="button" onClick="{{ toggleCart }}" style="cursor:pointer;fontSize:20px">&times;</span>
+          <span tabIndex="0" role="button" aria-label="Zamknij koszyk" onClick="{{ toggleCart }}" style="cursor:pointer;fontSize:20px">&times;</span>
         </div>
 
         <sc-if value="{{ hasCartItems }}" hint-placeholder-val="{{ false }}">
@@ -1132,7 +1173,7 @@
   <sc-if value="{{ showAuthModal }}" hint-placeholder-val="{{ false }}">
     <div style="position:fixed;inset:0;background:rgba(0,0,0,0.65);zIndex:500;display:flex;alignItems:center;justifyContent:center;padding:20px" onClick="{{ closeAuthModal }}">
       <div style="background:#33392B;width:min(400px,100%);padding:32px;position:relative" onClick="{{ stopProp }}">
-        <span tabIndex="0" role="button" onClick="{{ closeAuthModal }}" style="position:absolute;top:16px;right:20px;cursor:pointer;fontSize:20px;color:#9CA68C" style-hover="color:#E8E7DE">&times;</span>
+        <span tabIndex="0" role="button" aria-label="Zamknij okno logowania" onClick="{{ closeAuthModal }}" style="position:absolute;top:16px;right:20px;cursor:pointer;fontSize:20px;color:#9CA68C" style-hover="color:#E8E7DE">&times;</span>
         <h2 style="font-family:'Oswald',sans-serif;fontWeight:700;fontSize:22px;letterSpacing:0.5px;marginBottom:6px">ZALOGUJ SIĘ</h2>
         <p style="color:#9CA68C;fontSize:13px;marginBottom:22px">Zaloguj się lub kontynuuj jako gość, aby przejść do dostawy.</p>
 
@@ -1143,11 +1184,23 @@
 
         <div style="display:flex;flexDirection:column;gap:12px">
           <sc-if value="{{ isRegisterTab }}" hint-placeholder-val="{{ false }}">
-            <input value="{{ authImie }}" onChange="{{ onAuthImieChange }}" placeholder="Imię" style="background:#0F0F0D;border:1px solid rgba(232,231,222,0.15);color:#E8E7DE;padding:12px 14px;fontSize:14px;width:100%"/>
-            <input value="{{ authNazwisko }}" onChange="{{ onAuthNazwiskoChange }}" placeholder="Nazwisko" style="background:#0F0F0D;border:1px solid rgba(232,231,222,0.15);color:#E8E7DE;padding:12px 14px;fontSize:14px;width:100%"/>
+            <label style="display:flex;flexDirection:column;gap:4px">
+              <span style="fontSize:11px;letterSpacing:0.4px;color:#9CA68C">Imię</span>
+              <input value="{{ authImie }}" onChange="{{ onAuthImieChange }}" placeholder="Imię" style="background:#0F0F0D;border:1px solid rgba(232,231,222,0.15);color:#E8E7DE;padding:12px 14px;fontSize:14px;width:100%"/>
+            </label>
+            <label style="display:flex;flexDirection:column;gap:4px">
+              <span style="fontSize:11px;letterSpacing:0.4px;color:#9CA68C">Nazwisko</span>
+              <input value="{{ authNazwisko }}" onChange="{{ onAuthNazwiskoChange }}" placeholder="Nazwisko" style="background:#0F0F0D;border:1px solid rgba(232,231,222,0.15);color:#E8E7DE;padding:12px 14px;fontSize:14px;width:100%"/>
+            </label>
           </sc-if>
-          <input value="{{ authEmail }}" onChange="{{ onAuthEmailChange }}" placeholder="E-mail" style="background:#0F0F0D;border:1px solid rgba(232,231,222,0.15);color:#E8E7DE;padding:12px 14px;fontSize:14px;width:100%"/>
-          <input value="{{ authPassword }}" onChange="{{ onAuthPasswordChange }}" type="password" placeholder="Hasło" style="background:#0F0F0D;border:1px solid rgba(232,231,222,0.15);color:#E8E7DE;padding:12px 14px;fontSize:14px;width:100%"/>
+          <label style="display:flex;flexDirection:column;gap:4px">
+            <span style="fontSize:11px;letterSpacing:0.4px;color:#9CA68C">E-mail</span>
+            <input value="{{ authEmail }}" onChange="{{ onAuthEmailChange }}" placeholder="E-mail" style="background:#0F0F0D;border:1px solid rgba(232,231,222,0.15);color:#E8E7DE;padding:12px 14px;fontSize:14px;width:100%"/>
+          </label>
+          <label style="display:flex;flexDirection:column;gap:4px">
+            <span style="fontSize:11px;letterSpacing:0.4px;color:#9CA68C">Hasło</span>
+            <input value="{{ authPassword }}" onChange="{{ onAuthPasswordChange }}" type="password" placeholder="Hasło" style="background:#0F0F0D;border:1px solid rgba(232,231,222,0.15);color:#E8E7DE;padding:12px 14px;fontSize:14px;width:100%"/>
+          </label>
 
           <button onClick="{{ submitAuth }}" style="background:#A5131D;color:#fff;border:none;padding:14px;fontFamily:'Oswald',sans-serif;fontSize:13px;letterSpacing:1.2px;fontWeight:600;cursor:pointer;marginTop:6px" style-hover="background:#431517">{{ authSubmitLabel }}</button>
           <span tabIndex="0" role="button" onClick="{{ continueAsGuest }}" style="textAlign:center;color:#9CA68C;fontSize:13px;cursor:pointer;marginTop:4px" style-hover="color:#E8E7DE">Kontynuuj jako gość &rarr;</span>
@@ -1264,12 +1317,24 @@
               <span style="display:block;fontFamily:'Oswald',sans-serif;fontSize:13px;letterSpacing:1.5px;color:#9CA68C;marginBottom:14px">DANE OSOBY ODBIERAJĄCEJ</span>
               <div style="background:#33392B;padding:20px;display:flex;flexDirection:column;gap:14px">
                 <div style="display:grid;gridTemplateColumns:1fr 1fr;gap:14px">
-                  <input value="{{ buyerForm.imie }}" onChange="{{ onBuyerImieChange }}" placeholder="Imię" style="background:#0F0F0D;border:1px solid rgba(232,231,222,0.15);color:#E8E7DE;padding:12px 14px;fontSize:14px"/>
-                  <input value="{{ buyerForm.nazwisko }}" onChange="{{ onBuyerNazwiskoChange }}" placeholder="Nazwisko" style="background:#0F0F0D;border:1px solid rgba(232,231,222,0.15);color:#E8E7DE;padding:12px 14px;fontSize:14px"/>
+                  <label style="display:flex;flexDirection:column;gap:4px">
+                    <span style="fontSize:11px;letterSpacing:0.4px;color:#9CA68C">Imię</span>
+                    <input value="{{ buyerForm.imie }}" onChange="{{ onBuyerImieChange }}" placeholder="Imię" style="background:#0F0F0D;border:1px solid rgba(232,231,222,0.15);color:#E8E7DE;padding:12px 14px;fontSize:14px"/>
+                  </label>
+                  <label style="display:flex;flexDirection:column;gap:4px">
+                    <span style="fontSize:11px;letterSpacing:0.4px;color:#9CA68C">Nazwisko</span>
+                    <input value="{{ buyerForm.nazwisko }}" onChange="{{ onBuyerNazwiskoChange }}" placeholder="Nazwisko" style="background:#0F0F0D;border:1px solid rgba(232,231,222,0.15);color:#E8E7DE;padding:12px 14px;fontSize:14px"/>
+                  </label>
                 </div>
                 <div style="display:grid;gridTemplateColumns:1fr 1fr;gap:14px">
-                  <input value="{{ buyerForm.telefon }}" onChange="{{ onBuyerTelefonChange }}" placeholder="Telefon" style="background:#0F0F0D;border:1px solid rgba(232,231,222,0.15);color:#E8E7DE;padding:12px 14px;fontSize:14px"/>
-                  <input value="{{ buyerForm.email }}" onChange="{{ onBuyerEmailChange }}" placeholder="E-mail" style="background:#0F0F0D;border:1px solid rgba(232,231,222,0.15);color:#E8E7DE;padding:12px 14px;fontSize:14px"/>
+                  <label style="display:flex;flexDirection:column;gap:4px">
+                    <span style="fontSize:11px;letterSpacing:0.4px;color:#9CA68C">Telefon</span>
+                    <input value="{{ buyerForm.telefon }}" onChange="{{ onBuyerTelefonChange }}" placeholder="Telefon" style="background:#0F0F0D;border:1px solid rgba(232,231,222,0.15);color:#E8E7DE;padding:12px 14px;fontSize:14px"/>
+                  </label>
+                  <label style="display:flex;flexDirection:column;gap:4px">
+                    <span style="fontSize:11px;letterSpacing:0.4px;color:#9CA68C">E-mail</span>
+                    <input value="{{ buyerForm.email }}" onChange="{{ onBuyerEmailChange }}" placeholder="E-mail" style="background:#0F0F0D;border:1px solid rgba(232,231,222,0.15);color:#E8E7DE;padding:12px 14px;fontSize:14px"/>
+                  </label>
                 </div>
               </div>
             </div>
@@ -1278,12 +1343,27 @@
               <span style="display:block;fontFamily:'Oswald',sans-serif;fontSize:13px;letterSpacing:1.5px;color:#9CA68C;marginBottom:14px">DANE DO FAKTURY</span>
               <sc-if value="{{ isCompanyBuyer }}" hint-placeholder-val="{{ false }}">
                 <div style="background:#33392B;padding:20px;display:flex;flexDirection:column;gap:14px">
-                  <input value="{{ invoiceForm.nazwaFirmy }}" onChange="{{ onInvoiceNazwaChange }}" placeholder="Nazwa firmy" style="background:#0F0F0D;border:1px solid rgba(232,231,222,0.15);color:#E8E7DE;padding:12px 14px;fontSize:14px"/>
-                  <input value="{{ invoiceForm.nip }}" onChange="{{ onInvoiceNipChange }}" placeholder="NIP" style="background:#0F0F0D;border:1px solid rgba(232,231,222,0.15);color:#E8E7DE;padding:12px 14px;fontSize:14px"/>
-                  <input value="{{ invoiceForm.adres }}" onChange="{{ onInvoiceAdresChange }}" placeholder="Ulica i numer" style="background:#0F0F0D;border:1px solid rgba(232,231,222,0.15);color:#E8E7DE;padding:12px 14px;fontSize:14px"/>
+                  <label style="display:flex;flexDirection:column;gap:4px">
+                    <span style="fontSize:11px;letterSpacing:0.4px;color:#9CA68C">Nazwa firmy</span>
+                    <input value="{{ invoiceForm.nazwaFirmy }}" onChange="{{ onInvoiceNazwaChange }}" placeholder="Nazwa firmy" style="background:#0F0F0D;border:1px solid rgba(232,231,222,0.15);color:#E8E7DE;padding:12px 14px;fontSize:14px"/>
+                  </label>
+                  <label style="display:flex;flexDirection:column;gap:4px">
+                    <span style="fontSize:11px;letterSpacing:0.4px;color:#9CA68C">NIP</span>
+                    <input value="{{ invoiceForm.nip }}" onChange="{{ onInvoiceNipChange }}" placeholder="NIP" style="background:#0F0F0D;border:1px solid rgba(232,231,222,0.15);color:#E8E7DE;padding:12px 14px;fontSize:14px"/>
+                  </label>
+                  <label style="display:flex;flexDirection:column;gap:4px">
+                    <span style="fontSize:11px;letterSpacing:0.4px;color:#9CA68C">Ulica i numer</span>
+                    <input value="{{ invoiceForm.adres }}" onChange="{{ onInvoiceAdresChange }}" placeholder="Ulica i numer" style="background:#0F0F0D;border:1px solid rgba(232,231,222,0.15);color:#E8E7DE;padding:12px 14px;fontSize:14px"/>
+                  </label>
                   <div style="display:grid;gridTemplateColumns:1fr 1fr;gap:14px">
-                    <input value="{{ invoiceForm.kod }}" onChange="{{ onInvoiceKodChange }}" placeholder="Kod pocztowy" style="background:#0F0F0D;border:1px solid rgba(232,231,222,0.15);color:#E8E7DE;padding:12px 14px;fontSize:14px"/>
-                    <input value="{{ invoiceForm.miasto }}" onChange="{{ onInvoiceMiastoChange }}" placeholder="Miasto" style="background:#0F0F0D;border:1px solid rgba(232,231,222,0.15);color:#E8E7DE;padding:12px 14px;fontSize:14px"/>
+                    <label style="display:flex;flexDirection:column;gap:4px">
+                      <span style="fontSize:11px;letterSpacing:0.4px;color:#9CA68C">Kod pocztowy</span>
+                      <input value="{{ invoiceForm.kod }}" onChange="{{ onInvoiceKodChange }}" placeholder="Kod pocztowy" style="background:#0F0F0D;border:1px solid rgba(232,231,222,0.15);color:#E8E7DE;padding:12px 14px;fontSize:14px"/>
+                    </label>
+                    <label style="display:flex;flexDirection:column;gap:4px">
+                      <span style="fontSize:11px;letterSpacing:0.4px;color:#9CA68C">Miasto</span>
+                      <input value="{{ invoiceForm.miasto }}" onChange="{{ onInvoiceMiastoChange }}" placeholder="Miasto" style="background:#0F0F0D;border:1px solid rgba(232,231,222,0.15);color:#E8E7DE;padding:12px 14px;fontSize:14px"/>
+                    </label>
                   </div>
                 </div>
               </sc-if>
@@ -1295,11 +1375,23 @@
                   </label>
                   <sc-if value="{{ wantInvoiceDetails }}" hint-placeholder-val="{{ false }}">
                     <div style="display:flex;flexDirection:column;gap:14px;marginTop:6px">
-                      <input value="{{ invoiceForm.nip }}" onChange="{{ onInvoiceNipChange }}" placeholder="NIP (opcjonalnie)" style="background:#0F0F0D;border:1px solid rgba(232,231,222,0.15);color:#E8E7DE;padding:12px 14px;fontSize:14px"/>
-                      <input value="{{ invoiceForm.adres }}" onChange="{{ onInvoiceAdresChange }}" placeholder="Ulica i numer" style="background:#0F0F0D;border:1px solid rgba(232,231,222,0.15);color:#E8E7DE;padding:12px 14px;fontSize:14px"/>
+                      <label style="display:flex;flexDirection:column;gap:4px">
+                        <span style="fontSize:11px;letterSpacing:0.4px;color:#9CA68C">NIP (opcjonalnie)</span>
+                        <input value="{{ invoiceForm.nip }}" onChange="{{ onInvoiceNipChange }}" placeholder="NIP (opcjonalnie)" style="background:#0F0F0D;border:1px solid rgba(232,231,222,0.15);color:#E8E7DE;padding:12px 14px;fontSize:14px"/>
+                      </label>
+                      <label style="display:flex;flexDirection:column;gap:4px">
+                        <span style="fontSize:11px;letterSpacing:0.4px;color:#9CA68C">Ulica i numer</span>
+                        <input value="{{ invoiceForm.adres }}" onChange="{{ onInvoiceAdresChange }}" placeholder="Ulica i numer" style="background:#0F0F0D;border:1px solid rgba(232,231,222,0.15);color:#E8E7DE;padding:12px 14px;fontSize:14px"/>
+                      </label>
                       <div style="display:grid;gridTemplateColumns:1fr 1fr;gap:14px">
-                        <input value="{{ invoiceForm.kod }}" onChange="{{ onInvoiceKodChange }}" placeholder="Kod pocztowy" style="background:#0F0F0D;border:1px solid rgba(232,231,222,0.15);color:#E8E7DE;padding:12px 14px;fontSize:14px"/>
-                        <input value="{{ invoiceForm.miasto }}" onChange="{{ onInvoiceMiastoChange }}" placeholder="Miasto" style="background:#0F0F0D;border:1px solid rgba(232,231,222,0.15);color:#E8E7DE;padding:12px 14px;fontSize:14px"/>
+                        <label style="display:flex;flexDirection:column;gap:4px">
+                          <span style="fontSize:11px;letterSpacing:0.4px;color:#9CA68C">Kod pocztowy</span>
+                          <input value="{{ invoiceForm.kod }}" onChange="{{ onInvoiceKodChange }}" placeholder="Kod pocztowy" style="background:#0F0F0D;border:1px solid rgba(232,231,222,0.15);color:#E8E7DE;padding:12px 14px;fontSize:14px"/>
+                        </label>
+                        <label style="display:flex;flexDirection:column;gap:4px">
+                          <span style="fontSize:11px;letterSpacing:0.4px;color:#9CA68C">Miasto</span>
+                          <input value="{{ invoiceForm.miasto }}" onChange="{{ onInvoiceMiastoChange }}" placeholder="Miasto" style="background:#0F0F0D;border:1px solid rgba(232,231,222,0.15);color:#E8E7DE;padding:12px 14px;fontSize:14px"/>
+                        </label>
                       </div>
                     </div>
                   </sc-if>
@@ -1333,15 +1425,33 @@
               <div style="background:#33392B;border:1px solid rgba(232,231,222,0.08);padding:28px;display:flex;flexDirection:column;gap:16px">
                 <span style="fontFamily:'Oswald',sans-serif;fontSize:13px;letterSpacing:1.5px;color:#9CA68C">ADRES DOSTAWY</span>
                 <div style="display:grid;gridTemplateColumns:1fr 1fr;gap:14px">
-                  <input value="{{ courierForm.imie }}" onChange="{{ onCourierChange_imie }}" placeholder="Imię" style="background:#0F0F0D;border:1px solid rgba(232,231,222,0.15);color:#E8E7DE;padding:12px 14px;fontSize:14px"/>
-                  <input value="{{ courierForm.nazwisko }}" onChange="{{ onCourierChange_nazwisko }}" placeholder="Nazwisko" style="background:#0F0F0D;border:1px solid rgba(232,231,222,0.15);color:#E8E7DE;padding:12px 14px;fontSize:14px"/>
+                  <label style="display:flex;flexDirection:column;gap:4px">
+                    <span style="fontSize:11px;letterSpacing:0.4px;color:#9CA68C">Imię</span>
+                    <input value="{{ courierForm.imie }}" onChange="{{ onCourierChange_imie }}" placeholder="Imię" style="background:#0F0F0D;border:1px solid rgba(232,231,222,0.15);color:#E8E7DE;padding:12px 14px;fontSize:14px"/>
+                  </label>
+                  <label style="display:flex;flexDirection:column;gap:4px">
+                    <span style="fontSize:11px;letterSpacing:0.4px;color:#9CA68C">Nazwisko</span>
+                    <input value="{{ courierForm.nazwisko }}" onChange="{{ onCourierChange_nazwisko }}" placeholder="Nazwisko" style="background:#0F0F0D;border:1px solid rgba(232,231,222,0.15);color:#E8E7DE;padding:12px 14px;fontSize:14px"/>
+                  </label>
                 </div>
-                <input value="{{ courierForm.adres }}" onChange="{{ onCourierChange_adres }}" placeholder="Ulica i numer" style="background:#0F0F0D;border:1px solid rgba(232,231,222,0.15);color:#E8E7DE;padding:12px 14px;fontSize:14px"/>
+                <label style="display:flex;flexDirection:column;gap:4px">
+                  <span style="fontSize:11px;letterSpacing:0.4px;color:#9CA68C">Ulica i numer</span>
+                  <input value="{{ courierForm.adres }}" onChange="{{ onCourierChange_adres }}" placeholder="Ulica i numer" style="background:#0F0F0D;border:1px solid rgba(232,231,222,0.15);color:#E8E7DE;padding:12px 14px;fontSize:14px"/>
+                </label>
                 <div style="display:grid;gridTemplateColumns:1fr 1fr;gap:14px">
-                  <input value="{{ courierForm.kod }}" onChange="{{ onCourierChange_kod }}" placeholder="Kod pocztowy" style="background:#0F0F0D;border:1px solid rgba(232,231,222,0.15);color:#E8E7DE;padding:12px 14px;fontSize:14px"/>
-                  <input value="{{ courierForm.miasto }}" onChange="{{ onCourierChange_miasto }}" placeholder="Miasto" style="background:#0F0F0D;border:1px solid rgba(232,231,222,0.15);color:#E8E7DE;padding:12px 14px;fontSize:14px"/>
+                  <label style="display:flex;flexDirection:column;gap:4px">
+                    <span style="fontSize:11px;letterSpacing:0.4px;color:#9CA68C">Kod pocztowy</span>
+                    <input value="{{ courierForm.kod }}" onChange="{{ onCourierChange_kod }}" placeholder="Kod pocztowy" style="background:#0F0F0D;border:1px solid rgba(232,231,222,0.15);color:#E8E7DE;padding:12px 14px;fontSize:14px"/>
+                  </label>
+                  <label style="display:flex;flexDirection:column;gap:4px">
+                    <span style="fontSize:11px;letterSpacing:0.4px;color:#9CA68C">Miasto</span>
+                    <input value="{{ courierForm.miasto }}" onChange="{{ onCourierChange_miasto }}" placeholder="Miasto" style="background:#0F0F0D;border:1px solid rgba(232,231,222,0.15);color:#E8E7DE;padding:12px 14px;fontSize:14px"/>
+                  </label>
                 </div>
-                <input value="{{ courierForm.telefon }}" onChange="{{ onCourierChange_telefon }}" placeholder="Telefon" style="background:#0F0F0D;border:1px solid rgba(232,231,222,0.15);color:#E8E7DE;padding:12px 14px;fontSize:14px"/>
+                <label style="display:flex;flexDirection:column;gap:4px">
+                  <span style="fontSize:11px;letterSpacing:0.4px;color:#9CA68C">Telefon</span>
+                  <input value="{{ courierForm.telefon }}" onChange="{{ onCourierChange_telefon }}" placeholder="Telefon" style="background:#0F0F0D;border:1px solid rgba(232,231,222,0.15);color:#E8E7DE;padding:12px 14px;fontSize:14px"/>
+                </label>
               </div>
             </sc-if>
 
@@ -1349,10 +1459,19 @@
               <div style="background:#33392B;border:1px solid rgba(232,231,222,0.08);padding:28px;display:flex;flexDirection:column;gap:16px">
                 <span style="fontFamily:'Oswald',sans-serif;fontSize:13px;letterSpacing:1.5px;color:#9CA68C">DANE ODBIORCY</span>
                 <div style="display:grid;gridTemplateColumns:1fr 1fr;gap:14px">
-                  <input value="{{ paczkomatForm.imie }}" onChange="{{ onPaczkomatChange_imie }}" placeholder="Imię" style="background:#0F0F0D;border:1px solid rgba(232,231,222,0.15);color:#E8E7DE;padding:12px 14px;fontSize:14px"/>
-                  <input value="{{ paczkomatForm.nazwisko }}" onChange="{{ onPaczkomatChange_nazwisko }}" placeholder="Nazwisko" style="background:#0F0F0D;border:1px solid rgba(232,231,222,0.15);color:#E8E7DE;padding:12px 14px;fontSize:14px"/>
+                  <label style="display:flex;flexDirection:column;gap:4px">
+                    <span style="fontSize:11px;letterSpacing:0.4px;color:#9CA68C">Imię</span>
+                    <input value="{{ paczkomatForm.imie }}" onChange="{{ onPaczkomatChange_imie }}" placeholder="Imię" style="background:#0F0F0D;border:1px solid rgba(232,231,222,0.15);color:#E8E7DE;padding:12px 14px;fontSize:14px"/>
+                  </label>
+                  <label style="display:flex;flexDirection:column;gap:4px">
+                    <span style="fontSize:11px;letterSpacing:0.4px;color:#9CA68C">Nazwisko</span>
+                    <input value="{{ paczkomatForm.nazwisko }}" onChange="{{ onPaczkomatChange_nazwisko }}" placeholder="Nazwisko" style="background:#0F0F0D;border:1px solid rgba(232,231,222,0.15);color:#E8E7DE;padding:12px 14px;fontSize:14px"/>
+                  </label>
                 </div>
-                <input value="{{ paczkomatForm.telefon }}" onChange="{{ onPaczkomatChange_telefon }}" placeholder="Telefon" style="background:#0F0F0D;border:1px solid rgba(232,231,222,0.15);color:#E8E7DE;padding:12px 14px;fontSize:14px"/>
+                <label style="display:flex;flexDirection:column;gap:4px">
+                  <span style="fontSize:11px;letterSpacing:0.4px;color:#9CA68C">Telefon</span>
+                  <input value="{{ paczkomatForm.telefon }}" onChange="{{ onPaczkomatChange_telefon }}" placeholder="Telefon" style="background:#0F0F0D;border:1px solid rgba(232,231,222,0.15);color:#E8E7DE;padding:12px 14px;fontSize:14px"/>
+                </label>
 
                 <span style="fontFamily:'Oswald',sans-serif;fontSize:13px;letterSpacing:1.5px;color:#9CA68C;marginTop:8px">WYBIERZ PACZKOMAT</span>
                 <div style="height:220px;width:100%">
@@ -1534,7 +1653,7 @@
 
   <sc-if value="{{ lightboxOpen }}" hint-placeholder-val="{{ false }}">
     <div style="position:fixed;inset:0;background:rgba(15,15,13,0.95);zIndex:400;display:flex;alignItems:center;justifyContent:center;padding:40px" onClick="{{ closeLightbox }}">
-      <span tabIndex="0" role="button" onClick="{{ closeLightbox }}" style="position:absolute;top:24px;right:32px;color:#E8E7DE;fontSize:28px;cursor:pointer">&times;</span>
+      <span tabIndex="0" role="button" aria-label="Zamknij podgląd zdjęcia" onClick="{{ closeLightbox }}" style="position:absolute;top:24px;right:32px;color:#E8E7DE;fontSize:28px;cursor:pointer">&times;</span>
       <div style="width:min(900px,100%);height:min(600px,80vh)">
         <image-slot id="{{ lightboxSlotId }}" shape="rect" placeholder="Zdjęcie z wydarzenia"></image-slot>
       </div>
@@ -1606,6 +1725,10 @@ class Component extends DCLogic {
     paczkomatForm: { imie: '', nazwisko: '', telefon: '' },
     selectedPaczkomat: null,
     selectedArchiveEvent: null,
+    bannerPaused: false,
+    reviewsPaused: false,
+    reminderEmail: '',
+    reminderSubmitted: false,
   };
 
   products = [
@@ -1901,11 +2024,15 @@ class Component extends DCLogic {
   };
 
   componentDidMount() {
+    // Both carousels below auto-advance on a timer — WCAG 2.2.2 requires a way
+    // to stop that, so each tick is gated on a pause flag toggled by a visible
+    // button (bannerPaused / reviewsPaused) rather than just running forever.
     this._bannerTimer = setInterval(() => {
+      if (this.state.bannerPaused) return;
       this.setState(s => ({ bannerIndex: (s.bannerIndex + 1) % this.shopBanners.length }));
     }, 4500);
     this.setState({ reviewIndex: this.reviewsData.length });
-    this._reviewTimer = setInterval(() => this.nextReview(), 3500);
+    this._reviewTimer = setInterval(() => { if (!this.state.reviewsPaused) this.nextReview(); }, 3500);
     this._onScroll = () => this.setState({ scrolled: window.scrollY > 40 });
     this._onResize = () => this.setState({ isMobile: window.innerWidth < 900 });
     window.addEventListener('scroll', this._onScroll);
@@ -2132,6 +2259,7 @@ class Component extends DCLogic {
     priceRange: [Number(s.priceMinDraft) || 0, Number(s.priceMaxDraft) || 999999],
   }));
   toggleOnly = (key) => this.setState(s => ({ [key]: !s[key] }));
+  resetPriceRange = () => this.setState({ priceRange: [0, 1400], priceMinDraft: '', priceMaxDraft: '' });
   clearAllFilters = () => this.setState({
     category: 'Wszystkie', weightFilter: 'Wszystkie', akcSubFilter: 'Wszystkie', subFilter: 'Wszystkie',
     brandFilter: [], priceRange: [0, 1400], priceMinDraft: '', priceMaxDraft: '',
@@ -2139,6 +2267,13 @@ class Component extends DCLogic {
   });
   setSort = (v) => this.setState({ sort: v });
   goBanner = (i) => this.setState({ bannerIndex: i });
+  toggleBannerPause = () => this.setState(s => ({ bannerPaused: !s.bannerPaused }));
+  toggleReviewsPause = () => this.setState(s => ({ reviewsPaused: !s.reviewsPaused }));
+  onReminderEmailChange = (e) => this.setState({ reminderEmail: e.target.value });
+  // No backend behind this demo shop (checkout is the same — see confirmOrder),
+  // so this only captures the intent locally rather than silently pretending
+  // to send real reminders.
+  submitReminder = () => { if (this.state.reminderEmail.trim()) this.setState({ reminderSubmitted: true }); };
   nextBanner = () => this.setState(s => ({ bannerIndex: (s.bannerIndex + 1) % this.shopBanners.length }));
   prevBanner = () => this.setState(s => ({ bannerIndex: (s.bannerIndex - 1 + this.shopBanners.length) % this.shopBanners.length }));
   setBrandsRef = (el) => { this._brandsRef = el; };
@@ -2161,7 +2296,7 @@ class Component extends DCLogic {
   openArchiveEvent = (i) => { window.scrollTo(0, 0); this.setState({ selectedArchiveEvent: i }); };
   closeArchiveEvent = () => this.setState({ selectedArchiveEvent: null });
   renderVals() {
-    const { view, scrolled, isMobile, mobileMenuOpen, cartOpen, cart, search, category, sort, selectedProductId, eventsTab, productQty, productVariant, selectedAlbum, lightboxSlotId, checkoutStep, deliveryOption, toast, weightFilter, akcSubFilter, subFilter, bannerIndex, expandedSidebarCat, brandFilter, brandsExpanded, priceMinDraft, priceMaxDraft, priceRange, onlyBestseller, onlyPromocja, onlyDostepne, courierForm, paczkomatForm, selectedPaczkomat, selectedArchiveEvent } = this.state;
+    const { view, scrolled, isMobile, mobileMenuOpen, cartOpen, cart, search, category, sort, selectedProductId, eventsTab, productQty, productVariant, selectedAlbum, lightboxSlotId, checkoutStep, deliveryOption, toast, weightFilter, akcSubFilter, subFilter, bannerIndex, expandedSidebarCat, brandFilter, brandsExpanded, priceMinDraft, priceMaxDraft, priceRange, onlyBestseller, onlyPromocja, onlyDostepne, courierForm, paczkomatForm, selectedPaczkomat, selectedArchiveEvent, bannerPaused, reviewsPaused, reminderEmail, reminderSubmitted } = this.state;
 
     const badgeFor = (p) => {
       if (p.bestseller) return { badge: 'BESTSELLER', badgeBg: '#A5131D' };
@@ -2172,6 +2307,20 @@ class Component extends DCLogic {
     const decorated = this.products.filter(p => p.active !== false).map(p => ({ ...p, ...badgeFor(p), dostepne: p.stan > 0 }));
 
     const currentSubOptions = this.subcategoriesMap[category] || null;
+
+    // Removable summary of every active shop filter — without this, it's easy
+    // to lose track of why the grid shows what it shows after a few taps.
+    const activeFilterChips = [];
+    if (category !== 'Wszystkie') activeFilterChips.push({ label: category, removeLabel: 'Usuń filtr kategorii: ' + category, onRemove: () => this.setCategory('Wszystkie') });
+    if (currentSubOptions && subFilter !== 'Wszystkie') activeFilterChips.push({ label: subFilter, removeLabel: 'Usuń filtr rodzaju: ' + subFilter, onRemove: () => this.setSubFilter('Wszystkie') });
+    if (weightFilter !== 'Wszystkie') activeFilterChips.push({ label: weightFilter, removeLabel: 'Usuń filtr wagi: ' + weightFilter, onRemove: () => this.setWeightFilter('Wszystkie') });
+    brandFilter.forEach(b => activeFilterChips.push({ label: b, removeLabel: 'Usuń markę: ' + b, onRemove: () => this.toggleBrandFilter(b) }));
+    if (onlyBestseller) activeFilterChips.push({ label: 'Bestseller', removeLabel: 'Usuń filtr: tylko bestsellery', onRemove: () => this.toggleOnly('onlyBestseller') });
+    if (onlyPromocja) activeFilterChips.push({ label: 'Promocja', removeLabel: 'Usuń filtr: tylko promocje', onRemove: () => this.toggleOnly('onlyPromocja') });
+    if (onlyDostepne) activeFilterChips.push({ label: 'Dostępne', removeLabel: 'Usuń filtr: tylko dostępne', onRemove: () => this.toggleOnly('onlyDostepne') });
+    if (priceRange[0] !== 0 || priceRange[1] !== 1400) activeFilterChips.push({ label: priceRange[0] + '–' + priceRange[1] + ' zł', removeLabel: 'Usuń filtr ceny', onRemove: this.resetPriceRange });
+    if (search) activeFilterChips.push({ label: '„' + search + '”', removeLabel: 'Usuń wyszukiwanie: ' + search, onRemove: () => this.setSearch('') });
+
     const searchSuggestions = search
       ? [...new Set(this.products.filter(p => p.name.toLowerCase().includes(search.toLowerCase())).map(p => p.name))].slice(0, 8)
       : [];
@@ -2301,6 +2450,7 @@ class Component extends DCLogic {
       navBg: (scrolled || view !== 'home' || isMobile) ? 'rgba(13,14,10,0.96)' : 'rgba(13,14,10,0.15)',
       navBorder: (scrolled || view !== 'home' || isMobile) ? '1px solid rgba(232,231,222,0.12)' : '1px solid transparent',
       mobileMenuIcon: mobileMenuOpen ? '\u2715' : '\u2630',
+      mobileMenuAriaLabel: mobileMenuOpen ? 'Zamknij menu' : 'Otw\u00f3rz menu',
       toggleMobileMenu: this.toggleMobileMenu,
       toggleCart: this.toggleCart, stopProp: this.stopProp,
       goHome: () => this.setView('home'), goShop: () => this.setView('shop'), goEvents: () => this.setView('events'), goKorengal: () => this.setView('korengal'), goU3: () => this.setView('u3'),
@@ -2419,6 +2569,7 @@ class Component extends DCLogic {
       onSortChange: (e) => this.setSort(e.target.value),
       onSearchChange: (e) => this.setSearch(e.target.value),
       products: productsOut, hasProducts: productsOut.length > 0, hasNoProducts: productsOut.length === 0, productCount: productsOut.length,
+      activeFilterChips, hasActiveFilters: activeFilterChips.length > 0,
       isAmunicjaCategory: category === 'Kulki ASG',
       isAkcesoriaCategory: false,
       weightOptions: ['Wszystkie', '0.20g', '0.25g', '0.28g', '0.32g'].map(w => ({
@@ -2444,7 +2595,18 @@ class Component extends DCLogic {
       bannerDots: this.shopBanners.map((b, i) => ({
         onClick: () => this.goBanner(i),
         bg: i === bannerIndex ? '#A5131D' : 'rgba(232,231,222,0.3)',
+        ariaLabel: 'Baner ' + (i + 1) + ': ' + b.title,
       })),
+      toggleBannerPause: this.toggleBannerPause,
+      bannerPauseIcon: bannerPaused ? '▶' : '⏸',
+      bannerPauseLabel: bannerPaused ? 'Wznów automatyczne przewijanie banerów' : 'Zatrzymaj automatyczne przewijanie banerów',
+      toggleReviewsPause: this.toggleReviewsPause,
+      reviewsPauseIcon: reviewsPaused ? '▶' : '⏸',
+      reviewsPauseText: reviewsPaused ? 'Wznów' : 'Pauza',
+      reviewsPauseLabel: reviewsPaused ? 'Wznów automatyczne przewijanie opinii' : 'Zatrzymaj automatyczne przewijanie opinii',
+      reminderEmail, reminderSubmitted,
+      onReminderEmailChange: this.onReminderEmailChange,
+      submitReminder: this.submitReminder,
       categoryBrands: [...new Set(this.products.filter(p => category === 'Wszystkie' || (category === 'Promocje' ? p.promo === true : p.category === category)).map(p => p.brand))].sort().map(b => ({ name: b, onClick: () => this.filterByBrandOnly(b) })),
       setBrandsRef: this.setBrandsRef, scrollBrandsLeft: this.scrollBrandsLeft, scrollBrandsRight: this.scrollBrandsRight,
       brandFilterOptions: [...new Set(this.products.filter(p => category === 'Wszystkie' || (category === 'Promocje' ? p.promo === true : p.category === category)).map(p => p.brand))].sort().map(b => ({
@@ -2475,7 +2637,6 @@ class Component extends DCLogic {
           hasSubs: !!subs,
           showSubs: !!subs && expanded,
           arrowIcon: expanded ? '\u25b4' : '\u25be',
-          onToggleArrow: (e) => { e.stopPropagation(); this.toggleSidebarCat(cat); },
           subs: subs ? subs.map(s => ({
             label: s,
             onClick: () => { this.setCategory(cat); this.setSubFilter(s); },
@@ -2500,6 +2661,7 @@ class Component extends DCLogic {
         };
       })() : null,
       cartCount, cartTotalLabel: cartTotal + ' zł',
+      cartAriaLabel: cartCount > 0 ? 'Koszyk, liczba produktów: ' + cartCount : 'Koszyk (pusty)',
       cartItems, hasCartItems: cartItems.length > 0, hasNoCartItems: cartItems.length === 0, goShopFromCart: this.goShopFromCart,
       toast, hasToast: !!toast,
       checkoutStep, isDeliveryFormStep: checkoutStep === 'delivery', isConfirmedStep: checkoutStep === 'confirmed',
