@@ -1547,7 +1547,7 @@
             <sc-if value="{{ hasCheckoutError }}" hint-placeholder-val="{{ false }}">
               <span style="color:#F2846D;fontSize:13px;lineHeight:1.5">{{ checkoutError }}</span>
             </sc-if>
-            <button onClick="{{ confirmOrder }}" style="background:#A5131D;color:#fff;border:none;padding:16px;fontFamily:'Oswald',sans-serif;fontSize:14px;letterSpacing:1.2px;fontWeight:600;cursor:pointer" style-hover="background:#431517">POTWIERDŹ ZAMÓWIENIE</button>
+            <button onClick="{{ confirmOrder }}" disabled="{{ checkoutSubmitting }}" style="background:#A5131D;color:#fff;border:none;padding:16px;fontFamily:'Oswald',sans-serif;fontSize:14px;letterSpacing:1.2px;fontWeight:600;cursor:pointer;opacity:{{ checkoutSubmitOpacity }}" style-hover="background:#431517">{{ confirmOrderLabel }}</button>
             <span style="color:#9CA68C;fontSize:12px">Nie zwlekaj, produkty w koszyku nie są rezerwowane.</span>
           </div>
         </div>
@@ -1556,7 +1556,10 @@
       <sc-if value="{{ isConfirmedStep }}" hint-placeholder-val="{{ false }}">
         <div style="display:flex;flexDirection:column;gap:16px;alignItems:flex-start;paddingTop:40px">
           <span style="fontFamily:'Oswald',sans-serif;fontSize:30px;fontWeight:700">DZIĘKUJEMY!</span>
-          <p style="color:#9CA68C;fontSize:15px;lineHeight:1.7;maxWidth:520px">Zamówienie zostało zarejestrowane (demo). Sposób dostawy: {{ deliveryOption }}. Suma: {{ cartTotalLabel }}. Potwierdzenie wyślemy telefonicznie lub e-mailem.</p>
+          <sc-if value="{{ hasLastOrderNumber }}" hint-placeholder-val="{{ false }}">
+            <p style="color:#E8E7DE;fontSize:16px;fontFamily:'Oswald',sans-serif;letterSpacing:0.5px">Numer zamówienia: {{ lastOrderNumber }}</p>
+          </sc-if>
+          <p style="color:#9CA68C;fontSize:15px;lineHeight:1.7;maxWidth:520px">Zamówienie zostało przyjęte. Sposób dostawy: {{ deliveryOption }}. Suma: {{ lastOrderTotalLabel }}. Potwierdzenie wyślemy telefonicznie lub e-mailem.</p>
           <button onClick="{{ closeCartFully }}" style="background:transparent;color:#E8E7DE;border:1.5px solid rgba(232,231,222,0.4);padding:14px 26px;fontFamily:'Oswald',sans-serif;fontSize:13px;letterSpacing:1px;fontWeight:600;cursor:pointer" style-hover="border-color:#E8E7DE">WRÓĆ DO SKLEPU</button>
         </div>
       </sc-if>
@@ -1865,7 +1868,7 @@ class Component extends DCLogic {
     lightboxSlotId: null,
     orders: [],
     checkoutStep: 'delivery',
-    deliveryOption: 'Odbiór osobisty',
+    deliveryOption: 'Odbiór osobisty – Kunickiego 54',
     toast: null,
     weightFilter: 'Wszystkie',
     akcSubFilter: 'Wszystkie',
@@ -1881,6 +1884,9 @@ class Component extends DCLogic {
     authInfo: null,
     authLoading: false,
     checkoutError: null,
+    checkoutSubmitting: false,
+    lastOrderNumber: null,
+    lastOrderTotal: null,
     u3Tab: 'opis',
     korengalTab: 'opis',
     buyerType: 'Osoba prywatna',
@@ -2771,8 +2777,19 @@ class Component extends DCLogic {
   toggleInvoiceDetails = () => this.setState(s => ({ wantInvoiceDetails: !s.wantInvoiceDetails }));
   backToShop = () => this.setView('shop');
   setDeliveryOption = (v) => this.setState({ deliveryOption: v, selectedPaczkomat: null });
-  confirmOrder = () => {
-    const { cart, buyerForm, deliveryOption, courierForm, paczkomatForm, selectedPaczkomat, paymentMethod } = this.state;
+  // Koszt dostawy — jedyne miejsce, gdzie ta liczba jest zaszyta; RPC
+  // create_order() i tak przelicza cenę PRODUKTÓW wyłącznie z bazy, ale
+  // koszt dostawy (nie mając osobnej tabeli metod wysyłki) przekazujemy
+  // z frontendu — dlatego serwer nadal jest źródłem prawdy dla cen
+  // produktów, a to jest tylko stała opłata za wybraną metodę.
+  shippingCostFor = (deliveryOption) => {
+    if (deliveryOption === 'Kurier') return 14.99;
+    if (deliveryOption === 'Paczkomat') return 9.99;
+    return 0;
+  };
+
+  confirmOrder = async () => {
+    const { cart, buyerForm, deliveryOption, courierForm, paczkomatForm, selectedPaczkomat, paymentMethod, wantInvoiceDetails, invoiceForm } = this.state;
     const missing = (v) => !(v || '').trim();
     if (missing(buyerForm.imie) || missing(buyerForm.nazwisko) || missing(buyerForm.telefon) || missing(buyerForm.email)) {
       this.setState({ checkoutError: 'Podaj imię, nazwisko, numer telefonu i e-mail, aby złożyć zamówienie.' });
@@ -2786,27 +2803,73 @@ class Component extends DCLogic {
       this.setState({ checkoutError: 'Uzupełnij dane odbiorcy i wybierz paczkomat.' });
       return;
     }
-    this.setState({ checkoutError: null });
-    const items = cart.map(c => {
-      const p = this.products.find(pp => pp.id === c.id);
-      return { name: p ? p.name : c.id, qty: c.qty, price: p ? p.price : 0 };
-    });
-    const total = items.reduce((s, it) => s + it.price * it.qty, 0);
-    const address = deliveryOption === 'Kurier'
-      ? (courierForm.imie + ' ' + courierForm.nazwisko + ', ' + courierForm.adres + ', ' + courierForm.kod + ' ' + courierForm.miasto + ', tel. ' + courierForm.telefon)
+    if (!cart.length) {
+      this.setState({ checkoutError: 'Koszyk jest pusty.' });
+      return;
+    }
+    if (!this.supabase) {
+      this.setState({ checkoutError: 'Składanie zamówień jest chwilowo niedostępne. Odśwież stronę i spróbuj ponownie.' });
+      return;
+    }
+
+    const items = cart.map((c) => ({ variant_id: this.resolveVariantId(c.id), quantity: c.qty }));
+    if (items.some((it) => !it.variant_id)) {
+      this.setState({ checkoutError: 'Nie udało się rozpoznać jednego z produktów w koszyku. Odśwież stronę i spróbuj ponownie.' });
+      return;
+    }
+
+    this.setState({ checkoutError: null, checkoutSubmitting: true });
+
+    const shippingAddress = deliveryOption === 'Kurier'
+      ? { ...courierForm }
       : deliveryOption === 'Paczkomat'
-      ? (paczkomatForm.imie + ' ' + paczkomatForm.nazwisko + ', paczkomat ' + (selectedPaczkomat || '—') + ', tel. ' + paczkomatForm.telefon)
-      : 'Odbiór osobisty – Kunickiego 54';
-    const order = {
-      id: 'ORD-' + Date.now().toString().slice(-6),
-      date: new Date().toLocaleString('pl-PL'),
-      buyerName: (buyerForm.imie + ' ' + buyerForm.nazwisko).trim() || 'Gość',
-      contact: (buyerForm.telefon || '—') + ' / ' + (buyerForm.email || '—'),
-      deliveryMethod: deliveryOption, address, paymentMethod, items, total, status: 'Nowe',
-    };
-    this.setState(s => ({ checkoutStep: 'confirmed', orders: [order, ...s.orders] }));
+      ? { ...paczkomatForm, paczkomat: selectedPaczkomat }
+      : null;
+    const invoiceDetails = wantInvoiceDetails ? { ...invoiceForm } : null;
+    const shippingCost = this.shippingCostFor(deliveryOption);
+    // Suma do pokazania na ekranie potwierdzenia — liczona z lokalnych cen
+    // TYLKO na potrzeby wyświetlenia; prawdziwa suma zapisana w zamówieniu
+    // jest przeliczona przez create_order() z aktualnych cen w bazie.
+    const displayTotal = cart.reduce((sum, c) => {
+      const p = this.products.find((pp) => pp.id === c.id);
+      return sum + (p ? p.price * c.qty : 0);
+    }, 0) + shippingCost;
+
+    try {
+      const { data, error } = await this.supabase.rpc('create_order', {
+        p_items: items,
+        p_delivery_option: deliveryOption,
+        p_payment_method: paymentMethod,
+        p_buyer: { imie: buyerForm.imie, nazwisko: buyerForm.nazwisko, telefon: buyerForm.telefon, email: buyerForm.email },
+        p_shipping_address: shippingAddress,
+        p_invoice_details: invoiceDetails,
+        p_shipping_cost: shippingCost,
+      });
+      if (error) throw error;
+      const result = Array.isArray(data) ? data[0] : data;
+
+      this.setState({
+        checkoutSubmitting: false,
+        checkoutStep: 'confirmed',
+        lastOrderNumber: result ? result.out_order_number : null,
+        lastOrderTotal: displayTotal,
+        cart: [],
+      }, this.persistCart);
+    } catch (e) {
+      // Wyjątki z create_order() są już po polsku i zrozumiałe dla klienta
+      // (np. "Niektóre produkty przestały być dostępne w wybranej ilości.") —
+      // pokazujemy je wprost zamiast generycznego komunikatu.
+      console.error('Nie udało się złożyć zamówienia:', e);
+      this.setState({
+        checkoutSubmitting: false,
+        checkoutError: (e && e.message) || 'Nie udało się złożyć zamówienia. Spróbuj ponownie.',
+      });
+    }
   };
-  closeCartFully = () => { this.setState({ cartOpen: false, checkoutStep: 'delivery', cart: [] }, this.persistCart); this.setView('home'); };
+  closeCartFully = () => {
+    this.setState({ cartOpen: false, checkoutStep: 'delivery', cart: [], lastOrderNumber: null, lastOrderTotal: null }, this.persistCart);
+    this.setView('home');
+  };
   updateCourierField = (field, value) => this.setState(s => ({ courierForm: { ...s.courierForm, [field]: value } }));
   updatePaczkomatField = (field, value) => this.setState(s => ({ paczkomatForm: { ...s.paczkomatForm, [field]: value } }));
   selectPaczkomat = (code) => this.setState({ selectedPaczkomat: code });
@@ -3356,6 +3419,11 @@ class Component extends DCLogic {
       toast, hasToast: !!toast,
       checkoutStep, isDeliveryFormStep: checkoutStep === 'delivery', isConfirmedStep: checkoutStep === 'confirmed',
       checkoutError: this.state.checkoutError, hasCheckoutError: !!this.state.checkoutError,
+      checkoutSubmitting: this.state.checkoutSubmitting,
+      checkoutSubmitOpacity: this.state.checkoutSubmitting ? 0.6 : 1,
+      confirmOrderLabel: this.state.checkoutSubmitting ? 'SKŁADANIE ZAMÓWIENIA...' : 'POTWIERDŹ ZAMÓWIENIE',
+      lastOrderNumber: this.state.lastOrderNumber, hasLastOrderNumber: !!this.state.lastOrderNumber,
+      lastOrderTotalLabel: (this.state.lastOrderTotal != null ? this.state.lastOrderTotal : 0) + ' zł',
       goToCheckout: this.goToCheckout, backToShop: this.backToShop, confirmOrder: this.confirmOrder, closeCartFully: this.closeCartFully,
       deliveryOptions: [
         { label: 'Kurier', desc: 'Dostawa pod wskazany adres', price: '14,99 zł' },
