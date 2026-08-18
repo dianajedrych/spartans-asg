@@ -581,6 +581,86 @@
           </div>
         </div>
 
+        <!-- OPINIE (ETAP 12) -->
+        <div style="marginTop:70px;maxWidth:800px">
+          <h3 style="font-family:'Oswald',sans-serif;fontSize:20px;letterSpacing:1px;marginBottom:18px">OPINIE</h3>
+
+          <sc-if value="{{ hasPublishedReviews }}" hint-placeholder-val="{{ false }}">
+            <div style="display:flex;alignItems:baseline;gap:12px;marginBottom:28px">
+              <span style="color:#F2846D;fontSize:20px;letterSpacing:1px">{{ reviewAvgStars }}</span>
+              <span style="color:#E8E7DE;fontSize:15px;fontWeight:600">{{ reviewAvgLabel }}</span>
+              <span style="color:#9CA68C;fontSize:13px">({{ reviewCountLabel }})</span>
+            </div>
+            <div style="display:flex;flexDirection:column;gap:20px;marginBottom:40px">
+              <sc-for list="{{ publishedReviewsOut }}" as="r" hint-placeholder-count="3">
+                <div style="borderBottom:1px solid rgba(232,231,222,0.1);paddingBottom:20px">
+                  <div style="display:flex;justifyContent:space-between;flexWrap:wrap;gap:8px;marginBottom:6px">
+                    <div style="display:flex;alignItems:center;gap:10px">
+                      <span style="color:#F2846D;fontSize:14px;letterSpacing:1px">{{ r.starsLabel }}</span>
+                      <span style="color:#E8E7DE;fontSize:14px;fontWeight:600">{{ r.authorName }}</span>
+                      <sc-if value="{{ r.isVerified }}" hint-placeholder-val="{{ false }}">
+                        <span style="color:#8FBF6B;fontSize:11px;letterSpacing:0.5px;border:1px solid rgba(143,191,107,0.4);padding:2px 8px">✓ ZWERYFIKOWANY ZAKUP</span>
+                      </sc-if>
+                    </div>
+                    <span style="color:#9CA68C;fontSize:12px">{{ r.dateLabel }}</span>
+                  </div>
+                  <sc-if value="{{ r.hasTitle }}" hint-placeholder-val="{{ false }}">
+                    <span style="display:block;color:#E8E7DE;fontSize:14px;fontWeight:500;marginBottom:4px">{{ r.title }}</span>
+                  </sc-if>
+                  <p style="color:#E8E7DE;opacity:0.8;fontSize:14px;lineHeight:1.6">{{ r.body }}</p>
+                </div>
+              </sc-for>
+            </div>
+          </sc-if>
+
+          <sc-if value="{{ hasNoPublishedReviews }}" hint-placeholder-val="{{ false }}">
+            <p style="color:#9CA68C;fontSize:14px;marginBottom:28px">Ten produkt nie ma jeszcze żadnych opinii — bądź pierwszą osobą, która ją doda.</p>
+          </sc-if>
+
+          <div style="background:#33392B;padding:24px;maxWidth:520px">
+            <sc-if value="{{ showReviewLoginPrompt }}" hint-placeholder-val="{{ false }}">
+              <p style="color:#9CA68C;fontSize:14px;marginBottom:14px">Zaloguj się, aby dodać opinię o tym produkcie.</p>
+              <span tabIndex="0" role="button" onClick="{{ openReviewLogin }}" style="display:inline-block;background:#A5131D;color:#fff;border:none;padding:12px 22px;fontFamily:'Oswald',sans-serif;fontSize:13px;letterSpacing:1px;fontWeight:600;cursor:pointer" style-hover="background:#431517">ZALOGUJ SIĘ</span>
+            </sc-if>
+
+            <sc-if value="{{ hasMyReview }}" hint-placeholder-val="{{ false }}">
+              <span style="display:block;fontSize:12px;letterSpacing:1px;color:#9CA68C;marginBottom:10px">TWOJA OPINIA — {{ myReviewData.statusLabel }}</span>
+              <span style="color:#F2846D;fontSize:15px;letterSpacing:1px;display:block;marginBottom:6px">{{ myReviewData.starsLabel }}</span>
+              <sc-if value="{{ myReviewData.hasTitle }}" hint-placeholder-val="{{ false }}">
+                <span style="display:block;color:#E8E7DE;fontSize:14px;fontWeight:500;marginBottom:4px">{{ myReviewData.title }}</span>
+              </sc-if>
+              <p style="color:#E8E7DE;opacity:0.8;fontSize:14px;lineHeight:1.6">{{ myReviewData.body }}</p>
+            </sc-if>
+
+            <sc-if value="{{ reviewSubmittedThanks }}" hint-placeholder-val="{{ false }}">
+              <p style="color:#8FBF6B;fontSize:14px;lineHeight:1.6">✓ Dziękujemy! Twoja opinia czeka na moderację i pojawi się na stronie po zatwierdzeniu.</p>
+            </sc-if>
+
+            <sc-if value="{{ showReviewForm }}" hint-placeholder-val="{{ false }}">
+              <span style="display:block;fontSize:12px;letterSpacing:1px;color:#9CA68C;marginBottom:10px">DODAJ OPINIĘ</span>
+              <div style="display:flex;gap:6px;marginBottom:16px">
+                <sc-for list="{{ reviewStarPicker }}" as="s" hint-placeholder-count="5">
+                  <span tabIndex="0" role="button" aria-label="Oceń na {{ s.n }} z 5" onClick="{{ s.onClick }}" style="color:#F2846D;fontSize:24px;cursor:pointer;lineHeight:1">{{ s.symbol }}</span>
+                </sc-for>
+              </div>
+              <div style="display:flex;flexDirection:column;gap:12px">
+                <div>
+                  <label for="review-title" style="display:block;fontSize:12px;color:#9CA68C;marginBottom:5px">Tytuł (opcjonalnie)</label>
+                  <input id="review-title" value="{{ reviewTitle }}" onChange="{{ onReviewTitle }}" style="width:100%;background:#0F0F0D;border:1px solid rgba(232,231,222,0.15);color:#E8E7DE;padding:10px 12px;fontSize:14px" />
+                </div>
+                <div>
+                  <label for="review-body" style="display:block;fontSize:12px;color:#9CA68C;marginBottom:5px">Treść opinii</label>
+                  <textarea id="review-body" value="{{ reviewBody }}" onChange="{{ onReviewBody }}" rows="4" style="width:100%;background:#0F0F0D;border:1px solid rgba(232,231,222,0.15);color:#E8E7DE;padding:10px 12px;fontSize:14px;fontFamily:inherit;resize:vertical"></textarea>
+                </div>
+                <sc-if value="{{ hasReviewError }}" hint-placeholder-val="{{ false }}">
+                  <p style="color:#F2846D;fontSize:13px">{{ reviewError }}</p>
+                </sc-if>
+                <span tabIndex="0" role="button" onClick="{{ submitReview }}" style="align-self:flex-start;background:#A5131D;color:#fff;border:none;padding:12px 24px;fontFamily:'Oswald',sans-serif;fontSize:13px;letterSpacing:1px;fontWeight:600;cursor:pointer;opacity:{{ reviewSubmitOpacity }}" style-hover="background:#431517">{{ reviewSubmitLabel }}</span>
+              </div>
+            </sc-if>
+          </div>
+        </div>
+
         <div style="marginTop:70px">
           <h3 style="font-family:'Oswald',sans-serif;fontSize:20px;letterSpacing:1px;marginBottom:24px">PODOBNE PRODUKTY</h3>
           <div style="display:grid;gridTemplateColumns:repeat(auto-fill,minmax(220px,1fr));gap:20px">
@@ -1990,6 +2070,15 @@ class Component extends DCLogic {
     dbEvents: [],
     eventsLoaded: false,
     selectedEventSlug: null,
+    // ETAP 12: opinie produktowe (reviews) — patrz loadProductReviews().
+    productReviews: [],
+    reviewsLoaded: false,
+    reviewRating: 0,
+    reviewTitle: '',
+    reviewBody: '',
+    reviewSubmitting: false,
+    reviewError: null,
+    reviewSubmitted: false,
   };
 
   // Produkty/kategorie/marki są ładowane z Supabase w loadCatalog() (wywoływane
@@ -2543,6 +2632,15 @@ class Component extends DCLogic {
       this.shopBrands = Array.from(brandSet).sort((a, b) => a.localeCompare(b, 'pl'));
 
       this.setState({ catalogLoaded: true, catalogError: false });
+
+      // Wejście z linku bezpośrednio na stronę produktu (odświeżenie strony /
+      // link ze zbioru) — componentDidMount ustawił selectedProductId (slug)
+      // z adresu ZANIM this.products się wypełniło, więc opinie trzeba
+      // douczytać teraz, kiedy już znamy prawdziwe id (UUID) produktu.
+      if (this.state.view === 'product' && this.state.selectedProductId && !this.state.reviewsLoaded) {
+        const prod = this.products.find((p) => p.id === this.state.selectedProductId);
+        if (prod) this.loadProductReviews(prod.dbId);
+      }
     } catch (e) {
       console.error('Błąd wczytywania katalogu produktów:', e);
       this.setState({ catalogLoaded: true, catalogError: true });
@@ -2589,6 +2687,68 @@ class Component extends DCLogic {
     window.scrollTo(0, 0);
     this.setState({ view: 'event', selectedEventSlug: slug, mobileMenuOpen: false });
     this.syncRoute('#/event/' + encodeURIComponent(slug), true);
+  };
+
+  // ETAP 12: opinie produktowe. RLS na "reviews" zwraca gościom tylko
+  // opinie ze statusem 'published', a zalogowanemu klientowi dodatkowo
+  // jego WŁASNĄ opinię niezależnie od statusu — dzięki temu jedno proste
+  // zapytanie wystarcza i do listy publicznej, i do "moja opinia" poniżej.
+  loadProductReviews = async (productId) => {
+    const ready = await this.waitForSupabaseSdk();
+    if (!ready) return;
+    if (!this.supabase) this.supabase = window.supabase.createClient(window.SUPABASE_URL, window.SUPABASE_PUBLISHABLE_KEY);
+    try {
+      const { data, error } = await this.supabase
+        .from('reviews')
+        .select('id, rating, title, body, author_name, is_verified_purchase, status, user_id, created_at')
+        .eq('product_id', productId)
+        .order('created_at', { ascending: false });
+      if (error) throw error;
+      this.setState({ productReviews: data || [], reviewsLoaded: true });
+    } catch (e) {
+      console.error('Błąd wczytywania opinii:', e);
+      this.setState({ reviewsLoaded: true });
+    }
+  };
+
+  setReviewField = (field, value) => this.setState({ [field]: value, reviewError: null });
+  setReviewRating = (n) => this.setState({ reviewRating: n, reviewError: null });
+
+  openReviewLogin = () => this.setState({ showAuthModal: true, authIntent: 'review' });
+
+  submitReview = async () => {
+    if (!this._authUserId) { this.openReviewLogin(); return; }
+    const { reviewRating, reviewTitle, reviewBody, selectedProductId } = this.state;
+    if (!reviewRating || reviewRating < 1 || reviewRating > 5) {
+      this.setState({ reviewError: 'Wybierz ocenę (1–5 gwiazdek).' });
+      return;
+    }
+    if (!reviewBody.trim()) {
+      this.setState({ reviewError: 'Napisz kilka słów treści opinii.' });
+      return;
+    }
+    // selectedProductId to slug (patrz komentarz w openProduct) — reviews.product_id
+    // to prawdziwy UUID produktu.
+    const prod = this.products.find((p) => p.id === selectedProductId);
+    if (!prod) { this.setState({ reviewError: 'Nie udało się dodać opinii. Odśwież stronę i spróbuj ponownie.' }); return; }
+    this.setState({ reviewSubmitting: true, reviewError: null });
+    try {
+      const { error } = await this.supabase.from('reviews').insert({
+        product_id: prod.dbId,
+        user_id: this._authUserId,
+        rating: reviewRating,
+        title: reviewTitle.trim() || null,
+        body: reviewBody.trim(),
+      });
+      if (error) throw error;
+      this.setState({ reviewSubmitting: false, reviewSubmitted: true });
+      this.loadProductReviews(prod.dbId);
+    } catch (e) {
+      const msg = (e && e.code === '23505')
+        ? 'Już dodałeś/aś opinię o tym produkcie.'
+        : (e.message || 'Nie udało się dodać opinii. Spróbuj ponownie.');
+      this.setState({ reviewSubmitting: false, reviewError: msg });
+    }
   };
 
   // Reads the current #/... hash into a view (+ product id / shop category).
@@ -3104,8 +3264,16 @@ class Component extends DCLogic {
 
   openProduct = (id) => {
     window.scrollTo(0, 0);
-    this.setState({ view: 'product', selectedProductId: id, productQty: 1, productVariant: null });
+    this.setState({
+      view: 'product', selectedProductId: id, productQty: 1, productVariant: null,
+      productReviews: [], reviewsLoaded: false,
+      reviewRating: 0, reviewTitle: '', reviewBody: '', reviewError: null, reviewSubmitted: false,
+    });
     this.syncRoute('#/product/' + encodeURIComponent(id), true);
+    // "id" tutaj to slug (patrz komentarz "id: p.slug" w loadCatalog) — opinie
+    // w bazie wiążą się z prawdziwym UUID produktu (product.dbId), nie ze slugiem.
+    const prod = this.products.find((p) => p.id === id);
+    if (prod) this.loadProductReviews(prod.dbId);
   };
   setEventsTab = (t) => this.setState({ eventsTab: t });
   setProductVariant = (v) => this.setState({ productVariant: v });
@@ -3487,6 +3655,7 @@ class Component extends DCLogic {
         account: 'Zaloguj się, aby zobaczyć swój profil i historię zamówień.',
         favorites: 'Zaloguj się, aby zapisywać ulubione produkty.',
         compare: 'Zaloguj się, aby porównywać produkty.',
+        review: 'Zaloguj się, aby dodać opinię o produkcie.',
       }[this.state.authIntent || 'checkout'],
       isLoginTab: this.state.authTab === 'login', isRegisterTab: this.state.authTab === 'register',
       onLoginTab: () => this.setAuthTab('login'), onRegisterTab: () => this.setAuthTab('register'),
@@ -3770,6 +3939,56 @@ class Component extends DCLogic {
       selectedCompareColor: (selectedProduct && this.state.compareList.includes(selectedProduct.id)) ? '#F2846D' : '#E8E7DE',
       toggleSelectedCompare: () => selectedProduct && this.toggleCompare(selectedProduct.id),
       related,
+      // ETAP 12: opinie produktowe.
+      ...(() => {
+        const list = this.state.productReviews || [];
+        const published = list.filter((r) => r.status === 'published');
+        const myReview = this._authUserId ? list.find((r) => r.user_id === this._authUserId) : null;
+        const avg = published.length ? published.reduce((s, r) => s + r.rating, 0) / published.length : 0;
+        const starsFor = (n) => '★'.repeat(n) + '☆'.repeat(5 - n);
+        const reviewStatusLabels = { pending: 'Oczekuje na moderację', published: 'Opublikowana', hidden: 'Ukryta przez obsługę' };
+        return {
+          reviewsLoaded: this.state.reviewsLoaded,
+          hasPublishedReviews: published.length > 0,
+          hasNoPublishedReviews: this.state.reviewsLoaded && published.length === 0,
+          reviewCountLabel: published.length === 1 ? '1 opinia' : published.length + ' opinii',
+          reviewAvgStars: published.length ? starsFor(Math.round(avg)) : '',
+          reviewAvgLabel: published.length ? avg.toFixed(1).replace('.', ',') + ' / 5' : '',
+          publishedReviewsOut: published.map((r) => ({
+            id: r.id,
+            authorName: r.author_name || 'Klient Spartans ASG',
+            starsLabel: starsFor(r.rating),
+            title: r.title,
+            hasTitle: !!r.title,
+            body: r.body,
+            dateLabel: new Date(r.created_at).toLocaleDateString('pl-PL'),
+            isVerified: r.is_verified_purchase,
+          })),
+          hasMyReview: !!myReview,
+          myReviewData: myReview ? {
+            starsLabel: starsFor(myReview.rating),
+            title: myReview.title,
+            hasTitle: !!myReview.title,
+            body: myReview.body,
+            statusLabel: reviewStatusLabels[myReview.status] || myReview.status,
+          } : null,
+          showReviewForm: this.state.isLoggedIn && !myReview && !this.state.reviewSubmitted,
+          showReviewLoginPrompt: !this.state.isLoggedIn,
+          reviewSubmittedThanks: this.state.reviewSubmitted,
+          reviewStarPicker: [1, 2, 3, 4, 5].map((n) => ({
+            n, symbol: n <= this.state.reviewRating ? '★' : '☆', onClick: () => this.setReviewRating(n),
+          })),
+          reviewTitle: this.state.reviewTitle, reviewBody: this.state.reviewBody,
+          onReviewTitle: (e) => this.setReviewField('reviewTitle', e.target.value),
+          onReviewBody: (e) => this.setReviewField('reviewBody', e.target.value),
+          reviewError: this.state.reviewError, hasReviewError: !!this.state.reviewError,
+          reviewSubmitting: this.state.reviewSubmitting,
+          reviewSubmitOpacity: this.state.reviewSubmitting ? 0.6 : 1,
+          reviewSubmitLabel: this.state.reviewSubmitting ? 'WYSYŁANIE...' : 'DODAJ OPINIĘ',
+          submitReview: this.submitReview,
+          openReviewLogin: this.openReviewLogin,
+        };
+      })(),
       eventsTab, showingNearest: eventsTab === 'nearest', showingArchive: eventsTab === 'archive',
       showNearest: () => this.setEventsTab('nearest'), showArchive: () => this.setEventsTab('archive'),
       nearestTabColor: eventsTab === 'nearest' ? '#E8E7DE' : '#9CA68C',
