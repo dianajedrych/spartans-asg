@@ -2251,7 +2251,13 @@ class Component extends DCLogic {
     if (data && data.session) await this.applySession(data.session);
 
     // Keeps state in sync across tabs and after token refresh — e.g. signing
-    // out in one tab reflects here without a manual reload.
+    // out in one tab reflects here without a manual reload. NIGDY nie scala
+    // koszyka tutaj (mergeLocalCart nieprzekazane = false) — to wydarzenie
+    // odpala się też przy zwykłym odświeżeniu strony / odnowieniu tokenu,
+    // a wtedy koszyk w localStorage to tylko lustrzana kopia koszyka
+    // serwerowego, nie nowe pozycje gościa do dopisania (inaczej ilości
+    // podwajałyby się przy każdym odświeżeniu — to był realny bug, złapany
+    // podczas testów).
     this.supabase.auth.onAuthStateChange((event, session) => {
       if (event === 'SIGNED_OUT') {
         this.setState({ isLoggedIn: false });
@@ -2263,8 +2269,16 @@ class Component extends DCLogic {
 
   // Pulls the matching profiles row (imię/nazwisko/telefon) so the checkout
   // form and account page have real data instead of staying blank after login.
-  applySession = async (session) => {
+  //
+  // mergeLocalCart: true TYLKO gdy to jest świeże zalogowanie z formularza
+  // (submitAuth) — wtedy to, co jest w state.cart, to faktyczne dodatki
+  // gościa sprzed zalogowania i mają się dopisać do koszyka na serwerze.
+  // Przy przywracaniu sesji (odświeżenie strony) i przy zdarzeniach z
+  // onAuthStateChange zostaje false: koszyk jest wtedy tylko WCZYTYWANY
+  // z serwera, nigdy scalany, żeby nie dublować ilości przy każdym ładowaniu.
+  applySession = async (session, options) => {
     const user = session.user;
+    this._authUserId = user.id;
     let profile = null;
     try {
       const { data } = await this.supabase
@@ -2285,6 +2299,13 @@ class Component extends DCLogic {
         email: user.email || s.buyerForm.email,
       },
     }));
+
+    if (options && options.mergeLocalCart) {
+      await this.mergeLocalCartIntoServer();
+    } else {
+      await this.ensureCartId();
+      await this.reloadCartFromServer();
+    }
   };
 
   // Komunikaty Supabase Auth przychodzą po angielsku i czasem technicznie —
@@ -2388,6 +2409,7 @@ class Component extends DCLogic {
           imgHint: p.short_description || p.name,
           desc: p.description || p.short_description || '',
           variants: variantLabels,
+          variantsDetailed: variantsRaw.map((v) => ({ id: v.id, label: v.label })),
           promo: hasSale,
           bestseller: !!p.is_bestseller,
           nowosc: !!p.is_new,
@@ -2485,7 +2507,12 @@ class Component extends DCLogic {
   };
   logout = () => {
     if (this.supabase) this.supabase.auth.signOut();
-    this.setState({ isLoggedIn: false });
+    this._authUserId = null;
+    this._cartId = null;
+    // Koszyk zalogowanego klienta zostaje bezpiecznie zapisany na serwerze —
+    // wraca po ponownym zalogowaniu. Lokalny widok czyścimy, żeby świeża
+    // sesja gościa nie odziedziczyła cudzego koszyka na tym samym urządzeniu.
+    this.setState({ isLoggedIn: false, cart: [] }, this.persistCart);
     this.setView('home');
   };
 
@@ -2524,6 +2551,120 @@ class Component extends DCLogic {
   goShopFromCart = () => { this.setState({ cartOpen: false }); this.setView('shop'); };
   stopProp = (e) => e.stopPropagation();
 
+  // Koszyk zalogowanego klienta: mapowane produkty w this.products/state.cart
+  // dalej używają "id" = slug (bez zmian w reszcie kodu), ale carts/cart_items
+  // w bazie wymagają variant_id — ta funkcja bierze DOMYŚLNY (pierwszy)
+  // wariant produktu. To ten sam uproszczony wybór wariantu, jaki strona
+  // produktu już dziś stosuje przy dodawaniu do koszyka z listy — wybór
+  // konkretnego wariantu w rozwijanej liście na stronie produktu jest na
+  // razie kosmetyczny (dotyczy 2 z 39 produktów) i zostaje do dopracowania.
+  resolveVariantId = (productId) => {
+    const p = this.products.find(pp => pp.id === productId);
+    return (p && p.variantsDetailed && p.variantsDetailed[0]) ? p.variantsDetailed[0].id : null;
+  };
+
+  ensureCartId = async () => {
+    if (this._cartId) return this._cartId;
+    if (!this.supabase || !this._authUserId) return null;
+    try {
+      let { data } = await this.supabase.from('carts').select('id').eq('user_id', this._authUserId).maybeSingle();
+      if (!data) {
+        const { data: created, error } = await this.supabase
+          .from('carts').insert({ user_id: this._authUserId }).select('id').single();
+        if (error) throw error;
+        data = created;
+      }
+      this._cartId = data.id;
+      return this._cartId;
+    } catch (e) {
+      console.error('Nie udało się utworzyć koszyka na serwerze:', e);
+      return null;
+    }
+  };
+
+  // Wywoływane WYŁĄCZNIE ze świeżego logowania/rejestracji przez formularz
+  // (patrz applySession). Koszyk zapisany na serwerze z poprzedniej wizyty
+  // zostaje, a to, co klient zdążył dodać jako gość w tej samej przeglądarce
+  // (localStorage), dolewa się do niego zamiast go nadpisywać.
+  mergeLocalCartIntoServer = async () => {
+    const cartId = await this.ensureCartId();
+    if (!cartId) return;
+    try {
+      const localCart = this.state.cart || [];
+      for (const item of localCart) {
+        const variantId = this.resolveVariantId(item.id);
+        if (!variantId) continue;
+        const { data: existing } = await this.supabase
+          .from('cart_items').select('id, quantity').eq('cart_id', cartId).eq('variant_id', variantId).maybeSingle();
+        if (existing) {
+          await this.supabase.from('cart_items').update({ quantity: existing.quantity + item.qty }).eq('id', existing.id);
+        } else {
+          await this.supabase.from('cart_items').insert({ cart_id: cartId, variant_id: variantId, quantity: item.qty });
+        }
+      }
+      await this.reloadCartFromServer();
+    } catch (e) {
+      console.error('Nie udało się zsynchronizować koszyka:', e);
+    }
+  };
+
+  reloadCartFromServer = async () => {
+    if (!this.supabase || !this._cartId) return;
+    try {
+      const { data } = await this.supabase
+        .from('cart_items')
+        .select('quantity, product_variants ( products ( slug ) )')
+        .eq('cart_id', this._cartId);
+      const items = (data || [])
+        .map((row) => ({
+          id: row.product_variants && row.product_variants.products ? row.product_variants.products.slug : null,
+          qty: row.quantity,
+        }))
+        .filter((it) => it.id);
+      this.setState({ cart: items }, this.persistCart);
+    } catch (e) {
+      console.error('Nie udało się wczytać koszyka z serwera:', e);
+    }
+  };
+
+  syncAddToServerCart = async (productId, qty) => {
+    const cartId = await this.ensureCartId();
+    const variantId = this.resolveVariantId(productId);
+    if (!cartId || !variantId) return;
+    try {
+      const { data: existing } = await this.supabase
+        .from('cart_items').select('id, quantity').eq('cart_id', cartId).eq('variant_id', variantId).maybeSingle();
+      if (existing) {
+        await this.supabase.from('cart_items').update({ quantity: existing.quantity + qty }).eq('id', existing.id);
+      } else {
+        await this.supabase.from('cart_items').insert({ cart_id: cartId, variant_id: variantId, quantity: qty });
+      }
+    } catch (e) { console.error('Nie udało się dodać produktu do koszyka na serwerze:', e); }
+  };
+  syncSetQtyServerCart = async (productId, qty) => {
+    const cartId = await this.ensureCartId();
+    const variantId = this.resolveVariantId(productId);
+    if (!cartId || !variantId) return;
+    try {
+      await this.supabase.from('cart_items').update({ quantity: qty }).eq('cart_id', cartId).eq('variant_id', variantId);
+    } catch (e) { console.error('Nie udało się zaktualizować ilości w koszyku na serwerze:', e); }
+  };
+  syncRemoveFromServerCart = async (productId) => {
+    const cartId = await this.ensureCartId();
+    const variantId = this.resolveVariantId(productId);
+    if (!cartId || !variantId) return;
+    try {
+      await this.supabase.from('cart_items').delete().eq('cart_id', cartId).eq('variant_id', variantId);
+    } catch (e) { console.error('Nie udało się usunąć produktu z koszyka na serwerze:', e); }
+  };
+  syncClearServerCart = async () => {
+    const cartId = await this.ensureCartId();
+    if (!cartId) return;
+    try {
+      await this.supabase.from('cart_items').delete().eq('cart_id', cartId);
+    } catch (e) { console.error('Nie udało się wyczyścić koszyka na serwerze:', e); }
+  };
+
   // Cart persistence: the cart used to live only in memory, so one accidental
   // refresh (or the routing below sending someone Back) silently emptied it.
   // Every mutation below now also writes the new cart to localStorage, and
@@ -2542,13 +2683,15 @@ class Component extends DCLogic {
 
   addToCart = (id, qty, openDrawer) => {
     const p = this.products.find(pp => pp.id === id);
+    const amount = qty || 1;
     this.setState(s => {
       const cart = [...s.cart];
       const existing = cart.find(c => c.id === id);
-      if (existing) existing.qty += (qty || 1);
-      else cart.push({ id, qty: qty || 1 });
+      if (existing) existing.qty += amount;
+      else cart.push({ id, qty: amount });
       return { cart, cartOpen: openDrawer ? true : s.cartOpen, toast: { id: Date.now(), message: p ? p.name : 'Produkt' } };
     }, this.persistCart);
+    if (this.state.isLoggedIn) this.syncAddToServerCart(id, amount);
     clearTimeout(this._toastTimer);
     this._toastTimer = setTimeout(() => this.setState({ toast: null }), 2200);
   };
@@ -2557,7 +2700,10 @@ class Component extends DCLogic {
     this.setState({ cartOpen: false, checkoutStep: 'delivery' }); this.setView('checkout');
   };
   goToCartPage = () => { this.setState({ cartOpen: false }); this.setView('cart'); };
-  clearCart = () => this.setState({ cart: [] }, this.persistCart);
+  clearCart = () => {
+    this.setState({ cart: [] }, this.persistCart);
+    if (this.state.isLoggedIn) this.syncClearServerCart();
+  };
   setAuthTab = (t) => this.setState({ authTab: t, authError: null, authInfo: null });
   updateAuthField = (field, value) => this.setState(s => ({ authForm: { ...s.authForm, [field]: value } }));
   submitAuth = async () => {
@@ -2597,14 +2743,14 @@ class Component extends DCLogic {
         });
         return;
       }
-      await this.applySession(data.session);
+      await this.applySession(data.session, { mergeLocalCart: true });
     } else {
       const { data, error } = await this.supabase.auth.signInWithPassword({ email, password });
       if (error) {
         this.setState({ authLoading: false, authError: this.translateAuthError(error.message) });
         return;
       }
-      await this.applySession(data.session);
+      await this.applySession(data.session, { mergeLocalCart: true });
     }
 
     const intent = this.state.authIntent || 'checkout';
@@ -2664,8 +2810,21 @@ class Component extends DCLogic {
   updateCourierField = (field, value) => this.setState(s => ({ courierForm: { ...s.courierForm, [field]: value } }));
   updatePaczkomatField = (field, value) => this.setState(s => ({ paczkomatForm: { ...s.paczkomatForm, [field]: value } }));
   selectPaczkomat = (code) => this.setState({ selectedPaczkomat: code });
-  removeFromCart = (id) => this.setState(s => ({ cart: s.cart.filter(c => c.id !== id) }), this.persistCart);
-  changeQty = (id, delta) => this.setState(s => ({ cart: s.cart.map(c => c.id === id ? { ...c, qty: Math.max(1, c.qty + delta) } : c) }), this.persistCart);
+  removeFromCart = (id) => {
+    this.setState(s => ({ cart: s.cart.filter(c => c.id !== id) }), this.persistCart);
+    if (this.state.isLoggedIn) this.syncRemoveFromServerCart(id);
+  };
+  changeQty = (id, delta) => {
+    let newQty = null;
+    this.setState(s => ({
+      cart: s.cart.map(c => {
+        if (c.id !== id) return c;
+        newQty = Math.max(1, c.qty + delta);
+        return { ...c, qty: newQty };
+      }),
+    }), this.persistCart);
+    if (this.state.isLoggedIn && newQty != null) this.syncSetQtyServerCart(id, newQty);
+  };
 
   setSearch = (v) => this.setState({ search: v });
   // Any filter changing the result set jumps back to the top of the shop —
