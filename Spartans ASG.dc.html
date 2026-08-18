@@ -465,6 +465,16 @@
               </sc-for>
             </div>
           </sc-if>
+          <sc-if value="{{ isCatalogLoading }}" hint-placeholder-val="{{ false }}">
+            <div style="display:flex;flexDirection:column;alignItems:center;gap:10px;padding:60px 0">
+              <p style="color:#9CA68C;textAlign:center">Wczytywanie produktów...</p>
+            </div>
+          </sc-if>
+          <sc-if value="{{ hasCatalogError }}" hint-placeholder-val="{{ false }}">
+            <div style="display:flex;flexDirection:column;alignItems:center;gap:10px;padding:60px 0">
+              <p style="color:#F2846D;textAlign:center">Nie udało się wczytać produktów. Sprawdź połączenie i odśwież stronę.</p>
+            </div>
+          </sc-if>
           <sc-if value="{{ hasNoProducts }}" hint-placeholder-val="{{ false }}">
             <div style="display:flex;flexDirection:column;alignItems:center;gap:14px;padding:60px 0">
               <p style="color:#9CA68C;textAlign:center">Brak produktów spełniających kryteria.</p>
@@ -1839,6 +1849,8 @@ class Component extends DCLogic {
     reviewIndex: null,
     reviewTransition: true,
     isMobile: (typeof window !== 'undefined' && window.innerWidth < 900),
+    catalogLoaded: false,
+    catalogError: false,
     mobileMenuOpen: false,
     cartOpen: false,
     cart: [],
@@ -1894,61 +1906,15 @@ class Component extends DCLogic {
     compareList: [],
   };
 
-  products = [
-    { id: 'replika-m4-cqb-0001', brand: 'CYMA', name: 'Replika M4 CQB', category: 'Repliki ASG', subcategory: 'AEG', weight: null, price: 499.99, oldPrice: 549.99, slotId: 'prod-replika-m4-cqb-0001', imgHint: 'Zdjęcie: Replika M4 CQB – CYMA', desc: 'Replika M4 CQB marki CYMA. Produkt przeznaczony do zastosowań airsoftowych. Kompatybilność: M4 / STANAG. Wersja demonstracyjna do testowego sklepu internetowego.', variants: ['Czarny'], promo: true, bestseller: false, nowosc: true, stan: 3 },
-    { id: 'replika-aks47-0005', brand: 'G&G', name: 'Replika AKS47', category: 'Repliki ASG', subcategory: 'AEG', weight: null, price: 399.99, oldPrice: 439.99, slotId: 'prod-replika-aks47-0005', imgHint: 'Zdjęcie: Replika AKS47 – G&G', desc: 'Replika AKS47 marki G&G. Produkt przeznaczony do zastosowań airsoftowych. Kompatybilność: AK / AKS. Wersja demonstracyjna do testowego sklepu internetowego.', variants: ['Czarny', 'oliwkowy'], promo: true, bestseller: true, nowosc: false, stan: 15 },
-    { id: 'replika-hi-capa-combat-0006', brand: 'WELL', name: 'Replika Hi-Capa Combat', category: 'Repliki ASG', subcategory: 'GBB', weight: null, price: 399.99, oldPrice: 439.99, slotId: 'prod-replika-hi-capa-combat-0006', imgHint: 'Zdjęcie: Replika Hi-Capa Combat – WELL', desc: 'Replika Hi-Capa Combat marki WELL. Produkt przeznaczony do zastosowań airsoftowych. Kompatybilność: Hi-Capa. Wersja demonstracyjna do testowego sklepu internetowego.', variants: ['Czarny'], promo: true, bestseller: false, nowosc: false, stan: 24 },
-    { id: 'replika-pistoletu-co2-0007', brand: 'Tokyo Marui', name: 'Replika pistoletu CO2', category: 'Repliki ASG', subcategory: 'CO2', weight: null, price: 299.99, oldPrice: 329.99, slotId: 'prod-replika-pistoletu-co2-0007', imgHint: 'Zdjęcie: Replika pistoletu CO2 – Tokyo Marui', desc: 'Replika pistoletu CO2 marki Tokyo Marui. Produkt przeznaczony do zastosowań airsoftowych. Kompatybilność: Dedykowany magazynek CO2. Wersja demonstracyjna do testowego sklepu internetowego.', variants: ['Czarny'], promo: true, bestseller: false, nowosc: false, stan: 7 },
-    { id: 'magazynek-mid-cap-do-m4-0011', brand: 'Battleaxe', name: 'Magazynek Mid-Cap do M4', category: 'Magazynki', subcategory: 'Magazynki M4', weight: null, price: 44.99, oldPrice: null, slotId: 'prod-magazynek-mid-cap-do-m4-0011', imgHint: 'Zdjęcie: Magazynek Mid-Cap do M4 – Battleaxe', desc: 'Magazynek Mid-Cap do M4 marki Battleaxe. Produkt przeznaczony do zastosowań airsoftowych. Kompatybilność: 120. Wersja demonstracyjna do testowego sklepu internetowego.', variants: ['Czarny'], promo: false, bestseller: true, nowosc: true, stan: 19 },
-    { id: 'gumka-hop-up-80-0020', brand: 'Maple Leaf', name: 'Gumka Hop-Up 80°', category: 'Części wewnętrzne', subcategory: 'Hop-Up', weight: null, price: 30.99, oldPrice: null, slotId: 'prod-gumka-hop-up-80-0020', imgHint: 'Zdjęcie: Gumka Hop-Up 80° – Maple Leaf', desc: 'Gumka Hop-Up 80° marki Maple Leaf. Produkt przeznaczony do zastosowań airsoftowych. Kompatybilność: VSR / GBB. Wersja demonstracyjna do testowego sklepu internetowego.', variants: ['Czarny'], promo: false, bestseller: false, nowosc: true, stan: 35 },
-    { id: 'cylinder-typu-1-0021', brand: 'Element', name: 'Cylinder typu 1', category: 'Części wewnętrzne', subcategory: 'Cylindry i głowice cylindra', weight: null, price: 69.99, oldPrice: null, slotId: 'prod-cylinder-typu-1-0021', imgHint: 'Zdjęcie: Cylinder typu 1 – Element', desc: 'Cylinder typu 1 marki Element. Produkt przeznaczony do zastosowań airsoftowych. Kompatybilność: AEG. Wersja demonstracyjna do testowego sklepu internetowego.', variants: ['Srebrny'], promo: false, bestseller: false, nowosc: false, stan: 21 },
-    { id: 'kamizelka-plate-carrier-0026', brand: 'Specna Arms', name: 'Kamizelka Plate Carrier', category: 'Taktyka', subcategory: 'Kamizelki taktyczne', weight: null, price: 199.99, oldPrice: null, slotId: 'prod-kamizelka-plate-carrier-0026', imgHint: 'Zdjęcie: Kamizelka Plate Carrier – Specna Arms', desc: 'Kamizelka Plate Carrier marki Specna Arms. Produkt przeznaczony do zastosowań airsoftowych. Kompatybilność: MOLLE. Wersja demonstracyjna do testowego sklepu internetowego.', variants: ['Ranger Green'], promo: false, bestseller: true, nowosc: true, stan: 16 },
-    { id: 'helm-taktyczny-fast-0032', brand: 'Emerson Gear', name: 'Hełm taktyczny FAST', category: 'Taktyka', subcategory: 'Hełmy', weight: null, price: 169.99, oldPrice: null, slotId: 'prod-helm-taktyczny-fast-0032', imgHint: 'Zdjęcie: Hełm taktyczny FAST – Emerson Gear', desc: 'Hełm taktyczny FAST marki Emerson Gear. Produkt przeznaczony do zastosowań airsoftowych. Kompatybilność: Uniwersalny. Wersja demonstracyjna do testowego sklepu internetowego.', variants: ['Multicam'], promo: false, bestseller: true, nowosc: true, stan: 17 },
-    { id: 'offsetowy-montaz-latarki-0037', brand: 'NOVUS', name: 'Offsetowy montaż latarki', category: 'Optyka', subcategory: 'Montaże', weight: null, price: 74, oldPrice: null, slotId: 'prod-offsetowy-montaz-latarki-0037', imgHint: 'Zdjęcie: Offsetowy montaż latarki – NOVUS', desc: 'Offsetowy montaż latarki marki NOVUS. Produkt przeznaczony do zastosowań airsoftowych. Kompatybilność: RIS 22 mm. Wersja demonstracyjna do testowego sklepu internetowego.', variants: ['Czarny'], promo: false, bestseller: true, nowosc: true, stan: 35 },
-    { id: 'akumulator-lipo-11-1v-1300-mah-0041', brand: 'Specna Arms', name: 'Akumulator LiPo 11.1V 1300 mAh', category: 'Baterie i zasilanie', subcategory: 'Akumulatory', weight: null, price: 99.99, oldPrice: null, slotId: 'prod-akumulator-lipo-11-1v-1300-mah-0041', imgHint: 'Zdjęcie: Akumulator LiPo 11.1V 1300 mAh – Specna Arms', desc: 'Akumulator LiPo 11.1V 1300 mAh marki Specna Arms. Produkt przeznaczony do zastosowań airsoftowych. Kompatybilność: AEG. Wersja demonstracyjna do testowego sklepu internetowego.', variants: ['Czarny'], promo: false, bestseller: false, nowosc: false, stan: 22 },
-    { id: 'kulki-bio-0-25-g-1-kg-0043', brand: 'BLS', name: 'Kulki BIO 0.25 g 1 kg', category: 'Kulki ASG', subcategory: 'Bio', weight: '0.25g', price: 59.99, oldPrice: null, slotId: 'prod-kulki-bio-0-25-g-1-kg-0043', imgHint: 'Zdjęcie: Kulki BIO 0.25 g 1 kg – BLS', desc: 'Kulki BIO 0.25 g 1 kg marki BLS. Produkt przeznaczony do zastosowań airsoftowych. Kompatybilność: 6 mm. Wersja demonstracyjna do testowego sklepu internetowego.', variants: ['Białe'], promo: false, bestseller: false, nowosc: false, stan: 20 },
-    { id: 'kulki-tracer-0-25-g-0046', brand: 'Geoffs', name: 'Kulki tracer 0.25 g', category: 'Kulki ASG', subcategory: 'Tracer', weight: '0.25g', price: 69.99, oldPrice: null, slotId: 'prod-kulki-tracer-0-25-g-0046', imgHint: 'Zdjęcie: Kulki tracer 0.25 g – Geoffs', desc: 'Kulki tracer 0.25 g marki Geoffs. Produkt przeznaczony do zastosowań airsoftowych. Kompatybilność: 6 mm / tracer. Wersja demonstracyjna do testowego sklepu internetowego.', variants: ['Zielone'], promo: false, bestseller: false, nowosc: false, stan: 18 },
-    { id: 'helm-fast-0048', brand: 'Emerson Gear', name: 'Hełm FAST', category: 'Odzież i ochrona', subcategory: 'Hełmy', weight: null, price: 169.99, oldPrice: null, slotId: 'prod-helm-fast-0048', imgHint: 'Zdjęcie: Hełm FAST – Emerson Gear', desc: 'Hełm FAST marki Emerson Gear. Produkt przeznaczony do zastosowań airsoftowych. Kompatybilność: Uniwersalny. Wersja demonstracyjna do testowego sklepu internetowego.', variants: ['Czarny'], promo: false, bestseller: false, nowosc: false, stan: 2 },
-    { id: 'smar-silikonowy-0051', brand: 'Abbey', name: 'Smar silikonowy', category: 'Chemia i konserwacja', subcategory: 'Smarowanie', weight: null, price: 24.99, oldPrice: null, slotId: 'prod-smar-silikonowy-0051', imgHint: 'Zdjęcie: Smar silikonowy – Abbey', desc: 'Smar silikonowy marki Abbey. Produkt przeznaczony do zastosowań airsoftowych. Kompatybilność: Konserwacja. Wersja demonstracyjna do testowego sklepu internetowego.', variants: ['Bezbarwny'], promo: false, bestseller: false, nowosc: false, stan: 11 },
-    { id: 'preparat-do-czyszczenia-repliki-0052', brand: 'GFC Tactical', name: 'Preparat do czyszczenia repliki', category: 'Chemia i konserwacja', subcategory: 'Czyszczenie', weight: null, price: 29.99, oldPrice: 34.49, slotId: 'prod-preparat-do-czyszczenia-repliki-0052', imgHint: 'Zdjęcie: Preparat do czyszczenia repliki – GFC Tactical', desc: 'Preparat do czyszczenia repliki marki GFC Tactical. Produkt przeznaczony do zastosowań airsoftowych. Kompatybilność: Konserwacja. Wersja demonstracyjna do testowego sklepu internetowego.', variants: ['Bezbarwny'], promo: true, bestseller: false, nowosc: true, stan: 23 },
-    { id: 'replika-ak-tactical-standard-0056', brand: 'Specna Arms', name: 'Replika AK Tactical Standard', category: 'Repliki ASG', subcategory: 'AEG', weight: null, price: 449.99, oldPrice: 494.99, slotId: 'prod-replika-ak-tactical-standard-0056', imgHint: 'Zdjęcie: Replika AK Tactical Standard – Specna Arms', desc: 'Replika AK Tactical Standard marki Specna Arms. Produkt przeznaczony do zastosowań airsoftowych. Kompatybilność: AK. Wersja demonstracyjna do testowego sklepu internetowego.', variants: ['Czarny'], promo: true, bestseller: false, nowosc: true, stan: 9 },
-    { id: 'replika-aks47-gen-2-0057', brand: 'JAG Arms', name: 'Replika AKS47 Gen.2', category: 'Repliki ASG', subcategory: 'AEG', weight: null, price: 399.99, oldPrice: 439.99, slotId: 'prod-replika-aks47-gen-2-0057', imgHint: 'Zdjęcie: Replika AKS47 Gen.2 – JAG Arms', desc: 'Replika AKS47 Gen.2 marki JAG Arms. Produkt przeznaczony do zastosowań airsoftowych. Kompatybilność: AK / AKS. Wersja demonstracyjna do testowego sklepu internetowego.', variants: ['Czarny', 'oliwkowy'], promo: true, bestseller: false, nowosc: false, stan: 29 },
-    { id: 'replika-pistoletu-co2-black-0059', brand: 'WELL', name: 'Replika pistoletu CO2 Black', category: 'Repliki ASG', subcategory: 'CO2', weight: null, price: 299.99, oldPrice: null, slotId: 'prod-replika-pistoletu-co2-black-0059', imgHint: 'Zdjęcie: Replika pistoletu CO2 Black – WELL', desc: 'Replika pistoletu CO2 Black marki WELL. Produkt przeznaczony do zastosowań airsoftowych. Kompatybilność: Dedykowany magazynek CO2. Wersja demonstracyjna do testowego sklepu internetowego.', variants: ['Czarny'], promo: false, bestseller: false, nowosc: false, stan: 29 },
-    { id: 'magazynek-do-hi-capa-v2-0065', brand: 'CYMA', name: 'Magazynek do Hi-Capa V2', category: 'Magazynki', subcategory: 'Magazynki pistoletowe', weight: null, price: 79.99, oldPrice: 87.99, slotId: 'prod-magazynek-do-hi-capa-v2-0065', imgHint: 'Zdjęcie: Magazynek do Hi-Capa V2 – CYMA', desc: 'Magazynek do Hi-Capa V2 marki CYMA. Produkt przeznaczony do zastosowań airsoftowych. Kompatybilność: 31. Wersja demonstracyjna do testowego sklepu internetowego.', variants: ['Czarny'], promo: true, bestseller: false, nowosc: true, stan: 17 },
-    { id: 'zestaw-kol-zebatych-tactical-0067', brand: 'AirsoftPro', name: 'Zestaw kół zębatych Tactical', category: 'Części wewnętrzne', subcategory: 'Koła zębate i łożyska', weight: null, price: 89.99, oldPrice: 103.49, slotId: 'prod-zestaw-kol-zebatych-tactical-0067', imgHint: 'Zdjęcie: Zestaw kół zębatych Tactical – AirsoftPro', desc: 'Zestaw kół zębatych Tactical marki AirsoftPro. Produkt przeznaczony do zastosowań airsoftowych. Kompatybilność: V2 / V3. Wersja demonstracyjna do testowego sklepu internetowego.', variants: ['Stal'], promo: true, bestseller: false, nowosc: true, stan: 26 },
-    { id: 'gumka-hop-up-70-gen-2-0071', brand: 'AirsoftPro', name: 'Gumka Hop-Up 70° Gen.2', category: 'Części wewnętrzne', subcategory: 'Hop-Up', weight: null, price: 30.99, oldPrice: 35.64, slotId: 'prod-gumka-hop-up-70-gen-2-0071', imgHint: 'Zdjęcie: Gumka Hop-Up 70° Gen.2 – AirsoftPro', desc: 'Gumka Hop-Up 70° Gen.2 marki AirsoftPro. Produkt przeznaczony do zastosowań airsoftowych. Kompatybilność: VSR / GBB. Wersja demonstracyjna do testowego sklepu internetowego.', variants: ['Czarny'], promo: true, bestseller: false, nowosc: false, stan: 19 },
-    { id: 'gumka-hop-up-80-v2-0072', brand: 'AirsoftPro', name: 'Gumka Hop-Up 80° V2', category: 'Części wewnętrzne', subcategory: 'Hop-Up', weight: null, price: 30.99, oldPrice: null, slotId: 'prod-gumka-hop-up-80-v2-0072', imgHint: 'Zdjęcie: Gumka Hop-Up 80° V2 – AirsoftPro', desc: 'Gumka Hop-Up 80° V2 marki AirsoftPro. Produkt przeznaczony do zastosowań airsoftowych. Kompatybilność: VSR / GBB. Wersja demonstracyjna do testowego sklepu internetowego.', variants: ['Czarny'], promo: false, bestseller: false, nowosc: false, stan: 20 },
-    { id: 'tlok-14-zebow-tactical-0074', brand: 'SHS', name: 'Tłok 14 zębów Tactical', category: 'Części wewnętrzne', subcategory: 'Tłoki i głowice tłoków', weight: null, price: 59.99, oldPrice: 68.99, slotId: 'prod-tlok-14-zebow-tactical-0074', imgHint: 'Zdjęcie: Tłok 14 zębów Tactical – SHS', desc: 'Tłok 14 zębów Tactical marki SHS. Produkt przeznaczony do zastosowań airsoftowych. Kompatybilność: Gearbox V2. Wersja demonstracyjna do testowego sklepu internetowego.', variants: ['Czarny'], promo: true, bestseller: false, nowosc: false, stan: 28 },
-    { id: 'dysza-uszczelniona-pro-0075', brand: 'Maple Leaf', name: 'Dysza uszczelniona Pro', category: 'Części wewnętrzne', subcategory: 'Dysze', weight: null, price: 29.99, oldPrice: 34.49, slotId: 'prod-dysza-uszczelniona-pro-0075', imgHint: 'Zdjęcie: Dysza uszczelniona Pro – Maple Leaf', desc: 'Dysza uszczelniona Pro marki Maple Leaf. Produkt przeznaczony do zastosowań airsoftowych. Kompatybilność: M4 AEG. Wersja demonstracyjna do testowego sklepu internetowego.', variants: ['Czarny'], promo: true, bestseller: false, nowosc: false, stan: 28 },
-    { id: 'kamizelka-plate-carrier-gen-2-0078', brand: 'FMA', name: 'Kamizelka Plate Carrier Gen.2', category: 'Taktyka', subcategory: 'Kamizelki taktyczne', weight: null, price: 199.99, oldPrice: null, slotId: 'prod-kamizelka-plate-carrier-gen-2-0078', imgHint: 'Zdjęcie: Kamizelka Plate Carrier Gen.2 – FMA', desc: 'Kamizelka Plate Carrier Gen.2 marki FMA. Produkt przeznaczony do zastosowań airsoftowych. Kompatybilność: MOLLE. Wersja demonstracyjna do testowego sklepu internetowego.', variants: ['Ranger Green'], promo: false, bestseller: false, nowosc: false, stan: 31 },
-    { id: 'ladownica-uniwersalna-tactical-0081', brand: 'GFC Tactical', name: 'Ładownica uniwersalna Tactical', category: 'Taktyka', subcategory: 'Ładownice', weight: null, price: 49.99, oldPrice: 54.99, slotId: 'prod-ladownica-uniwersalna-tactical-0081', imgHint: 'Zdjęcie: Ładownica uniwersalna Tactical – GFC Tactical', desc: 'Ładownica uniwersalna Tactical marki GFC Tactical. Produkt przeznaczony do zastosowań airsoftowych. Kompatybilność: MOLLE. Wersja demonstracyjna do testowego sklepu internetowego.', variants: ['Coyote'], promo: true, bestseller: false, nowosc: true, stan: 28 },
-    { id: 'pokrowiec-na-replike-compact-0083', brand: '8Fields', name: 'Pokrowiec na replikę Compact', category: 'Taktyka', subcategory: 'Torby i pokrowce', weight: null, price: 149.99, oldPrice: null, slotId: 'prod-pokrowiec-na-replike-compact-0083', imgHint: 'Zdjęcie: Pokrowiec na replikę Compact – 8Fields', desc: 'Pokrowiec na replikę Compact marki 8Fields. Produkt przeznaczony do zastosowań airsoftowych. Kompatybilność: Repliki długie. Wersja demonstracyjna do testowego sklepu internetowego.', variants: ['Czarny'], promo: false, bestseller: false, nowosc: false, stan: 11 },
-    { id: 'helm-taktyczny-fast-standard-0084', brand: 'Specna Arms', name: 'Hełm taktyczny FAST Standard', category: 'Taktyka', subcategory: 'Hełmy', weight: null, price: 169.99, oldPrice: 195.49, slotId: 'prod-helm-taktyczny-fast-standard-0084', imgHint: 'Zdjęcie: Hełm taktyczny FAST Standard – Specna Arms', desc: 'Hełm taktyczny FAST Standard marki Specna Arms. Produkt przeznaczony do zastosowań airsoftowych. Kompatybilność: Uniwersalny. Wersja demonstracyjna do testowego sklepu internetowego.', variants: ['Multicam'], promo: true, bestseller: false, nowosc: true, stan: 15 },
-    { id: 'wysoki-montaz-optyki-tactical-0088', brand: 'Theta Optics', name: 'Wysoki montaż optyki Tactical', category: 'Optyka', subcategory: 'Montaże', weight: null, price: 31.99, oldPrice: 35.19, slotId: 'prod-wysoki-montaz-optyki-tactical-0088', imgHint: 'Zdjęcie: Wysoki montaż optyki Tactical – Theta Optics', desc: 'Wysoki montaż optyki Tactical marki Theta Optics. Produkt przeznaczony do zastosowań airsoftowych. Kompatybilność: RIS 22 mm. Wersja demonstracyjna do testowego sklepu internetowego.', variants: ['Czarny'], promo: true, bestseller: false, nowosc: false, stan: 34 },
-    { id: 'akumulator-lipo-11-1v-1300-mah-v2-0093', brand: 'Specna Arms', name: 'Akumulator LiPo 11.1V 1300 mAh V2', category: 'Baterie i zasilanie', subcategory: 'Akumulatory', weight: null, price: 99.99, oldPrice: 109.99, slotId: 'prod-akumulator-lipo-11-1v-1300-mah-v2-0093', imgHint: 'Zdjęcie: Akumulator LiPo 11.1V 1300 mAh V2 – Specna Arms', desc: 'Akumulator LiPo 11.1V 1300 mAh V2 marki Specna Arms. Produkt przeznaczony do zastosowań airsoftowych. Kompatybilność: AEG. Wersja demonstracyjna do testowego sklepu internetowego.', variants: ['Czarny'], promo: true, bestseller: false, nowosc: false, stan: 18 },
-    { id: 'replika-ar15-rifle-gen-2-0106', brand: 'ASG', name: 'Replika AR15 Rifle Gen.2', category: 'Repliki ASG', subcategory: 'AEG', weight: null, price: 649.99, oldPrice: 714.99, slotId: 'prod-replika-ar15-rifle-gen-2-0106', imgHint: 'Zdjęcie: Replika AR15 Rifle Gen.2 – ASG', desc: 'Replika AR15 Rifle Gen.2 marki ASG. Produkt przeznaczony do zastosowań airsoftowych. Kompatybilność: M4 / STANAG. Wersja demonstracyjna do testowego sklepu internetowego.', variants: ['Czarny'], promo: true, bestseller: false, nowosc: false, stan: 30 },
-    { id: 'replika-ar15-carbine-v2-0107', brand: 'JAG Arms', name: 'Replika AR15 Carbine V2', category: 'Repliki ASG', subcategory: 'AEG', weight: null, price: 729.99, oldPrice: null, slotId: 'prod-replika-ar15-carbine-v2-0107', imgHint: 'Zdjęcie: Replika AR15 Carbine V2 – JAG Arms', desc: 'Replika AR15 Carbine V2 marki JAG Arms. Produkt przeznaczony do zastosowań airsoftowych. Kompatybilność: M4 / STANAG. Wersja demonstracyjna do testowego sklepu internetowego.', variants: ['FDE'], promo: false, bestseller: false, nowosc: false, stan: 8 },
-    { id: 'replika-hi-capa-combat-pro-0110', brand: 'ASG', name: 'Replika Hi-Capa Combat Pro', category: 'Repliki ASG', subcategory: 'GBB', weight: null, price: 399.99, oldPrice: null, slotId: 'prod-replika-hi-capa-combat-pro-0110', imgHint: 'Zdjęcie: Replika Hi-Capa Combat Pro – ASG', desc: 'Replika Hi-Capa Combat Pro marki ASG. Produkt przeznaczony do zastosowań airsoftowych. Kompatybilność: Hi-Capa. Wersja demonstracyjna do testowego sklepu internetowego.', variants: ['Czarny'], promo: false, bestseller: false, nowosc: false, stan: 6 },
-    { id: 'replika-pistoletu-co2-compact-0111', brand: 'Double Bell', name: 'Replika pistoletu CO2 Compact', category: 'Repliki ASG', subcategory: 'CO2', weight: null, price: 299.99, oldPrice: null, slotId: 'prod-replika-pistoletu-co2-compact-0111', imgHint: 'Zdjęcie: Replika pistoletu CO2 Compact – Double Bell', desc: 'Replika pistoletu CO2 Compact marki Double Bell. Produkt przeznaczony do zastosowań airsoftowych. Kompatybilność: Dedykowany magazynek CO2. Wersja demonstracyjna do testowego sklepu internetowego.', variants: ['Czarny'], promo: false, bestseller: false, nowosc: true, stan: 16 },
-    { id: 'replika-sniper-rifle-gen-2-0113', brand: 'Tokyo Marui', name: 'Replika Sniper Rifle Gen.2', category: 'Repliki ASG', subcategory: 'Sprężynowa', weight: null, price: 449.99, oldPrice: 517.49, slotId: 'prod-replika-sniper-rifle-gen-2-0113', imgHint: 'Zdjęcie: Replika Sniper Rifle Gen.2 – Tokyo Marui', desc: 'Replika Sniper Rifle Gen.2 marki Tokyo Marui. Produkt przeznaczony do zastosowań airsoftowych. Kompatybilność: VSR / dedykowane. Wersja demonstracyjna do testowego sklepu internetowego.', variants: ['Czarny'], promo: true, bestseller: true, nowosc: false, stan: 19 },
-    { id: 'magazynek-hi-cap-do-m4-v2-0114', brand: 'Battleaxe', name: 'Magazynek Hi-Cap do M4 V2', category: 'Magazynki', subcategory: 'Magazynki M4', weight: null, price: 49.99, oldPrice: 54.99, slotId: 'prod-magazynek-hi-cap-do-m4-v2-0114', imgHint: 'Zdjęcie: Magazynek Hi-Cap do M4 V2 – Battleaxe', desc: 'Magazynek Hi-Cap do M4 V2 marki Battleaxe. Produkt przeznaczony do zastosowań airsoftowych. Kompatybilność: 300. Wersja demonstracyjna do testowego sklepu internetowego.', variants: ['Czarny'], promo: true, bestseller: true, nowosc: true, stan: 22 },
-    { id: 'metalowy-magazynek-low-cap-compact-0118', brand: 'KWC', name: 'Metalowy magazynek low-cap Compact', category: 'Magazynki', subcategory: 'Magazynki snajperskie', weight: null, price: 47.99, oldPrice: 52.79, slotId: 'prod-metalowy-magazynek-low-cap-compact-0118', imgHint: 'Zdjęcie: Metalowy magazynek low-cap Compact – KWC', desc: 'Metalowy magazynek low-cap Compact marki KWC. Produkt przeznaczony do zastosowań airsoftowych. Kompatybilność: 25. Wersja demonstracyjna do testowego sklepu internetowego.', variants: ['Czarny'], promo: true, bestseller: true, nowosc: false, stan: 33 },
-    { id: 'zestaw-kol-zebatych-standard-0119', brand: 'Element', name: 'Zestaw kół zębatych Standard', category: 'Części wewnętrzne', subcategory: 'Koła zębate i łożyska', weight: null, price: 89.99, oldPrice: 98.99, slotId: 'prod-zestaw-kol-zebatych-standard-0119', imgHint: 'Zdjęcie: Zestaw kół zębatych Standard – Element', desc: 'Zestaw kół zębatych Standard marki Element. Produkt przeznaczony do zastosowań airsoftowych. Kompatybilność: V2 / V3. Wersja demonstracyjna do testowego sklepu internetowego.', variants: ['Stal'], promo: true, bestseller: false, nowosc: false, stan: 18 },
-  ];
+  // Produkty/kategorie/marki są ładowane z Supabase w loadCatalog() (wywoływane
+  // z componentDidMount) i podmieniane na te same kształty, jakich cała reszta
+  // renderVals()/szablonu już oczekiwała — patrz ETAP 5 w ARCHITECTURE.md.
+  // Zaczynają puste, żeby nic nie migało starymi danymi przed wczytaniem.
+  products = [];
 
-  categories = ['Wszystkie', 'Repliki ASG', 'Magazynki', 'Części wewnętrzne', 'Taktyka', 'Optyka', 'Baterie i zasilanie', 'Kulki ASG', 'Odzież i ochrona', 'Chemia i konserwacja', 'Promocje'];
+  categories = ['Wszystkie'];
 
-  subcategoriesMap = {
-    'Repliki ASG': ['AEG', 'GBB', 'CO2', 'Sprężynowa'],
-    'Magazynki': ['Magazynki M4', 'Magazynki pistoletowe', 'Magazynki snajperskie'],
-    'Części wewnętrzne': ['Hop-Up', 'Cylindry i głowice cylindra', 'Koła zębate i łożyska', 'Tłoki i głowice tłoków', 'Dysze'],
-    'Taktyka': ['Kamizelki taktyczne', 'Hełmy', 'Ładownice', 'Torby i pokrowce'],
-    'Optyka': ['Montaże'],
-    'Baterie i zasilanie': ['Akumulatory'],
-    'Kulki ASG': ['Bio', 'Tracer'],
-    'Odzież i ochrona': ['Hełmy'],
-    'Chemia i konserwacja': ['Smarowanie', 'Czyszczenie'],
-  };
+  subcategoriesMap = {};
 
   reviewsData = [
     { initials: 'TA', name: 'Tomasz Adamczyk', stars: '★★★★★', text: 'Genialny sklep z niesamowitym serwisem Airsoftowym i z pewnością jedyny taki w Lublinie. Obsługa na wysokim poziomie, zawsze chłopaki doradzą co jest do czego najlepsze, pomogą na każdym etapie.' },
@@ -1967,7 +1933,7 @@ class Component extends DCLogic {
     { category: 'Promocje', title: 'PROMOCJE', desc: 'Ograniczone czasowo oferty na wybrany sprzęt.', slotId: 'shop-banner-promocje' },
   ];
 
-  shopBrands = ['8Fields', 'ASG', 'Abbey', 'AirsoftPro', 'BLS', 'Battleaxe', 'CYMA', 'Double Bell', 'Element', 'Emerson Gear', 'FMA', 'G&G', 'GFC Tactical', 'Geoffs', 'JAG Arms', 'KWC', 'Maple Leaf', 'NOVUS', 'SHS', 'Specna Arms', 'Theta Optics', 'Tokyo Marui', 'WELL'];
+  shopBrands = []; // wypełniane w loadCatalog()
 
   albums = [
     { id: 'u3', name: 'Niedzielne U3 – 09.08.2026', slotId: 'gal-album-u3', count: 42 },
@@ -2191,6 +2157,7 @@ class Component extends DCLogic {
     // you in" state. Fire-and-forget: componentDidMount stays synchronous,
     // the async work resolves in the background and updates state when done.
     this.initSupabase();
+    this.loadCatalog();
 
     // Both carousels below auto-advance on a timer — WCAG 2.2.2 requires a way
     // to stop that, so each tick is gated on a pause flag toggled by a visible
@@ -2331,6 +2298,111 @@ class Component extends DCLogic {
     if (m.includes('rate limit') || m.includes('too many')) return 'Zbyt wiele prób. Spróbuj ponownie za chwilę.';
     if (m.includes('network') || m.includes('fetch')) return 'Brak połączenia z serwerem. Sprawdź internet i spróbuj ponownie.';
     return 'Nie udało się wykonać operacji. Spróbuj ponownie.';
+  };
+
+  // Wczytuje produkty/kategorie/marki z Supabase i przekształca je w
+  // DOKŁADNIE ten sam kształt, jakiego cała reszta renderVals()/szablonu już
+  // oczekiwała, gdy te dane były tablicami zaszytymi w kodzie — dzięki temu
+  // filtry, wyszukiwarka, sortowanie i strony produktu działają bez zmian
+  // (patrz ARCHITECTURE.md ETAP 5). this.products/categories/subcategoriesMap
+  // /shopBrands to zwykłe pola klasy, nie state — po ich podmianie
+  // setState({}) wystarczy, żeby wymusić ponowne wyrenderowanie.
+  loadCatalog = async () => {
+    const ready = await this.waitForSupabaseSdk();
+    if (!ready) return;
+    if (!this.supabase) this.supabase = window.supabase.createClient(window.SUPABASE_URL, window.SUPABASE_PUBLISHABLE_KEY);
+
+    try {
+      const [catRes, prodRes] = await Promise.all([
+        this.supabase.from('categories').select('id, parent_id, name, sort_order').order('sort_order'),
+        this.supabase
+          .from('products')
+          .select(`
+            id, slug, sku, name, short_description, description,
+            base_price, sale_price, is_bestseller, is_new, category_id,
+            brands ( name ),
+            product_variants ( id, label, sku, inventory ( quantity_on_hand ) ),
+            product_specifications ( spec_name, spec_value, spec_unit )
+          `)
+          .eq('is_active', true),
+      ]);
+
+      if (catRes.error) throw catRes.error;
+      if (prodRes.error) throw prodRes.error;
+
+      const categoriesRaw = catRes.data || [];
+      const catById = {};
+      categoriesRaw.forEach((c) => { catById[c.id] = c; });
+
+      const topCategories = categoriesRaw
+        .filter((c) => !c.parent_id)
+        .sort((a, b) => a.sort_order - b.sort_order);
+      this.categories = ['Wszystkie', ...topCategories.map((c) => c.name)];
+
+      const subMap = {};
+      topCategories.forEach((top) => { subMap[top.name] = []; });
+      categoriesRaw
+        .filter((c) => c.parent_id)
+        .sort((a, b) => a.sort_order - b.sort_order)
+        .forEach((sub) => {
+          const parent = catById[sub.parent_id];
+          if (parent && subMap[parent.name]) subMap[parent.name].push(sub.name);
+        });
+      this.subcategoriesMap = subMap;
+
+      const productsRaw = prodRes.data || [];
+      const brandSet = new Set();
+      this.products = productsRaw.map((p) => {
+        const cat = catById[p.category_id];
+        const topCat = cat ? (cat.parent_id ? catById[cat.parent_id] : cat) : null;
+        const subCat = cat && cat.parent_id ? cat : null;
+        const brandName = (p.brands && p.brands.name) || '—';
+        brandSet.add(brandName);
+
+        const specs = p.product_specifications || [];
+        const weightSpec = specs.find((s) => s.spec_name === 'Waga kulki');
+        // Reszta specyfikacji (np. "Kompatybilność") trafia obok stałych pól
+        // na stronie produktu — patrz specs w selectedProduct w renderVals().
+        const customSpecs = specs
+          .filter((s) => s.spec_name !== 'Waga kulki')
+          .map((s) => ({ label: s.spec_name, value: s.spec_value + (s.spec_unit ? ' ' + s.spec_unit : '') }));
+
+        const variantsRaw = p.product_variants || [];
+        const variantLabels = variantsRaw.length ? variantsRaw.map((v) => v.label) : ['Standard'];
+        const totalStock = variantsRaw.reduce((sum, v) => sum + ((v.inventory && v.inventory.quantity_on_hand) || 0), 0);
+
+        const hasSale = p.sale_price != null && Number(p.sale_price) < Number(p.base_price);
+
+        return {
+          id: p.slug, // zachowuje dotychczasowe, już zaindeksowane adresy #/product/<slug>
+          dbId: p.id,
+          sku: p.sku,
+          brand: brandName,
+          name: p.name,
+          category: topCat ? topCat.name : '—',
+          subcategory: subCat ? subCat.name : null,
+          weight: weightSpec ? weightSpec.spec_value : null,
+          price: hasSale ? Number(p.sale_price) : Number(p.base_price),
+          oldPrice: hasSale ? Number(p.base_price) : null,
+          slotId: 'prod-' + p.slug,
+          imgHint: p.short_description || p.name,
+          desc: p.description || p.short_description || '',
+          variants: variantLabels,
+          promo: hasSale,
+          bestseller: !!p.is_bestseller,
+          nowosc: !!p.is_new,
+          stan: totalStock,
+          customSpecs,
+        };
+      });
+
+      this.shopBrands = Array.from(brandSet).sort((a, b) => a.localeCompare(b, 'pl'));
+
+      this.setState({ catalogLoaded: true, catalogError: false });
+    } catch (e) {
+      console.error('Błąd wczytywania katalogu produktów:', e);
+      this.setState({ catalogLoaded: true, catalogError: true });
+    }
   };
 
   // Reads the current #/... hash into a view (+ product id / shop category).
@@ -2749,10 +2821,11 @@ class Component extends DCLogic {
         ...(baseSelected.subcategory ? [{ label: 'Rodzaj', value: baseSelected.subcategory }] : []),
         ...(baseSelected.weight ? [{ label: 'Waga kulki [g]', value: baseSelected.weight }] : []),
         { label: 'Wariant', value: (baseSelected.variants || []).join(', ') },
-        { label: 'Kod produktu', value: baseSelected.id.toUpperCase() },
+        { label: 'Kod produktu', value: (baseSelected.sku || baseSelected.id).toUpperCase() },
+        ...(baseSelected.customSpecs || []),
       ].map((sp, i) => ({ ...sp, rowBg: i % 2 === 0 ? '#33392B' : 'transparent' })),
       stockLabel: baseSelected.stan === 0 ? 'Niedostępny' : baseSelected.stan <= 5 ? 'Ostatnie ' + baseSelected.stan + ' szt.' : 'Dostępny w magazynie',
-      stockColor: baseSelected.stan === 0 ? '#A5131D' : baseSelected.stan <= 5 ? '#c9862f' : '#67705D',
+      stockColor: baseSelected.stan === 0 ? '#A5131D' : baseSelected.stan <= 5 ? '#c9862f' : '#9CA68C',
       outOfStock: baseSelected.stan === 0,
       addBtnBg: baseSelected.stan === 0 ? '#3a3d33' : '#A5131D',
       addBtnCursor: baseSelected.stan === 0 ? 'not-allowed' : 'pointer',
@@ -3019,7 +3092,11 @@ class Component extends DCLogic {
       onCategoryChange: (e) => this.setCategory(e.target.value),
       onSortChange: (e) => this.setSort(e.target.value),
       onSearchChange: (e) => this.setSearch(e.target.value),
-      products: productsOut, hasProducts: productsOut.length > 0, hasNoProducts: productsOut.length === 0, productCount: productsOut.length,
+      products: productsOut, hasProducts: productsOut.length > 0,
+      hasNoProducts: this.state.catalogLoaded && !this.state.catalogError && productsOut.length === 0,
+      isCatalogLoading: !this.state.catalogLoaded,
+      hasCatalogError: this.state.catalogLoaded && this.state.catalogError,
+      productCount: productsOut.length,
       activeFilterChips, hasActiveFilters: activeFilterChips.length > 0, activeFilterCount: activeFilterChips.length,
       isAmunicjaCategory: category === 'Kulki ASG',
       isAkcesoriaCategory: false,
