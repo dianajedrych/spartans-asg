@@ -3,6 +3,8 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
+<script src="./supabase-config.js"></script>
+<script src="https://unpkg.com/@supabase/supabase-js@2/dist/umd/supabase.js"></script>
 <script src="./support.js"></script>
 </head>
 <body>
@@ -1211,7 +1213,10 @@
           <sc-if value="{{ hasAuthError }}" hint-placeholder-val="{{ false }}">
             <span style="color:#F2846D;fontSize:13px">{{ authError }}</span>
           </sc-if>
-          <button onClick="{{ submitAuth }}" style="background:#A5131D;color:#fff;border:none;padding:14px;fontFamily:'Oswald',sans-serif;fontSize:13px;letterSpacing:1.2px;fontWeight:600;cursor:pointer;marginTop:6px" style-hover="background:#431517">{{ authSubmitLabel }}</button>
+          <sc-if value="{{ hasAuthInfo }}" hint-placeholder-val="{{ false }}">
+            <span style="color:#9CA68C;fontSize:13px;lineHeight:1.5;background:rgba(156,166,140,0.12);padding:10px 12px">{{ authInfo }}</span>
+          </sc-if>
+          <button onClick="{{ submitAuth }}" disabled="{{ authLoading }}" style="background:#A5131D;color:#fff;border:none;padding:14px;fontFamily:'Oswald',sans-serif;fontSize:13px;letterSpacing:1.2px;fontWeight:600;cursor:pointer;marginTop:6px;opacity:{{ authSubmitOpacity }}" style-hover="background:#431517">{{ authSubmitLabel }}</button>
           <sc-if value="{{ isCheckoutIntent }}" hint-placeholder-val="{{ true }}">
             <span tabIndex="0" role="button" onClick="{{ continueAsGuest }}" style="textAlign:center;color:#9CA68C;fontSize:13px;cursor:pointer;marginTop:4px" style-hover="color:#E8E7DE">Kontynuuj jako gość &rarr;</span>
           </sc-if>
@@ -1861,6 +1866,8 @@ class Component extends DCLogic {
     authTab: 'login',
     authForm: { email: '', password: '', imie: '', nazwisko: '' },
     authError: null,
+    authInfo: null,
+    authLoading: false,
     checkoutError: null,
     u3Tab: 'opis',
     korengalTab: 'opis',
@@ -2180,6 +2187,11 @@ class Component extends DCLogic {
   };
 
   componentDidMount() {
+    // Real Supabase Auth — replaces the old fake "any email/password logs
+    // you in" state. Fire-and-forget: componentDidMount stays synchronous,
+    // the async work resolves in the background and updates state when done.
+    this.initSupabase();
+
     // Both carousels below auto-advance on a timer — WCAG 2.2.2 requires a way
     // to stop that, so each tick is gated on a pause flag toggled by a visible
     // button (bannerPaused / reviewsPaused) rather than just running forever.
@@ -2248,6 +2260,78 @@ class Component extends DCLogic {
     };
     window.addEventListener('hashchange', this._onHashChange);
   }
+
+  // The Supabase SDK loads from a CDN <script> tag (same pattern support.js
+  // already uses for React/Babel) — it's not guaranteed to be ready the
+  // instant this component mounts, so we poll briefly instead of assuming.
+  waitForSupabaseSdk = async (retries) => {
+    for (let i = 0; i < (retries || 50); i++) {
+      if (window.supabase && window.supabase.createClient) return true;
+      await new Promise((resolve) => setTimeout(resolve, 100));
+    }
+    return false;
+  };
+
+  initSupabase = async () => {
+    const ready = await this.waitForSupabaseSdk();
+    if (!ready) {
+      console.error('Supabase SDK nie załadował się — logowanie będzie niedostępne.');
+      return;
+    }
+    this.supabase = window.supabase.createClient(window.SUPABASE_URL, window.SUPABASE_PUBLISHABLE_KEY);
+
+    const { data } = await this.supabase.auth.getSession();
+    if (data && data.session) await this.applySession(data.session);
+
+    // Keeps state in sync across tabs and after token refresh — e.g. signing
+    // out in one tab reflects here without a manual reload.
+    this.supabase.auth.onAuthStateChange((event, session) => {
+      if (event === 'SIGNED_OUT') {
+        this.setState({ isLoggedIn: false });
+      } else if (session) {
+        this.applySession(session);
+      }
+    });
+  };
+
+  // Pulls the matching profiles row (imię/nazwisko/telefon) so the checkout
+  // form and account page have real data instead of staying blank after login.
+  applySession = async (session) => {
+    const user = session.user;
+    let profile = null;
+    try {
+      const { data } = await this.supabase
+        .from('profiles')
+        .select('first_name, last_name, phone')
+        .eq('id', user.id)
+        .single();
+      profile = data;
+    } catch (e) { /* profil ładuje się z opóźnieniem tuż po rejestracji — nie blokujemy logowania */ }
+
+    this.setState((s) => ({
+      isLoggedIn: true,
+      buyerForm: {
+        ...s.buyerForm,
+        imie: (profile && profile.first_name) || s.buyerForm.imie,
+        nazwisko: (profile && profile.last_name) || s.buyerForm.nazwisko,
+        telefon: (profile && profile.phone) || s.buyerForm.telefon,
+        email: user.email || s.buyerForm.email,
+      },
+    }));
+  };
+
+  // Komunikaty Supabase Auth przychodzą po angielsku i czasem technicznie —
+  // tłumaczymy na coś, co klient zrozumie (pkt 40/41 wymagań).
+  translateAuthError = (message) => {
+    const m = (message || '').toLowerCase();
+    if (m.includes('invalid login credentials')) return 'Nieprawidłowy e-mail lub hasło.';
+    if (m.includes('already registered') || m.includes('already exists')) return 'Konto z tym adresem e-mail już istnieje. Zaloguj się.';
+    if (m.includes('email not confirmed')) return 'Potwierdź adres e-mail — sprawdź skrzynkę i kliknij link potwierdzający.';
+    if (m.includes('password') && (m.includes('character') || m.includes('short'))) return 'Hasło musi mieć co najmniej 6 znaków.';
+    if (m.includes('rate limit') || m.includes('too many')) return 'Zbyt wiele prób. Spróbuj ponownie za chwilę.';
+    if (m.includes('network') || m.includes('fetch')) return 'Brak połączenia z serwerem. Sprawdź internet i spróbuj ponownie.';
+    return 'Nie udało się wykonać operacji. Spróbuj ponownie.';
+  };
 
   // Reads the current #/... hash into a view (+ product id / shop category).
   parseRoute = () => {
@@ -2327,7 +2411,11 @@ class Component extends DCLogic {
     if (!this.state.isLoggedIn) { this.setState({ showAuthModal: true, authIntent: 'account' }); return; }
     this.setView('account');
   };
-  logout = () => { this.setState({ isLoggedIn: false }); this.setView('home'); };
+  logout = () => {
+    if (this.supabase) this.supabase.auth.signOut();
+    this.setState({ isLoggedIn: false });
+    this.setView('home');
+  };
 
   // Favorites / comparison: both are gated behind login, same pattern as
   // checkout — clicking while logged out opens the auth modal instead of
@@ -2398,9 +2486,9 @@ class Component extends DCLogic {
   };
   goToCartPage = () => { this.setState({ cartOpen: false }); this.setView('cart'); };
   clearCart = () => this.setState({ cart: [] }, this.persistCart);
-  setAuthTab = (t) => this.setState({ authTab: t, authError: null });
+  setAuthTab = (t) => this.setState({ authTab: t, authError: null, authInfo: null });
   updateAuthField = (field, value) => this.setState(s => ({ authForm: { ...s.authForm, [field]: value } }));
-  submitAuth = () => {
+  submitAuth = async () => {
     const { authForm, authTab } = this.state;
     const email = (authForm.email || '').trim(), password = (authForm.password || '').trim();
     const imie = (authForm.imie || '').trim(), nazwisko = (authForm.nazwisko || '').trim();
@@ -2409,16 +2497,53 @@ class Component extends DCLogic {
       this.setState({ authError: 'Uzupełnij wszystkie pola, aby kontynuować.' });
       return;
     }
+    if (authTab === 'register' && password.length < 6) {
+      this.setState({ authError: 'Hasło musi mieć co najmniej 6 znaków.' });
+      return;
+    }
+    if (!this.supabase) {
+      this.setState({ authError: 'Logowanie chwilowo niedostępne. Odśwież stronę i spróbuj ponownie.' });
+      return;
+    }
+    this.setState({ authLoading: true, authError: null, authInfo: null });
+
+    if (authTab === 'register') {
+      const { data, error } = await this.supabase.auth.signUp({
+        email, password,
+        options: { data: { first_name: imie, last_name: nazwisko } },
+      });
+      if (error) {
+        this.setState({ authLoading: false, authError: this.translateAuthError(error.message) });
+        return;
+      }
+      if (!data.session) {
+        // Projekt wymaga potwierdzenia e-mail przed zalogowaniem — konto już
+        // istnieje, ale nie ma jeszcze sesji, więc zostajemy w oknie logowania.
+        this.setState({
+          authLoading: false,
+          authInfo: 'Konto utworzone! Sprawdź e-mail (' + email + ') i kliknij link potwierdzający, aby się zalogować.',
+        });
+        return;
+      }
+      await this.applySession(data.session);
+    } else {
+      const { data, error } = await this.supabase.auth.signInWithPassword({ email, password });
+      if (error) {
+        this.setState({ authLoading: false, authError: this.translateAuthError(error.message) });
+        return;
+      }
+      await this.applySession(data.session);
+    }
+
     const intent = this.state.authIntent || 'checkout';
     this.setState(s => ({
-      isLoggedIn: true, showAuthModal: false, cartOpen: false,
-      checkoutStep: intent === 'checkout' ? 'delivery' : s.checkoutStep, authError: null,
-      buyerForm: { ...s.buyerForm, imie: imie || s.buyerForm.imie, nazwisko: nazwisko || s.buyerForm.nazwisko, email },
+      authLoading: false, showAuthModal: false, cartOpen: false,
+      checkoutStep: intent === 'checkout' ? 'delivery' : s.checkoutStep, authError: null, authInfo: null,
     }));
     this.setView(intent);
   };
   continueAsGuest = () => { this.setState({ showAuthModal: false, cartOpen: false, checkoutStep: 'delivery' }); this.setView('checkout'); };
-  closeAuthModal = () => this.setState({ showAuthModal: false });
+  closeAuthModal = () => this.setState({ showAuthModal: false, authError: null, authInfo: null });
   setU3Tab = (t) => this.setState({ u3Tab: t });
   setKorengalTab = (t) => this.setState({ korengalTab: t });
   setBuyerType = (v) => this.setState({ buyerType: v });
@@ -2849,6 +2974,9 @@ class Component extends DCLogic {
       goToCartPage: this.goToCartPage, clearCart: this.clearCart,
       showAuthModal: this.state.showAuthModal, closeAuthModal: this.closeAuthModal,
       authError: this.state.authError, hasAuthError: !!this.state.authError,
+      authInfo: this.state.authInfo, hasAuthInfo: !!this.state.authInfo,
+      authLoading: this.state.authLoading,
+      authSubmitOpacity: this.state.authLoading ? 0.6 : 1,
       isCheckoutIntent: (this.state.authIntent || 'checkout') === 'checkout',
       authModalSubtitle: {
         checkout: 'Zaloguj się lub kontynuuj jako gość, aby przejść do dostawy.',
@@ -2869,7 +2997,9 @@ class Component extends DCLogic {
       onAuthImieChange: (e) => this.updateAuthField('imie', e.target.value),
       onAuthNazwiskoChange: (e) => this.updateAuthField('nazwisko', e.target.value),
       submitAuth: this.submitAuth, continueAsGuest: this.continueAsGuest,
-      authSubmitLabel: this.state.authTab === 'login' ? 'ZALOGUJ SIĘ' : 'ZAREJESTRUJ SIĘ',
+      authSubmitLabel: this.state.authLoading
+        ? (this.state.authTab === 'login' ? 'LOGOWANIE...' : 'REJESTRACJA...')
+        : (this.state.authTab === 'login' ? 'ZALOGUJ SIĘ' : 'ZAREJESTRUJ SIĘ'),
       upsellProducts: this.products.filter(p => p.active !== false && !cart.some(c => c.id === p.id)).slice(0, 5).map(p => ({
         ...p, priceLabel: p.price + ' zł', upsellSlotId: 'upsell-' + p.id, onOpen: () => this.openProduct(p.id),
       })),
