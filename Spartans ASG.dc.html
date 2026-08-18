@@ -1204,7 +1204,12 @@
           <sc-for list="{{ albums }}" as="a" hint-placeholder-count="4">
             <div tabIndex="0" role="button" style="background:#33392B;border:1px solid rgba(232,231,222,0.08);cursor:pointer" onClick="{{ a.onOpen }}" style-hover="border-color:rgba(232,231,222,0.3)">
               <div style="height:220px;width:100%">
-                <image-slot id="{{ a.slotId }}" shape="rect" placeholder="Zdjęcie okładkowe albumu"></image-slot>
+                <sc-if value="{{ a.hasCover }}" hint-placeholder-val="{{ false }}">
+                  <img src="{{ a.coverUrl }}" alt="Okładka albumu: {{ a.name }}" style="width:100%;height:100%;objectFit:cover;display:block" />
+                </sc-if>
+                <sc-if value="{{ !a.hasCover }}" hint-placeholder-val="{{ true }}">
+                  <image-slot id="{{ a.slotId }}" shape="rect" placeholder="Zdjęcie okładkowe albumu"></image-slot>
+                </sc-if>
               </div>
               <div style="padding:16px">
                 <span style="display:block;fontSize:15px;fontWeight:500;marginBottom:4px">{{ a.name }}</span>
@@ -1221,7 +1226,12 @@
         <div style="display:grid;gridTemplateColumns:repeat(auto-fill,minmax(220px,1fr));gridAutoFlow:dense;gap:14px">
           <sc-for list="{{ selectedAlbumData.photos }}" as="ph" hint-placeholder-count="9">
             <div tabIndex="0" role="button" onClick="{{ ph.onOpen }}" style="cursor:pointer;width:100%;height:{{ ph.height }}px;position:relative">
-              <image-slot id="{{ ph.slotId }}" shape="rect" placeholder="Zdjęcie z wydarzenia"></image-slot>
+              <sc-if value="{{ ph.hasPhoto }}" hint-placeholder-val="{{ false }}">
+                <img src="{{ ph.photoUrl }}" alt="{{ ph.caption }}" style="width:100%;height:100%;objectFit:cover;display:block" />
+              </sc-if>
+              <sc-if value="{{ !ph.hasPhoto }}" hint-placeholder-val="{{ true }}">
+                <image-slot id="{{ ph.slotId }}" shape="rect" placeholder="Zdjęcie z wydarzenia"></image-slot>
+              </sc-if>
             </div>
           </sc-for>
         </div>
@@ -1977,7 +1987,12 @@
     <div style="position:fixed;inset:0;background:rgba(15,15,13,0.95);zIndex:400;display:flex;alignItems:center;justifyContent:center;padding:40px" onClick="{{ closeLightbox }}">
       <span tabIndex="0" role="button" aria-label="Zamknij podgląd zdjęcia" onClick="{{ closeLightbox }}" style="position:absolute;top:24px;right:32px;color:#E8E7DE;fontSize:28px;cursor:pointer">&times;</span>
       <div style="width:min(900px,100%);height:min(600px,80vh)">
-        <image-slot id="{{ lightboxSlotId }}" shape="rect" placeholder="Zdjęcie z wydarzenia"></image-slot>
+        <sc-if value="{{ hasLightboxImageUrl }}" hint-placeholder-val="{{ false }}">
+          <img src="{{ lightboxImageUrl }}" alt="{{ lightboxCaption }}" style="width:100%;height:100%;objectFit:contain" />
+        </sc-if>
+        <sc-if value="{{ !hasLightboxImageUrl }}" hint-placeholder-val="{{ true }}">
+          <image-slot id="{{ lightboxSlotId }}" shape="rect" placeholder="Zdjęcie z wydarzenia"></image-slot>
+        </sc-if>
       </div>
     </div>
   </sc-if>
@@ -2019,6 +2034,8 @@ class Component extends DCLogic {
     eventsTab: 'nearest',
     selectedAlbum: null,
     lightboxSlotId: null,
+    lightboxImageUrl: null,
+    lightboxCaption: '',
     orders: [],
     checkoutStep: 'delivery',
     deliveryOption: 'Odbiór osobisty – Kunickiego 54',
@@ -2079,6 +2096,9 @@ class Component extends DCLogic {
     reviewSubmitting: false,
     reviewError: null,
     reviewSubmitted: false,
+    // ETAP 13: galeria (gallery_albums/gallery_images) — patrz loadGallery().
+    dbAlbums: [],
+    galleryLoaded: false,
   };
 
   // Produkty/kategorie/marki są ładowane z Supabase w loadCatalog() (wywoływane
@@ -2346,6 +2366,7 @@ class Component extends DCLogic {
     this.initSupabase();
     this.loadCatalog();
     this.loadEvents();
+    this.loadGallery();
 
     // Both carousels below auto-advance on a timer — WCAG 2.2.2 requires a way
     // to stop that, so each tick is gated on a pause flag toggled by a visible
@@ -2749,6 +2770,31 @@ class Component extends DCLogic {
         : (e.message || 'Nie udało się dodać opinii. Spróbuj ponownie.');
       this.setState({ reviewSubmitting: false, reviewError: msg });
     }
+  };
+
+  // ETAP 13: galeria. Albumy i zdjęcia są publiczne do odczytu (RLS: "Każdy
+  // czyta albumy/zdjęcia"), więc to zapytanie działa też dla gości.
+  loadGallery = async () => {
+    const ready = await this.waitForSupabaseSdk();
+    if (!ready) return;
+    if (!this.supabase) this.supabase = window.supabase.createClient(window.SUPABASE_URL, window.SUPABASE_PUBLISHABLE_KEY);
+    try {
+      const { data, error } = await this.supabase
+        .from('gallery_albums')
+        .select('id, name, slug, cover_image_storage_path, sort_order, gallery_images ( id, storage_path, caption, sort_order )')
+        .order('sort_order', { ascending: true });
+      if (error) throw error;
+      this.setState({ dbAlbums: data || [], galleryLoaded: true });
+    } catch (e) {
+      console.error('Błąd wczytywania galerii:', e);
+      this.setState({ galleryLoaded: true });
+    }
+  };
+
+  // Bucket 'gallery-images' jest publiczny do odczytu (patrz 008_storage.sql).
+  galleryImageUrl = (storagePath) => {
+    if (!storagePath || !this.supabase) return null;
+    return this.supabase.storage.from('gallery-images').getPublicUrl(storagePath).data.publicUrl;
   };
 
   // Reads the current #/... hash into a view (+ product id / shop category).
@@ -3281,8 +3327,12 @@ class Component extends DCLogic {
 
   openAlbum = (id) => this.setState({ selectedAlbum: id });
   closeAlbum = () => this.setState({ selectedAlbum: null });
-  openLightbox = (slotId) => this.setState({ lightboxSlotId: slotId });
-  closeLightbox = () => this.setState({ lightboxSlotId: null });
+  // imageUrl/caption opcjonalne — istniejący wywołujący (np. zdjęcia archiwum
+  // wydarzeń) podają tylko slotId i dostają starą, projektową ramkę-placeholder.
+  openLightbox = (slotId, imageUrl, caption) => this.setState({
+    lightboxSlotId: slotId, lightboxImageUrl: imageUrl || null, lightboxCaption: caption || '',
+  });
+  closeLightbox = () => this.setState({ lightboxSlotId: null, lightboxImageUrl: null, lightboxCaption: '' });
   openArchiveEvent = (i) => { window.scrollTo(0, 0); this.setState({ selectedArchiveEvent: i }); };
   closeArchiveEvent = () => this.setState({ selectedArchiveEvent: null });
   renderVals() {
@@ -3676,16 +3726,50 @@ class Component extends DCLogic {
       upsellProducts: this.products.filter(p => p.active !== false && !cart.some(c => c.id === p.id)).slice(0, 5).map(p => ({
         ...p, priceLabel: p.price + ' zł', upsellSlotId: 'upsell-' + p.id, onOpen: () => this.openProduct(p.id),
       })),
-      albums: this.albums.map(a => ({ ...a, onOpen: () => this.openAlbum(a.id) })),
+      // ETAP 13: galeria czytana z bazy (gallery_albums/gallery_images) —
+      // właściciel dodaje albumy i wgrywa zdjęcia w panelu admina i widać je
+      // tu od razu. Dopóki zapytanie się nie zakończyło, pokazujemy starą
+      // statyczną listę, żeby strona nie mrugnęła pustką (ten sam wzorzec co
+      // przy archiwum wydarzeń w ETAP 11).
+      albums: (this.state.galleryLoaded
+        ? this.state.dbAlbums.map((a) => {
+            const coverUrl = this.galleryImageUrl(a.cover_image_storage_path);
+            return {
+              id: a.id, name: a.name, count: (a.gallery_images || []).length,
+              hasCover: !!coverUrl, coverUrl, slotId: 'gal-album-' + a.id,
+              onOpen: () => this.openAlbum(a.id),
+            };
+          })
+        : this.albums.map(a => ({ ...a, hasCover: false, onOpen: () => this.openAlbum(a.id) }))
+      ),
       selectedAlbumData: (() => {
+        const heights = [220, 300, 180, 260, 320, 200, 240, 280, 210];
+        if (this.state.galleryLoaded) {
+          const a = this.state.dbAlbums.find(x => x.id === selectedAlbum);
+          if (!a) return null;
+          const images = [...(a.gallery_images || [])].sort((x, y) => x.sort_order - y.sort_order);
+          return {
+            name: a.name,
+            photos: images.map((img, i) => {
+              const url = this.galleryImageUrl(img.storage_path);
+              return {
+                slotId: 'gal-img-' + img.id, hasPhoto: !!url, photoUrl: url,
+                caption: img.caption || a.name,
+                height: heights[i % heights.length],
+                onOpen: () => this.openLightbox('gal-img-' + img.id, url, img.caption || a.name),
+              };
+            }),
+          };
+        }
         const a = this.albums.find(x => x.id === selectedAlbum);
         if (!a) return null;
-        const heights = [220, 300, 180, 260, 320, 200, 240, 280, 210];
-        return { ...a, photos: Array.from({ length: 9 }, (_, i) => ({ slotId: a.id + '-photo-' + i, height: heights[i], onOpen: () => this.openLightbox(a.id + '-photo-' + i) })) };
+        return { ...a, photos: Array.from({ length: 9 }, (_, i) => ({ slotId: a.id + '-photo-' + i, hasPhoto: false, height: heights[i], onOpen: () => this.openLightbox(a.id + '-photo-' + i) })) };
       })(),
       hasSelectedAlbum: !!selectedAlbum, showAlbumList: !selectedAlbum,
       closeAlbum: this.closeAlbum,
       lightboxOpen: !!lightboxSlotId, lightboxSlotId,
+      hasLightboxImageUrl: !!this.state.lightboxImageUrl, lightboxImageUrl: this.state.lightboxImageUrl,
+      lightboxCaption: this.state.lightboxCaption,
       closeLightbox: this.closeLightbox,
       // ETAP 11: "Niedzielne U3" ma dedykowaną, bogatą stronę (isU3) — zamiast
       // ją zastępować, podmieniamy tylko pola widoczne na karcie/pasku bocznym
