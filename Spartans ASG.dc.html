@@ -1588,15 +1588,28 @@
               <sc-if value="{{ hasAccountOrders }}" hint-placeholder-val="{{ false }}">
                 <div style="display:flex;flexDirection:column;gap:12px">
                   <sc-for list="{{ accountOrders }}" as="o" hint-placeholder-count="2">
-                    <div style="border:1px solid rgba(232,231,222,0.1);padding:14px 16px;display:flex;justifyContent:space-between;flexWrap:wrap;gap:8px">
-                      <div>
-                        <span style="display:block;fontSize:14px;color:#E8E7DE;fontWeight:500">{{ o.id }}</span>
-                        <span style="display:block;fontSize:12px;color:#9CA68C">{{ o.date }}</span>
+                    <div style="border:1px solid rgba(232,231,222,0.1);padding:14px 16px">
+                      <div style="display:flex;justifyContent:space-between;flexWrap:wrap;gap:8px">
+                        <div>
+                          <span style="display:block;fontSize:14px;color:#E8E7DE;fontWeight:500">{{ o.orderNumber }}</span>
+                          <span style="display:block;fontSize:12px;color:#9CA68C">{{ o.date }}</span>
+                        </div>
+                        <div style="textAlign:right">
+                          <span style="display:block;fontSize:14px;color:#E8E7DE;fontFamily:'Oswald',sans-serif">{{ o.total }} zł</span>
+                          <span style="display:block;fontSize:12px;color:#9CA68C">{{ o.statusLabel }}</span>
+                        </div>
                       </div>
-                      <div style="textAlign:right">
-                        <span style="display:block;fontSize:14px;color:#E8E7DE;fontFamily:'Oswald',sans-serif">{{ o.total }} zł</span>
-                        <span style="display:block;fontSize:12px;color:#9CA68C">{{ o.status }}</span>
-                      </div>
+                      <span tabIndex="0" role="button" onClick="{{ o.onToggle }}" style="display:inline-block;marginTop:10px;color:#F2846D;fontSize:12px;cursor:pointer;letterSpacing:0.3px" style-hover="color:#fff">{{ o.toggleLabel }}</span>
+                      <sc-if value="{{ o.isExpanded }}" hint-placeholder-val="{{ false }}">
+                        <div style="display:flex;flexDirection:column;gap:8px;marginTop:14px;paddingTop:14px;borderTop:1px solid rgba(232,231,222,0.08)">
+                          <sc-for list="{{ o.timeline }}" as="step" hint-placeholder-count="3">
+                            <div style="display:flex;justifyContent:space-between;gap:10px">
+                              <span style="fontSize:13px;color:{{ step.color }};fontWeight:{{ step.fontWeight }}">✓ {{ step.label }}</span>
+                              <span style="fontSize:12px;color:#9CA68C;whiteSpace:nowrap">{{ step.date }}</span>
+                            </div>
+                          </sc-for>
+                        </div>
+                      </sc-if>
                     </div>
                   </sc-for>
                 </div>
@@ -1887,6 +1900,8 @@ class Component extends DCLogic {
     checkoutSubmitting: false,
     lastOrderNumber: null,
     lastOrderTotal: null,
+    customerOrders: [],
+    expandedOrderId: null,
     u3Tab: 'opis',
     korengalTab: 'opis',
     buyerType: 'Osoba prywatna',
@@ -1922,6 +1937,18 @@ class Component extends DCLogic {
 
   subcategoriesMap = {};
 
+  // Statusy zamówień (klient — "Moje konto") — te same nazwy co w panelu
+  // administratora, żeby klient i obsługa mówili tym samym językiem.
+  orderStatusLabels = {
+    new: '🟢 Nowe', processing: '🟡 W realizacji', packed: '📦 Spakowane', shipped: '🚚 Wysłane',
+    delivered: '✅ Dostarczone', cancelled: '❌ Anulowane', returned: '↩️ Zwrócone', refunded: '💰 Zwrot pieniędzy',
+  };
+  // Te same statusy, ale jako etapy na osi czasu zamówienia (pkt 26 wymagań).
+  orderTimelineLabels = {
+    new: 'Zamówienie złożone', processing: 'Zamówienie przekazane do realizacji', packed: 'Zamówienie spakowane',
+    shipped: 'Wysłane', delivered: 'Dostarczone', cancelled: 'Zamówienie anulowane',
+    returned: 'Zwrot zarejestrowany', refunded: 'Zwrot pieniędzy zrealizowany',
+  };
   reviewsData = [
     { initials: 'TA', name: 'Tomasz Adamczyk', stars: '★★★★★', text: 'Genialny sklep z niesamowitym serwisem Airsoftowym i z pewnością jedyny taki w Lublinie. Obsługa na wysokim poziomie, zawsze chłopaki doradzą co jest do czego najlepsze, pomogą na każdym etapie.' },
     { initials: 'MO', name: 'Mateusz Ossowski', stars: '★★★★★', text: 'Pan Andrzej — najlepszy serwisant w lubelskim, z uwalonej HK zrobił bestię do CQB i LARPu. Organizują też super strzelanki i wydarzenia LARP, polecam z serduszka.' },
@@ -2312,7 +2339,30 @@ class Component extends DCLogic {
       await this.ensureCartId();
       await this.reloadCartFromServer();
     }
+
+    this.loadCustomerOrders();
   };
+
+  // Historia zamówień klienta (strona "Moje konto") — RLS z ETAP 3 już
+  // pilnuje, że każdy widzi wyłącznie własne zamówienia (auth.uid() = user_id).
+  loadCustomerOrders = async () => {
+    if (!this.supabase || !this._authUserId) return;
+    try {
+      const { data, error } = await this.supabase
+        .from('orders')
+        .select(`
+          id, order_number, status, total, currency, created_at,
+          order_status_history ( to_status, note, created_at )
+        `)
+        .eq('user_id', this._authUserId)
+        .order('created_at', { ascending: false });
+      if (error) throw error;
+      this.setState({ customerOrders: data || [] });
+    } catch (e) {
+      console.error('Nie udało się wczytać historii zamówień:', e);
+    }
+  };
+  toggleOrderDetail = (id) => this.setState(s => ({ expandedOrderId: s.expandedOrderId === id ? null : id }));
 
   // Komunikaty Supabase Auth przychodzą po angielsku i czasem technicznie —
   // tłumaczymy na coś, co klient zrozumie (pkt 40/41 wymagań).
@@ -2518,7 +2568,7 @@ class Component extends DCLogic {
     // Koszyk zalogowanego klienta zostaje bezpiecznie zapisany na serwerze —
     // wraca po ponownym zalogowaniu. Lokalny widok czyścimy, żeby świeża
     // sesja gościa nie odziedziczyła cudzego koszyka na tym samym urządzeniu.
-    this.setState({ isLoggedIn: false, cart: [] }, this.persistCart);
+    this.setState({ isLoggedIn: false, cart: [], customerOrders: [], expandedOrderId: null }, this.persistCart);
     this.setView('home');
   };
 
@@ -2855,6 +2905,7 @@ class Component extends DCLogic {
         lastOrderTotal: displayTotal,
         cart: [],
       }, this.persistCart);
+      if (this.state.isLoggedIn) this.loadCustomerOrders();
     } catch (e) {
       // Wyjątki z create_order() są już po polsku i zrozumiałe dla klienta
       // (np. "Niektóre produkty przestały być dostępne w wybranej ilości.") —
@@ -3239,7 +3290,32 @@ class Component extends DCLogic {
       accountAriaLabel: this.state.isLoggedIn ? 'Moje konto' : 'Zaloguj się',
       accountImie: this.state.buyerForm.imie, accountNazwisko: this.state.buyerForm.nazwisko,
       accountEmail: this.state.buyerForm.email, hasAccountName: !!(this.state.buyerForm.imie || this.state.buyerForm.nazwisko),
-      accountOrders: this.state.orders, hasAccountOrders: this.state.orders.length > 0,
+      accountOrders: this.state.customerOrders.map((o) => {
+        const history = [...(o.order_status_history || [])].sort(
+          (a, b) => new Date(a.created_at) - new Date(b.created_at)
+        );
+        const isExpanded = this.state.expandedOrderId === o.id;
+        return {
+          id: o.id,
+          orderNumber: o.order_number,
+          date: new Date(o.created_at).toLocaleString('pl-PL'),
+          total: o.total,
+          statusLabel: this.orderStatusLabels[o.status] || o.status,
+          onToggle: () => this.toggleOrderDetail(o.id),
+          isExpanded,
+          toggleLabel: isExpanded ? 'UKRYJ SZCZEGÓŁY' : 'ZOBACZ SZCZEGÓŁY',
+          timeline: history.map((h, i) => {
+            const isLast = i === history.length - 1;
+            return {
+              label: this.orderTimelineLabels[h.to_status] || h.to_status,
+              date: new Date(h.created_at).toLocaleString('pl-PL'),
+              color: isLast ? '#E8E7DE' : '#9CA68C',
+              fontWeight: isLast ? '600' : '400',
+            };
+          }),
+        };
+      }),
+      hasAccountOrders: this.state.customerOrders.length > 0,
       goFavorites: this.goFavorites, goCompare: this.goCompare,
       favoritesCount: this.state.favorites.length, hasFavorites: this.state.favorites.length > 0,
       favoritesAriaLabel: this.state.favorites.length > 0 ? 'Ulubione, liczba produktów: ' + this.state.favorites.length : 'Ulubione (puste)',
