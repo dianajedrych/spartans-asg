@@ -136,7 +136,7 @@
             </div>
             <p style="color:#9CA68C;fontSize:15px;lineHeight:1.6;maxWidth:520px;marginBottom:26px">{{ nearestEvent.desc }}</p>
             <div style="display:flex;gap:14px;flexWrap:wrap">
-              <a href="{{ nearestEvent.formsUrl }}" target="_blank" style="background:#A5131D;color:#fff;border:none;padding:14px 26px;font-family:'Oswald',sans-serif;fontSize:13px;letterSpacing:1.5px;fontWeight:600;textDecoration:none" style-hover="background:#431517">ZAPISZ SIĘ</a>
+              <span tabIndex="0" role="button" onClick="{{ nearestEvent.onRegisterClick }}" style="background:#A5131D;color:#fff;border:none;padding:14px 26px;font-family:'Oswald',sans-serif;fontSize:13px;letterSpacing:1.5px;fontWeight:600;cursor:pointer" style-hover="background:#431517">ZAPISZ SIĘ</span>
               <button onClick="{{ goEvents }}" style="background:transparent;color:#E8E7DE;border:1.5px solid rgba(232,231,222,0.4);padding:14px 26px;font-family:'Oswald',sans-serif;fontSize:13px;letterSpacing:1.5px;fontWeight:600;cursor:pointer" style-hover="border-color:#E8E7DE">SZCZEGÓŁY</button>
             </div>
           </div>
@@ -645,6 +645,22 @@
               <span style="color:#E8E7DE;fontSize:14px;marginTop:6px">3-dniowa impreza milsim &mdash; zobacz szczegóły</span>
             </div>
           </div>
+
+          <sc-if value="{{ hasOtherUpcomingEvents }}" hint-placeholder-val="{{ false }}">
+            <div style="display:grid;gridTemplateColumns:repeat(auto-fill,minmax(240px,1fr));gap:20px;marginTop:4px">
+              <sc-for list="{{ otherUpcomingEvents }}" as="ev" hint-placeholder-count="2">
+                <div tabIndex="0" role="button" style="background:#33392B;border:1px solid rgba(232,231,222,0.08);cursor:pointer" onClick="{{ ev.onOpen }}" style-hover="border-color:rgba(165,19,29,0.5)">
+                  <div style="height:160px;width:100%">
+                    <image-slot id="{{ ev.slotId }}" shape="rect" placeholder="Zdjęcie z wydarzenia"></image-slot>
+                  </div>
+                  <div style="padding:16px">
+                    <span style="display:block;fontSize:15px;fontWeight:500;marginBottom:4px">{{ ev.name }}</span>
+                    <span style="color:#9CA68C;fontSize:13px">{{ ev.date }}</span>
+                  </div>
+                </div>
+              </sc-for>
+            </div>
+          </sc-if>
         </div>
       </sc-if>
 
@@ -803,7 +819,7 @@
             <span>{{ nearestEvent.date }}</span>
             <span>{{ nearestEvent.time }}</span>
           </div>
-          <a href="{{ nearestEvent.formsUrl }}" target="_blank" style="background:#A5131D;color:#fff;border:none;padding:15px;fontFamily:'Oswald',sans-serif;fontSize:13px;letterSpacing:1.2px;fontWeight:600;textDecoration:none;textAlign:center;marginTop:8px" style-hover="background:#431517">ZAPISZ SIĘ</a>
+          <span tabIndex="0" role="button" onClick="{{ nearestEvent.onRegisterClick }}" style="background:#A5131D;color:#fff;border:none;padding:15px;fontFamily:'Oswald',sans-serif;fontSize:13px;letterSpacing:1.2px;fontWeight:600;cursor:pointer;textAlign:center;marginTop:8px" style-hover="background:#431517">ZAPISZ SIĘ</span>
         </div>
       </div>
     </div>
@@ -1051,6 +1067,50 @@
           <span tabIndex="0" role="button" onClick="{{ goKorengalZapisy }}" style="background:#A5131D;color:#fff;border:none;padding:15px;fontFamily:'Oswald',sans-serif;fontSize:13px;letterSpacing:1.2px;fontWeight:600;textAlign:center;marginTop:8px;cursor:pointer" style-hover="background:#431517">ZAPISZ SIĘ</span>
         </div>
       </div>
+    </div>
+  </sc-if>
+
+  <!-- EVENT DETAIL (ETAP 11) — generyczna strona dla wydarzeń dodanych przez
+       właściciela w panelu admina; Niedzielne U3 i Korengal mają własne,
+       bogate strony powyżej i tu trafiają tylko przy rejestracji bez
+       zewnętrznego formularza. -->
+  <sc-if value="{{ isEventDetail }}" hint-placeholder-val="{{ false }}">
+    <div style="paddingTop:96px;maxWidth:900px;margin:0 auto;padding:96px 24px 60px">
+      <span tabIndex="0" role="button" onClick="{{ goEvents }}" style="color:#9CA68C;fontSize:13px;cursor:pointer;display:inline-block;marginBottom:20px" style-hover="color:#E8E7DE">&larr; Wróć do wydarzeń</span>
+
+      <sc-if value="{{ hasEventDetail }}" hint-placeholder-val="{{ false }}">
+        <div style="height:280px;width:100%;marginBottom:28px">
+          <image-slot id="{{ eventDetail.slotId }}" shape="rect" placeholder="Zdjęcie z wydarzenia"></image-slot>
+        </div>
+        <h1 style="font-family:'Oswald',sans-serif;fontWeight:700;fontSize:clamp(28px,5vw,42px);letterSpacing:0.5px;marginBottom:14px">{{ eventDetail.name }}</h1>
+        <div style="display:flex;gap:20px;flexWrap:wrap;color:#9CA68C;fontSize:14px;marginBottom:22px;paddingBottom:22px;borderBottom:1px solid rgba(232,231,222,0.12)">
+          <span>📅 {{ eventDetail.dateLabel }}</span>
+          <sc-if value="{{ eventDetail.hasTime }}" hint-placeholder-val="{{ false }}">
+            <span>🕒 {{ eventDetail.timeLabel }}</span>
+          </sc-if>
+          <sc-if value="{{ eventDetail.hasLocation }}" hint-placeholder-val="{{ false }}">
+            <span>📍 {{ eventDetail.location }}</span>
+          </sc-if>
+          <span>💳 {{ eventDetail.priceLabel }}</span>
+        </div>
+        <p style="color:#E8E7DE;opacity:0.85;fontSize:15px;lineHeight:1.8;marginBottom:36px;whiteSpace:pre-line">{{ eventDetail.desc }}</p>
+
+        <div style="background:#33392B;padding:28px;maxWidth:460px">
+          <h2 style="font-family:'Oswald',sans-serif;fontWeight:700;fontSize:18px;letterSpacing:0.5px;marginBottom:16px">ZAPISY</h2>
+
+          <sc-if value="{{ eventDetail.hasExternalForm }}" hint-placeholder-val="{{ false }}">
+            <a href="{{ eventDetail.externalFormUrl }}" target="_blank" rel="noopener" style="display:block;background:#A5131D;color:#fff;border:none;padding:15px;fontFamily:'Oswald',sans-serif;fontSize:13px;letterSpacing:1.2px;fontWeight:600;textDecoration:none;textAlign:center" style-hover="background:#431517">ZAPISZ SIĘ</a>
+          </sc-if>
+
+          <sc-if value="{{ eventDetail.formComingSoon }}" hint-placeholder-val="{{ false }}">
+            <p style="color:#9CA68C;fontSize:14px">Link do zapisów pojawi się tutaj wkrótce.</p>
+          </sc-if>
+
+          <sc-if value="{{ eventDetail.isClosed }}" hint-placeholder-val="{{ false }}">
+            <p style="color:#9CA68C;fontSize:14px">Zapisy na to wydarzenie są obecnie zamknięte.</p>
+          </sc-if>
+        </div>
+      </sc-if>
     </div>
   </sc-if>
 
@@ -1925,6 +1985,11 @@ class Component extends DCLogic {
     showAccountMenu: false,
     favorites: [],
     compareList: [],
+    // ETAP 11: wydarzenia z bazy (events) — patrz loadEvents(). Zaczyna puste,
+    // żeby nic nie migało starymi statycznymi danymi przed wczytaniem.
+    dbEvents: [],
+    eventsLoaded: false,
+    selectedEventSlug: null,
   };
 
   // Produkty/kategorie/marki są ładowane z Supabase w loadCatalog() (wywoływane
@@ -2191,6 +2256,7 @@ class Component extends DCLogic {
     // the async work resolves in the background and updates state when done.
     this.initSupabase();
     this.loadCatalog();
+    this.loadEvents();
 
     // Both carousels below auto-advance on a timer — WCAG 2.2.2 requires a way
     // to stop that, so each tick is gated on a pause flag toggled by a visible
@@ -2483,12 +2549,55 @@ class Component extends DCLogic {
     }
   };
 
+  // ETAP 11: wydarzenia z Supabase. RLS pokazuje gościom tylko status =
+  // 'published' — zamknięte/robocze wpisy widzi wyłącznie obsługa w panelu
+  // admina, więc to zapytanie jest bezpieczne bez logowania.
+  loadEvents = async () => {
+    // Ta funkcja jest wywoływana z componentDidMount równolegle z
+    // loadCatalog() (fire-and-forget) — this.supabase może więc jeszcze nie
+    // istnieć w tym momencie. Czekamy na SDK i tworzymy klienta samodzielnie,
+    // dokładnie jak robi to loadCatalog(), zamiast po prostu się poddać.
+    const ready = await this.waitForSupabaseSdk();
+    if (!ready) return;
+    if (!this.supabase) this.supabase = window.supabase.createClient(window.SUPABASE_URL, window.SUPABASE_PUBLISHABLE_KEY);
+    try {
+      const { data, error } = await this.supabase
+        .from('events')
+        .select('id, slug, name, short_description, event_date, event_time, location, price, capacity, status, content, external_form_url, cover_image_storage_path')
+        .order('event_date', { ascending: true, nullsFirst: true });
+      if (error) throw error;
+      this.setState({ dbEvents: data || [], eventsLoaded: true });
+    } catch (e) {
+      console.error('Błąd wczytywania wydarzeń:', e);
+      this.setState({ eventsLoaded: true });
+    }
+  };
+
+  // '2026-08-09' -> '09.08.2026' — spójny format ze starymi, ręcznie wpisanymi datami.
+  formatEventDate = (d) => {
+    if (!d) return null;
+    const [y, m, day] = d.split('-');
+    return day + '.' + m + '.' + y;
+  };
+
+  // Wydarzenia inne niż Niedzielne U3/Korengal (własna, bogata strona) i
+  // zapisy na wydarzenia idą ZAWSZE przez zewnętrzny link (Google Forms —
+  // ustawiany przez właściciela w panelu admina, pole "external_form_url"),
+  // nigdy przez formularz na tej stronie — stąd ta strona tylko pokazuje
+  // dane wydarzenia i link, bez własnej logiki zapisu.
+  openEventDetail = (slug) => {
+    window.scrollTo(0, 0);
+    this.setState({ view: 'event', selectedEventSlug: slug, mobileMenuOpen: false });
+    this.syncRoute('#/event/' + encodeURIComponent(slug), true);
+  };
+
   // Reads the current #/... hash into a view (+ product id / shop category).
   parseRoute = () => {
     const raw = (typeof window !== 'undefined' ? window.location.hash : '').replace(/^#\/?/, '');
     const parts = raw.split('/').filter(Boolean).map((p) => { try { return decodeURIComponent(p); } catch (e) { return p; } });
     const known = ['home', 'shop', 'product', 'events', 'korengal', 'u3', 'about', 'gallery', 'eventy', 'info', 'checkout', 'cart', 'account', 'favorites', 'compare'];
     if (parts[0] === 'product' && parts[1]) return { view: 'product', selectedProductId: parts[1] };
+    if (parts[0] === 'event' && parts[1]) return { view: 'event', selectedEventSlug: parts[1] };
     if (parts[0] === 'shop' && parts[1]) return { view: 'shop', category: parts[1] };
     if (known.includes(parts[0])) return { view: parts[0] };
     return { view: 'home' };
@@ -3269,6 +3378,30 @@ class Component extends DCLogic {
       onReviewPrev: this.prevReview, onReviewNext: this.nextReview,
       navItems, whatWeDo, serviceHighlights, specialEvents,
       isHome: view === 'home', isShop: view === 'shop', isEvents: view === 'events', isProduct: view === 'product', isKorengal: view === 'korengal', isU3: view === 'u3', isAbout: view === 'about',
+      isEventDetail: view === 'event',
+      eventDetail: (() => {
+        const ev = this.state.dbEvents.find((e) => e.slug === this.state.selectedEventSlug);
+        if (!ev) return null;
+        const isOpen = ev.status === 'published';
+        return {
+          slotId: 'event-detail-' + ev.id,
+          name: ev.name,
+          dateLabel: this.formatEventDate(ev.event_date) || 'Termin: wkrótce ogłosimy',
+          hasTime: !!ev.event_time,
+          timeLabel: ev.event_time ? ev.event_time.slice(0, 5) : '',
+          hasLocation: !!ev.location,
+          location: ev.location || '',
+          priceLabel: ev.price != null ? (ev.price + ' zł') : 'Cena: do ustalenia',
+          desc: (ev.content && ev.content.desc) || ev.short_description || '',
+          hasExternalForm: isOpen && !!ev.external_form_url,
+          externalFormUrl: ev.external_form_url || '',
+          // Zapisy zawsze idą przez zewnętrzny link (Google Forms) ustawiony
+          // przez właściciela w panelu admina — nie ma tu formularza na stronie.
+          formComingSoon: isOpen && !ev.external_form_url,
+          isClosed: !isOpen,
+        };
+      })(),
+      hasEventDetail: !!this.state.dbEvents.find((e) => e.slug === this.state.selectedEventSlug),
       u3: this.u3,
       isU3TabOpis: this.state.u3Tab === 'opis', isU3TabSprzet: this.state.u3Tab === 'sprzet',
       isU3TabMapa: this.state.u3Tab === 'mapa', isU3TabLimity: this.state.u3Tab === 'limity',
@@ -3385,7 +3518,39 @@ class Component extends DCLogic {
       closeAlbum: this.closeAlbum,
       lightboxOpen: !!lightboxSlotId, lightboxSlotId,
       closeLightbox: this.closeLightbox,
-      nearestEvent: this.nearestEvent, archiveEvents: this.archiveEvents, korengal: this.korengal,
+      // ETAP 11: "Niedzielne U3" ma dedykowaną, bogatą stronę (isU3) — zamiast
+      // ją zastępować, podmieniamy tylko pola widoczne na karcie/pasku bocznym
+      // prawdziwymi danymi z bazy (jeśli właściciel je ustawił w panelu), a gdy
+      // czegoś jeszcze nie ustawił, zostaje stara, ręcznie napisana treść.
+      nearestEvent: (() => {
+        const db = this.state.dbEvents.find((e) => e.slug === 'niedzielne-u3');
+        if (!db) return this.nearestEvent;
+        return {
+          title: this.nearestEvent.title,
+          subtitle: this.nearestEvent.subtitle,
+          date: this.formatEventDate(db.event_date) || this.nearestEvent.date,
+          time: db.event_time ? ('Godzina zbiórki: ' + db.event_time.slice(0, 5)) : this.nearestEvent.time,
+          desc: db.short_description || this.nearestEvent.desc,
+          level: db.location || this.nearestEvent.level,
+          onRegisterClick: db.external_form_url
+            ? (() => window.open(db.external_form_url, '_blank', 'noopener'))
+            : (() => this.openEventDetail('niedzielne-u3')),
+        };
+      })(),
+      archiveEvents: this.archiveEvents, korengal: this.korengal,
+      // Dodatkowe, opublikowane wydarzenia dodane przez właściciela w panelu
+      // admina (poza Niedzielnym U3 i Korengalem, które mają własne strony).
+      otherUpcomingEvents: this.state.dbEvents
+        .filter((e) => e.status === 'published' && e.slug !== 'niedzielne-u3')
+        .map((ev) => ({
+          id: ev.id,
+          name: ev.name,
+          date: this.formatEventDate(ev.event_date) || 'Termin: wkrótce ogłosimy',
+          desc: ev.short_description || '',
+          slotId: 'event-upcoming-' + ev.id,
+          onOpen: () => this.openEventDetail(ev.slug),
+        })),
+      hasOtherUpcomingEvents: this.state.dbEvents.some((e) => e.status === 'published' && e.slug !== 'niedzielne-u3'),
       categories: this.categories, sorts: this.sorts, category, sort, search,
       onCategoryChange: (e) => this.setCategory(e.target.value),
       onSortChange: (e) => this.setSort(e.target.value),
@@ -3473,22 +3638,45 @@ class Component extends DCLogic {
           })) : [],
         };
       }),
-      archiveEventsOut: this.archiveEvents.map((ev, i) => ({ ...ev, onOpen: () => this.openArchiveEvent(i) })),
-      hasSelectedArchiveEvent: selectedArchiveEvent != null,
-      showArchiveList: selectedArchiveEvent == null,
+      // ETAP 11: archiwum czytane z bazy (events, status = 'closed'), zamiast
+      // statycznej listy — właściciel dodaje/edytuje wydarzenia w panelu admina
+      // i pojawiają się tu automatycznie. Dopóki zapytanie się nie zakończyło,
+      // pokazujemy starą statyczną listę, żeby strona nie mrugnęła pustką.
+      archiveEventsOut: (this.state.eventsLoaded
+        ? this.state.dbEvents.filter((ev) => ev.status === 'closed').map((ev) => ({
+            id: ev.id,
+            name: ev.name,
+            date: this.formatEventDate(ev.event_date) || '',
+            desc: (ev.content && ev.content.desc) || ev.short_description || '',
+            slotId: 'event-archive-' + ev.id,
+            onOpen: () => this.openArchiveEvent(ev.id),
+          }))
+        : this.archiveEvents.map((ev, i) => ({ ...ev, onOpen: () => this.openArchiveEvent(i) }))
+      ),
       closeArchiveEvent: this.closeArchiveEvent,
       selectedArchiveEventData: selectedArchiveEvent != null ? (() => {
-        const ev = this.archiveEvents[selectedArchiveEvent];
-        const heights = [220, 300, 180, 260, 320, 200, 240, 280, 210];
-        return {
-          ...ev,
-          photos: Array.from({ length: ev.photoCount || 12 }, (_, i) => ({
-            slotId: ev.slotId + '-photo-' + i,
-            height: heights[i % heights.length],
-            onOpen: () => this.openLightbox(ev.slotId + '-photo-' + i),
-          })),
-        };
+        // Szuka najpierw w danych z bazy (id, string), a jeśli kliknięto
+        // zanim się wczytały (rzadki wyścig), spada do starej statycznej
+        // listy indeksowanej liczbą — patrz komentarz przy archiveEventsOut.
+        let ev = this.state.dbEvents.find((e) => e.id === selectedArchiveEvent);
+        let name, date, desc, slotId;
+        if (ev) {
+          name = ev.name;
+          date = this.formatEventDate(ev.event_date) || '';
+          desc = (ev.content && ev.content.desc) || ev.short_description || '';
+          slotId = 'event-archive-' + ev.id;
+        } else if (typeof selectedArchiveEvent === 'number' && this.archiveEvents[selectedArchiveEvent]) {
+          ev = this.archiveEvents[selectedArchiveEvent];
+          name = ev.name; date = ev.date; desc = ev.desc; slotId = ev.slotId;
+        } else {
+          return null;
+        }
+        // Prawdziwe archiwalne zdjęcia (per wydarzenie) to ETAP 13 (Galeria) —
+        // na razie jedno zdjęcie okładkowe zamiast wcześniejszej, syntetycznej siatki.
+        return { name, date, desc, photos: [{ slotId, height: 340, onOpen: () => this.openLightbox(slotId) }] };
       })() : null,
+      hasSelectedArchiveEvent: selectedArchiveEvent != null,
+      showArchiveList: selectedArchiveEvent == null,
       cartCount, cartTotalLabel: cartTotal + ' zł',
       cartAriaLabel: cartCount > 0 ? 'Koszyk, liczba produktów: ' + cartCount : 'Koszyk (pusty)',
       cartItems, hasCartItems: cartItems.length > 0, hasNoCartItems: cartItems.length === 0, goShopFromCart: this.goShopFromCart,
