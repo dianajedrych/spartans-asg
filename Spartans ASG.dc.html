@@ -183,7 +183,12 @@
                 <span style="position:absolute;top:6px;left:6px;background:{{ p.badgeBg }};color:#E8E7DE;fontFamily:'Oswald',sans-serif;fontSize:9px;letterSpacing:0.5px;fontWeight:600;padding:4px 7px;zIndex:2">{{ p.badge }}</span>
               </sc-if>
               <div style="height:110px;width:100%">
-                <image-slot id="{{ p.slotId }}" shape="rect" placeholder="{{ p.imgHint }}"></image-slot>
+                <sc-if value="{{ p.hasImage }}" hint-placeholder-val="{{ false }}">
+                  <img src="{{ p.imageUrl }}" alt="{{ p.name }}" loading="lazy" style="width:100%;height:100%;objectFit:cover;display:block" />
+                </sc-if>
+                <sc-if value="{{ !p.hasImage }}" hint-placeholder-val="{{ true }}">
+                  <image-slot id="{{ p.slotId }}" shape="rect" placeholder="{{ p.imgHint }}"></image-slot>
+                </sc-if>
               </div>
               <div style="padding:10px;display:flex;flexDirection:column;gap:4px">
                 <span style="fontSize:12px;fontWeight:500;lineHeight:1.3">{{ p.name }}</span>
@@ -450,7 +455,12 @@
                     <span style="position:absolute;top:10px;left:10px;background:{{ p.badgeBg }};color:#E8E7DE;fontFamily:'Oswald',sans-serif;fontSize:10px;letterSpacing:1px;fontWeight:600;padding:5px 10px;zIndex:2">{{ p.badge }}</span>
                   </sc-if>
                   <div style="height:{{ shopCardImgHeight }};width:100%">
-                    <image-slot id="{{ p.slotId }}" shape="rect" placeholder="{{ p.imgHint }}"></image-slot>
+                    <sc-if value="{{ p.hasImage }}" hint-placeholder-val="{{ false }}">
+                  <img src="{{ p.imageUrl }}" alt="{{ p.name }}" loading="lazy" style="width:100%;height:100%;objectFit:cover;display:block" />
+                </sc-if>
+                <sc-if value="{{ !p.hasImage }}" hint-placeholder-val="{{ true }}">
+                  <image-slot id="{{ p.slotId }}" shape="rect" placeholder="{{ p.imgHint }}"></image-slot>
+                </sc-if>
                   </div>
                   <div style="padding:{{ shopCardPadding }};display:flex;flexDirection:column;gap:8px;flex:1">
                     <span style="fontSize:11px;letterSpacing:1px;color:#9CA68C;fontFamily:'Oswald',sans-serif">{{ p.category }}</span>
@@ -502,16 +512,31 @@
         <div style="display:flex;gap:48px;flexWrap:wrap;marginTop:20px">
           <div style="flex:1;minWidth:min(300px,100%);maxWidth:480px;display:flex;flexDirection:column;gap:12px">
             <div style="position:relative;height:380px;width:100%;background:#33392B">
-              <image-slot id="{{ selectedProduct.detailSlotMain }}" shape="rect" placeholder="{{ selectedProduct.imgHint }}"></image-slot>
+              <sc-if value="{{ selectedProduct.hasImage }}" hint-placeholder-val="{{ false }}">
+                <img src="{{ selectedProduct.imageUrl }}" alt="{{ selectedProduct.name }}" style="width:100%;height:100%;objectFit:cover;display:block" />
+              </sc-if>
+              <sc-if value="{{ !selectedProduct.hasImage }}" hint-placeholder-val="{{ true }}">
+                <image-slot id="{{ selectedProduct.detailSlotMain }}" shape="rect" placeholder="{{ selectedProduct.imgHint }}"></image-slot>
+              </sc-if>
               <span style="position:absolute;top:50%;left:8px;transform:translateY(-50%);color:#E8E7DE;fontSize:20px;cursor:pointer;background:rgba(15,15,13,0.6);width:32px;height:32px;display:flex;alignItems:center;justifyContent:center">&lsaquo;</span>
               <span style="position:absolute;top:50%;right:8px;transform:translateY(-50%);color:#E8E7DE;fontSize:20px;cursor:pointer;background:rgba(15,15,13,0.6);width:32px;height:32px;display:flex;alignItems:center;justifyContent:center">&rsaquo;</span>
             </div>
             <div style="display:flex;gap:12px">
               <div style="height:80px;width:80px;border:2px solid #A5131D;flexShrink:0">
-                <image-slot id="{{ selectedProduct.detailSlotMain }}-thumb" shape="rect" placeholder="Miniatura 1"></image-slot>
+                <sc-if value="{{ selectedProduct.hasImage }}" hint-placeholder-val="{{ false }}">
+                  <img src="{{ selectedProduct.imageUrl }}" alt="{{ selectedProduct.name }}" loading="lazy" style="width:100%;height:100%;objectFit:cover;display:block" />
+                </sc-if>
+                <sc-if value="{{ !selectedProduct.hasImage }}" hint-placeholder-val="{{ true }}">
+                  <image-slot id="{{ selectedProduct.detailSlotMain }}-thumb" shape="rect" placeholder="Miniatura 1"></image-slot>
+                </sc-if>
               </div>
               <div style="height:80px;width:80px;border:1px solid rgba(232,231,222,0.15);flexShrink:0">
-                <image-slot id="{{ selectedProduct.detailSlotAlt }}" shape="rect" placeholder="Miniatura 2"></image-slot>
+                <sc-if value="{{ selectedProduct.hasThumb2 }}" hint-placeholder-val="{{ false }}">
+                  <img src="{{ selectedProduct.thumb2Url }}" alt="{{ selectedProduct.name }}" loading="lazy" style="width:100%;height:100%;objectFit:cover;display:block" />
+                </sc-if>
+                <sc-if value="{{ !selectedProduct.hasThumb2 }}" hint-placeholder-val="{{ true }}">
+                  <image-slot id="{{ selectedProduct.detailSlotAlt }}" shape="rect" placeholder="Miniatura 2"></image-slot>
+                </sc-if>
               </div>
             </div>
           </div>
@@ -587,7 +612,12 @@
             <sc-for list="{{ related }}" as="p" hint-placeholder-count="3">
               <div tabIndex="0" role="button" style="background:#33392B;border:1px solid rgba(232,231,222,0.08);cursor:pointer;position:relative" onClick="{{ p.onOpen }}" style-hover="border-color:rgba(232,231,222,0.3)">
                 <div style="height:160px;width:100%">
-                  <image-slot id="{{ p.relatedSlotId }}" shape="rect" placeholder="{{ p.imgHint }}"></image-slot>
+                  <sc-if value="{{ p.hasImage }}" hint-placeholder-val="{{ false }}">
+                    <img src="{{ p.imageUrl }}" alt="{{ p.name }}" loading="lazy" style="width:100%;height:100%;objectFit:cover;display:block" />
+                  </sc-if>
+                  <sc-if value="{{ !p.hasImage }}" hint-placeholder-val="{{ true }}">
+                    <image-slot id="{{ p.relatedSlotId }}" shape="rect" placeholder="{{ p.imgHint }}"></image-slot>
+                  </sc-if>
                 </div>
                 <div style="padding:14px;display:flex;flexDirection:column;gap:6px">
                   <span style="fontSize:11px;color:#9CA68C;letterSpacing:0.5px">{{ p.brand }}</span>
@@ -620,7 +650,12 @@
         <div style="display:flex;flexDirection:column;gap:24px">
           <div tabIndex="0" role="button" style="background:#33392B;border:1px solid rgba(232,231,222,0.08);display:flex;flexWrap:wrap;cursor:pointer" onClick="{{ goU3 }}" style-hover="border-color:rgba(165,19,29,0.5)">
             <div style="flex:1;minWidth:min(260px,100%);maxWidth:380px;alignSelf:stretch">
-              <image-slot id="event-u3-img" shape="rect" placeholder="Zdjęcie: Niedzielne U3 w akcji"></image-slot>
+              <sc-if value="{{ nearestEvent.hasImage }}" hint-placeholder-val="{{ false }}">
+                <img src="{{ nearestEvent.imageUrl }}" alt="Niedzielne U3 w akcji" loading="lazy" style="width:100%;height:100%;objectFit:cover;display:block" />
+              </sc-if>
+              <sc-if value="{{ !nearestEvent.hasImage }}" hint-placeholder-val="{{ true }}">
+                <image-slot id="event-u3-img" shape="rect" placeholder="Zdjęcie: Niedzielne U3 w akcji"></image-slot>
+              </sc-if>
             </div>
             <div style="flex:2;minWidth:min(280px,100%);padding:30px;display:flex;flexDirection:column;gap:10px;justifyContent:center">
               <span style="fontSize:11px;letterSpacing:1.5px;color:#9CA68C;fontFamily:'Oswald',sans-serif">{{ nearestEvent.level }}</span>
@@ -637,7 +672,7 @@
 
           <div tabIndex="0" role="button" style="position:relative;background:#33392B;border:1px solid rgba(165,19,29,0.35);overflow:hidden;cursor:pointer" onClick="{{ goKorengal }}">
             <div style="height:340px;width:100%">
-              <image-slot id="korengal-hero-thumb" shape="rect" placeholder="Zdjęcie: Korengal – kadr z poprzedniej edycji, duża skala wydarzenia"></image-slot>
+              <img src="https://kgwshquqpzrsvidwogrm.supabase.co/storage/v1/object/public/gallery-images/albums/bf9f6c82-cff1-47bb-a1c8-3603c4fd3ba7/494550971.jpg" alt="Korengal – kadr z poprzedniej edycji" loading="lazy" style="width:100%;height:100%;objectFit:cover;display:block" />
             </div>
             <div style="position:absolute;inset:0;background:linear-gradient(180deg,rgba(13,14,10,0) 30%,rgba(13,14,10,0.92) 100%);display:flex;flexDirection:column;justifyContent:flex-end;padding:32px;pointerEvents:none">
               <span style="fontSize:12px;letterSpacing:2px;color:rgba(232,231,222,0.65);fontFamily:'Oswald',sans-serif;marginBottom:8px">WYDARZENIE SPECJALNE</span>
@@ -703,7 +738,12 @@
     <div>
       <div style="position:relative;height:44vh;minHeight:300px;display:flex;alignItems:flex-end;padding:50px 24px">
         <div style="position:absolute;inset:0;zIndex:0">
-          <image-slot id="u3-hero" shape="rect" placeholder="Zdjęcie: Niedzielne U3 – kadr z rozgrywki w Ursusie"></image-slot>
+          <sc-if value="{{ u3.hasImage }}" hint-placeholder-val="{{ false }}">
+            <img src="{{ u3.imageUrl }}" alt="Niedzielne U3 – kadr z rozgrywki" loading="lazy" style="width:100%;height:100%;objectFit:cover;display:block" />
+          </sc-if>
+          <sc-if value="{{ !u3.hasImage }}" hint-placeholder-val="{{ true }}">
+            <image-slot id="u3-hero" shape="rect" placeholder="Zdjęcie: Niedzielne U3 – kadr z rozgrywki w Ursusie"></image-slot>
+          </sc-if>
         </div>
         <div style="position:absolute;inset:0;background:linear-gradient(180deg,rgba(15,15,13,0.2) 0%,rgba(15,15,13,0.95) 100%);zIndex:1;pointerEvents:none"></div>
         <div style="position:relative;zIndex:2;maxWidth:1200px;margin:0 auto;width:100%">
@@ -830,7 +870,7 @@
     <div>
       <div style="position:relative;height:50vh;minHeight:360px;display:flex;alignItems:flex-end;padding:50px 24px">
         <div style="position:absolute;inset:0;zIndex:0">
-          <image-slot id="korengal-hero" shape="rect" placeholder="Zdjęcie: Korengal – szeroki kadr z terenu gry, duża skala imprezy"></image-slot>
+          <img src="https://kgwshquqpzrsvidwogrm.supabase.co/storage/v1/object/public/gallery-images/albums/bf9f6c82-cff1-47bb-a1c8-3603c4fd3ba7/494550971.jpg" alt="Korengal – szeroki kadr z terenu gry" loading="lazy" style="width:100%;height:100%;objectFit:cover;display:block" />
         </div>
         <div style="position:absolute;inset:0;background:linear-gradient(180deg,rgba(13,14,10,0.2) 0%,rgba(13,14,10,0.95) 100%);zIndex:1;pointerEvents:none"></div>
         <div style="position:relative;zIndex:2;maxWidth:1200px;margin:0 auto;width:100%">
@@ -1044,7 +1084,7 @@
               <h3 style="font-family:'Oswald',sans-serif;fontSize:18px;letterSpacing:0.5px;marginBottom:16px">JAK DOJECHAĆ</h3>
               <p style="color:#9CA68C;fontSize:14px;lineHeight:1.6;marginBottom:16px">{{ korengal.miejsce }}</p>
               <div style="height:300px;width:100%;marginBottom:16px">
-                <image-slot id="korengal-mapa-dojazd" shape="rect" placeholder="Mapa dojazdu: kamieniołom Józefów"></image-slot>
+                <img src="https://kgwshquqpzrsvidwogrm.supabase.co/storage/v1/object/public/gallery-images/site/korengal-mapa-dojazd.jpg" alt="Mapa dojazdu: kamieniołom Józefów" loading="lazy" style="width:100%;height:100%;objectFit:cover;display:block" />
               </div>
               <a href="{{ korengal.dojazdUrl }}" target="_blank" style="color:#F2846D;fontSize:14px;textDecoration:none;borderBottom:1px solid rgba(165,19,29,0.4)" style-hover="border-color:#F2846D">Otwórz trasę w Google Maps &rarr;</a>
             </div>
@@ -1080,7 +1120,12 @@
 
       <sc-if value="{{ hasEventDetail }}" hint-placeholder-val="{{ false }}">
         <div style="height:280px;width:100%;marginBottom:28px">
-          <image-slot id="{{ eventDetail.slotId }}" shape="rect" placeholder="Zdjęcie z wydarzenia"></image-slot>
+          <sc-if value="{{ eventDetail.hasImage }}" hint-placeholder-val="{{ false }}">
+            <img src="{{ eventDetail.imageUrl }}" alt="{{ eventDetail.name }}" loading="lazy" style="width:100%;height:100%;objectFit:cover;display:block" />
+          </sc-if>
+          <sc-if value="{{ !eventDetail.hasImage }}" hint-placeholder-val="{{ true }}">
+            <image-slot id="{{ eventDetail.slotId }}" shape="rect" placeholder="Zdjęcie z wydarzenia"></image-slot>
+          </sc-if>
         </div>
         <h1 style="font-family:'Oswald',sans-serif;fontWeight:700;fontSize:clamp(28px,5vw,42px);letterSpacing:0.5px;marginBottom:14px">{{ eventDetail.name }}</h1>
         <div style="display:flex;gap:20px;flexWrap:wrap;color:#9CA68C;fontSize:14px;marginBottom:22px;paddingBottom:22px;borderBottom:1px solid rgba(232,231,222,0.12)">
@@ -1133,7 +1178,7 @@
             <div tabIndex="0" role="button" style="background:#33392B;border:1px solid rgba(232,231,222,0.08);cursor:pointer" onClick="{{ a.onOpen }}" style-hover="border-color:rgba(232,231,222,0.3)">
               <div style="height:220px;width:100%">
                 <sc-if value="{{ a.hasCover }}" hint-placeholder-val="{{ false }}">
-                  <img src="{{ a.coverUrl }}" alt="Okładka albumu: {{ a.name }}" style="width:100%;height:100%;objectFit:cover;display:block" />
+                  <img src="{{ a.coverUrl }}" alt="Okładka albumu: {{ a.name }}" loading="lazy" style="width:100%;height:100%;objectFit:cover;display:block" />
                 </sc-if>
                 <sc-if value="{{ !a.hasCover }}" hint-placeholder-val="{{ true }}">
                   <image-slot id="{{ a.slotId }}" shape="rect" placeholder="Zdjęcie okładkowe albumu"></image-slot>
@@ -1155,7 +1200,7 @@
           <sc-for list="{{ selectedAlbumData.photos }}" as="ph" hint-placeholder-count="9">
             <div tabIndex="0" role="button" onClick="{{ ph.onOpen }}" style="cursor:pointer;width:100%;height:{{ ph.height }}px;position:relative">
               <sc-if value="{{ ph.hasPhoto }}" hint-placeholder-val="{{ false }}">
-                <img src="{{ ph.photoUrl }}" alt="{{ ph.caption }}" style="width:100%;height:100%;objectFit:cover;display:block" />
+                <img src="{{ ph.photoUrl }}" alt="{{ ph.caption }}" loading="lazy" style="width:100%;height:100%;objectFit:cover;display:block" />
               </sc-if>
               <sc-if value="{{ !ph.hasPhoto }}" hint-placeholder-val="{{ true }}">
                 <image-slot id="{{ ph.slotId }}" shape="rect" placeholder="Zdjęcie z wydarzenia"></image-slot>
@@ -1209,7 +1254,7 @@
   <sc-if value="{{ isAbout }}" hint-placeholder-val="{{ false }}">
     <div style="paddingTop:96px;maxWidth:1100px;margin:0 auto;padding:96px 24px 100px;display:flex;gap:48px;alignItems:center;flexWrap:wrap">
       <div style="flex:1;minWidth:min(280px,100%);maxWidth:460px;height:360px">
-        <image-slot id="about-img" shape="rect" placeholder="Zdjęcie: wnętrze sklepu lub zespół Spartans ASG"></image-slot>
+        <img src="https://kgwshquqpzrsvidwogrm.supabase.co/storage/v1/object/public/gallery-images/site/about-sklep.jpg" alt="Wnętrze sklepu Spartans ASG" loading="lazy" style="width:100%;height:100%;objectFit:cover;display:block" />
       </div>
       <div style="flex:1;minWidth:min(280px,100%)">
         <p style="font-family:'Oswald',sans-serif;fontSize:13px;letterSpacing:2px;color:rgba(232,231,222,0.65);marginBottom:10px">O NAS</p>
@@ -1233,7 +1278,12 @@
             <sc-for list="{{ cartItems }}" as="c" hint-placeholder-count="2">
               <div style="display:flex;gap:14px;borderBottom:1px solid rgba(232,231,222,0.08);paddingBottom:14px">
                 <div style="width:70px;height:70px;flexShrink:0">
-                  <image-slot id="{{ c.cartSlotId }}" shape="rect" placeholder="{{ c.imgHint }}"></image-slot>
+                  <sc-if value="{{ c.hasImage }}" hint-placeholder-val="{{ false }}">
+                    <img src="{{ c.imageUrl }}" alt="{{ c.name }}" loading="lazy" style="width:100%;height:100%;objectFit:cover;display:block" />
+                  </sc-if>
+                  <sc-if value="{{ !c.hasImage }}" hint-placeholder-val="{{ true }}">
+                    <image-slot id="{{ c.cartSlotId }}" shape="rect" placeholder="{{ c.imgHint }}"></image-slot>
+                  </sc-if>
                 </div>
                 <div style="flex:1;display:flex;flexDirection:column;gap:6px">
                   <span style="fontSize:14px;fontWeight:500">{{ c.name }}</span>
@@ -1336,7 +1386,12 @@
             <sc-for list="{{ cartItems }}" as="c" hint-placeholder-count="2">
               <div style="display:flex;gap:{{ cartRowGap }};alignItems:center;flexWrap:wrap;background:#33392B;padding:16px;marginBottom:2px">
                 <div style="width:{{ cartImgSize }};height:{{ cartImgSize }};flexShrink:0;background:#0F0F0D">
-                  <image-slot id="{{ c.cartSlotId }}" shape="rect" placeholder="{{ c.imgHint }}"></image-slot>
+                  <sc-if value="{{ c.hasImage }}" hint-placeholder-val="{{ false }}">
+                    <img src="{{ c.imageUrl }}" alt="{{ c.name }}" loading="lazy" style="width:100%;height:100%;objectFit:cover;display:block" />
+                  </sc-if>
+                  <sc-if value="{{ !c.hasImage }}" hint-placeholder-val="{{ true }}">
+                    <image-slot id="{{ c.cartSlotId }}" shape="rect" placeholder="{{ c.imgHint }}"></image-slot>
+                  </sc-if>
                 </div>
                 <span style="flex:1;minWidth:min(110px,100%);fontSize:15px;fontWeight:500">{{ c.name }}</span>
                 <span style="fontFamily:'Oswald',sans-serif;fontSize:15px;fontWeight:600;minWidth:min(70px,100%)">{{ c.lineTotalLabel }}</span>
@@ -1371,7 +1426,12 @@
             <sc-for list="{{ upsellProducts }}" as="p" hint-placeholder-count="5">
               <div tabIndex="0" role="button" style="background:#33392B;border:1px solid rgba(232,231,222,0.08);cursor:pointer" onClick="{{ p.onOpen }}" style-hover="border-color:rgba(232,231,222,0.3)">
                 <div style="height:140px;width:100%">
-                  <image-slot id="{{ p.upsellSlotId }}" shape="rect" placeholder="{{ p.imgHint }}"></image-slot>
+                  <sc-if value="{{ p.hasImage }}" hint-placeholder-val="{{ false }}">
+                    <img src="{{ p.imageUrl }}" alt="{{ p.name }}" loading="lazy" style="width:100%;height:100%;objectFit:cover;display:block" />
+                  </sc-if>
+                  <sc-if value="{{ !p.hasImage }}" hint-placeholder-val="{{ true }}">
+                    <image-slot id="{{ p.upsellSlotId }}" shape="rect" placeholder="{{ p.imgHint }}"></image-slot>
+                  </sc-if>
                 </div>
                 <div style="padding:12px">
                   <span style="fontSize:13px;display:block;marginBottom:6px;lineHeight:1.3">{{ p.name }}</span>
@@ -1606,7 +1666,12 @@
             <sc-for list="{{ cartItems }}" as="c" hint-placeholder-count="1">
               <div style="display:flex;gap:12px;alignItems:center">
                 <div style="width:56px;height:56px;flexShrink:0;background:#0F0F0D">
-                  <image-slot id="{{ c.cartSlotId }}" shape="rect" placeholder="{{ c.imgHint }}"></image-slot>
+                  <sc-if value="{{ c.hasImage }}" hint-placeholder-val="{{ false }}">
+                    <img src="{{ c.imageUrl }}" alt="{{ c.name }}" loading="lazy" style="width:100%;height:100%;objectFit:cover;display:block" />
+                  </sc-if>
+                  <sc-if value="{{ !c.hasImage }}" hint-placeholder-val="{{ true }}">
+                    <image-slot id="{{ c.cartSlotId }}" shape="rect" placeholder="{{ c.imgHint }}"></image-slot>
+                  </sc-if>
                 </div>
                 <div style="flex:1;fontSize:13px">
                   <span style="display:block">{{ c.name }}</span>
@@ -1733,7 +1798,12 @@
             <div tabIndex="0" role="button" style="background:#33392B;border:1px solid rgba(232,231,222,0.08);cursor:pointer;position:relative" onClick="{{ p.onOpen }}" style-hover="border-color:#F2846D">
               <span tabIndex="0" role="button" aria-label="Usuń z ulubionych" onClick="{{ p.onRemove }}" style="position:absolute;top:10px;right:10px;zIndex:2;width:28px;height:28px;background:rgba(15,15,13,0.7);color:#F2846D;display:flex;alignItems:center;justifyContent:center;cursor:pointer;fontSize:16px">&times;</span>
               <div style="height:160px;width:100%">
-                <image-slot id="{{ p.slotId }}" shape="rect" placeholder="{{ p.imgHint }}"></image-slot>
+                <sc-if value="{{ p.hasImage }}" hint-placeholder-val="{{ false }}">
+                  <img src="{{ p.imageUrl }}" alt="{{ p.name }}" loading="lazy" style="width:100%;height:100%;objectFit:cover;display:block" />
+                </sc-if>
+                <sc-if value="{{ !p.hasImage }}" hint-placeholder-val="{{ true }}">
+                  <image-slot id="{{ p.slotId }}" shape="rect" placeholder="{{ p.imgHint }}"></image-slot>
+                </sc-if>
               </div>
               <div style="padding:14px;display:flex;flexDirection:column;gap:6px">
                 <span style="fontSize:11px;color:#9CA68C;letterSpacing:0.5px">{{ p.brand }}</span>
@@ -1767,7 +1837,12 @@
             <div style="background:#33392B;border:1px solid rgba(232,231,222,0.08);position:relative">
               <span tabIndex="0" role="button" aria-label="Usuń z porównania" onClick="{{ p.onRemove }}" style="position:absolute;top:10px;right:10px;zIndex:2;width:28px;height:28px;background:rgba(15,15,13,0.7);color:#F2846D;display:flex;alignItems:center;justifyContent:center;cursor:pointer;fontSize:16px">&times;</span>
               <div tabIndex="0" role="button" onClick="{{ p.onOpen }}" style="cursor:pointer;height:150px;width:100%">
-                <image-slot id="{{ p.slotId }}" shape="rect" placeholder="{{ p.imgHint }}"></image-slot>
+                <sc-if value="{{ p.hasImage }}" hint-placeholder-val="{{ false }}">
+                  <img src="{{ p.imageUrl }}" alt="{{ p.name }}" loading="lazy" style="width:100%;height:100%;objectFit:cover;display:block" />
+                </sc-if>
+                <sc-if value="{{ !p.hasImage }}" hint-placeholder-val="{{ true }}">
+                  <image-slot id="{{ p.slotId }}" shape="rect" placeholder="{{ p.imgHint }}"></image-slot>
+                </sc-if>
               </div>
               <div style="padding:16px;display:flex;flexDirection:column;gap:8px">
                 <span tabIndex="0" role="button" onClick="{{ p.onOpen }}" style="fontSize:15px;fontWeight:500;cursor:pointer">{{ p.name }}</span>
@@ -2374,7 +2449,15 @@ class Component extends DCLogic {
       console.error('Supabase SDK nie załadował się — logowanie będzie niedostępne.');
       return;
     }
-    this.supabase = window.supabase.createClient(window.SUPABASE_URL, window.SUPABASE_PUBLISHABLE_KEY);
+    // componentDidMount woła initSupabase()/loadCatalog()/loadEvents()/
+    // loadGallery() równolegle (fire-and-forget) — którakolwiek z nich
+    // ruszy pierwsza, tworzy this.supabase (ten sam wzorzec "if (!this.supabase)"
+    // w każdej z nich). Bez tej strażniczki initSupabase() nadpisywał już
+    // istniejącego klienta świeżym, bez sesji — loadEvents() (który potrzebuje
+    // zalogowanej roli obsługi, żeby zobaczyć wydarzenia inne niż
+    // "published") mógł wtedy wystrzelić zapytanie na tym starym,
+    // podmienionym kliencie, zanim sesja w ogóle zdążyła się do niego dopiąć.
+    if (!this.supabase) this.supabase = window.supabase.createClient(window.SUPABASE_URL, window.SUPABASE_PUBLISHABLE_KEY);
 
     const { data } = await this.supabase.auth.getSession();
     if (data && data.session) await this.applySession(data.session);
@@ -2495,7 +2578,8 @@ class Component extends DCLogic {
             base_price, sale_price, is_bestseller, is_new, category_id,
             brands ( name ),
             product_variants ( id, label, sku, inventory ( quantity_on_hand ) ),
-            product_specifications ( spec_name, spec_value, spec_unit )
+            product_specifications ( spec_name, spec_value, spec_unit ),
+            product_images ( storage_path, is_primary, sort_order )
           `)
           .eq('is_active', true),
       ]);
@@ -2546,6 +2630,24 @@ class Component extends DCLogic {
 
         const hasSale = p.sale_price != null && Number(p.sale_price) < Number(p.base_price);
 
+        // ETAP „AUDYT ZDJĘĆ": prawdziwe zdjęcia produktu z product_images —
+        // wcześniej ta tabela była wypełniana przez panel admina (upload
+        // działał: Storage + baza były poprawne), ale sklep nigdy jej nie
+        // odczytywał, więc żadne wgrane zdjęcie nigdy się nie pokazywało.
+        // <image-slot> to wyłącznie narzędzie projektowe (zapisuje przez
+        // window.omelette, dostępne tylko w edytorze Claude Design) — na
+        // prawdziwej, opublikowanej stronie NIGDY nie pokaże wgranego
+        // zdjęcia, więc nie jest tu użyteczne jako fallback poza swoim
+        // miejscem jako wizualny placeholder.
+        const imagesRaw = [...(p.product_images || [])].sort((a, b) => {
+          if (a.is_primary !== b.is_primary) return a.is_primary ? -1 : 1;
+          return (a.sort_order || 0) - (b.sort_order || 0);
+        });
+        const galleryUrls = imagesRaw.map((img) =>
+          this.supabase.storage.from('product-images').getPublicUrl(img.storage_path).data.publicUrl
+        );
+        const imageUrl = galleryUrls[0] || null;
+
         return {
           id: p.slug, // zachowuje dotychczasowe, już zaindeksowane adresy #/product/<slug>
           dbId: p.id,
@@ -2559,6 +2661,9 @@ class Component extends DCLogic {
           oldPrice: hasSale ? Number(p.base_price) : null,
           slotId: 'prod-' + p.slug,
           imgHint: p.short_description || p.name,
+          hasImage: !!imageUrl,
+          imageUrl,
+          galleryUrls,
           desc: p.description || p.short_description || '',
           variants: variantLabels,
           variantsDetailed: variantsRaw.map((v) => ({ id: v.id, label: v.label })),
@@ -2641,10 +2746,12 @@ class Component extends DCLogic {
     }
   };
 
-  // Bucket 'gallery-images' jest publiczny do odczytu (patrz 008_storage.sql).
-  galleryImageUrl = (storagePath) => {
+  // Wszystkie buckety Storage są publiczne do odczytu (patrz 008_storage.sql).
+  // Domyślnie 'gallery-images' (najczęstszy wywołujący — galeria), ale np.
+  // zdjęcia okładkowe wydarzeń są w osobnym buckecie 'event-images'.
+  galleryImageUrl = (storagePath, bucket) => {
     if (!storagePath || !this.supabase) return null;
-    return this.supabase.storage.from('gallery-images').getPublicUrl(storagePath).data.publicUrl;
+    return this.supabase.storage.from(bucket || 'gallery-images').getPublicUrl(storagePath).data.publicUrl;
   };
 
   // Reads the current #/... hash into a view (+ product id / shop category).
@@ -3240,6 +3347,8 @@ class Component extends DCLogic {
         id: c.id, qty: c.qty,
         name: p ? p.name : '',
         imgHint: p ? p.imgHint : '',
+        hasImage: p ? p.hasImage : false,
+        imageUrl: p ? p.imageUrl : null,
         cartSlotId: 'cart-' + c.id,
         lineTotalLabel: p ? (p.price * c.qty) + ' zł' : '0 zł',
         onIncrease: () => this.changeQty(c.id, 1),
@@ -3256,6 +3365,8 @@ class Component extends DCLogic {
       priceLabel: baseSelected.price + ' zł',
       detailSlotMain: 'detail-main-' + baseSelected.id,
       detailSlotAlt: 'detail-alt-' + baseSelected.id,
+      hasThumb2: (baseSelected.galleryUrls || []).length > 1,
+      thumb2Url: (baseSelected.galleryUrls || [])[1] || null,
       variants: baseSelected.variants,
       specs: [
         { label: 'Marka', value: baseSelected.brand || '—' },
@@ -3445,8 +3556,11 @@ class Component extends DCLogic {
         const isOpen = ev.status === 'published';
         const rawTabs = (ev.content && Array.isArray(ev.content.tabs)) ? ev.content.tabs : [];
         const activeIdx = Math.min(this.state.activeEventTabIndex || 0, Math.max(rawTabs.length - 1, 0));
+        const coverUrl = this.galleryImageUrl(ev.cover_image_storage_path, 'event-images');
         return {
           slotId: 'event-detail-' + ev.id,
+          hasImage: !!coverUrl,
+          imageUrl: coverUrl,
           name: ev.name,
           dateLabel: this.formatEventDate(ev.event_date) || 'Termin: wkrótce ogłosimy',
           hasTime: !!ev.event_time,
@@ -3474,7 +3588,16 @@ class Component extends DCLogic {
         };
       })(),
       hasEventDetail: !!this.state.dbEvents.find((e) => e.slug === this.state.selectedEventSlug),
-      u3: this.u3,
+      // "Niedzielne U3" ma dedykowaną, hardkodowaną stronę (this.u3), ale
+      // zdjęcie okładkowe wciąż jest ustawiane przez właściciela w panelu
+      // admina jak dla każdego innego wydarzenia — musi więc czytać
+      // cover_image_storage_path z tego samego rekordu w bazie, tak jak
+      // eventDetail wyżej, inaczej wgrane zdjęcie nigdy się nie pokaże.
+      u3: (() => {
+        const db = this.state.dbEvents.find((e) => e.slug === 'niedzielne-u3');
+        const coverUrl = db ? this.galleryImageUrl(db.cover_image_storage_path, 'event-images') : null;
+        return { ...this.u3, hasImage: !!coverUrl, imageUrl: coverUrl };
+      })(),
       isU3TabOpis: this.state.u3Tab === 'opis', isU3TabSprzet: this.state.u3Tab === 'sprzet',
       isU3TabMapa: this.state.u3Tab === 'mapa', isU3TabLimity: this.state.u3Tab === 'limity',
       isU3TabBezpieczenstwo: this.state.u3Tab === 'bezpieczenstwo',
@@ -3530,7 +3653,7 @@ class Component extends DCLogic {
         if (!p) return null;
         return {
           id: p.id, name: p.name, brand: p.brand, category: p.category, priceLabel: p.price + ' zł',
-          slotId: p.slotId, imgHint: p.imgHint,
+          slotId: p.slotId, imgHint: p.imgHint, hasImage: p.hasImage, imageUrl: p.imageUrl,
           onOpen: () => this.openProduct(p.id),
           onAdd: (e) => { e.stopPropagation(); this.addToCart(p.id, 1, true); },
           onRemove: (e) => { e.stopPropagation(); this.removeFavorite(p.id); },
@@ -3542,7 +3665,7 @@ class Component extends DCLogic {
         return {
           id: p.id, name: p.name, brand: p.brand, category: p.category, weight: p.weight || '—',
           priceLabel: p.price + ' zł', stockLabel: p.stan > 0 ? 'Dostępny' : 'Niedostępny',
-          slotId: p.slotId, imgHint: p.imgHint,
+          slotId: p.slotId, imgHint: p.imgHint, hasImage: p.hasImage, imageUrl: p.imageUrl,
           onOpen: () => this.openProduct(p.id),
           onRemove: (e) => { e.stopPropagation(); this.removeCompare(p.id); },
         };
@@ -3630,7 +3753,8 @@ class Component extends DCLogic {
       // czegoś jeszcze nie ustawił, zostaje stara, ręcznie napisana treść.
       nearestEvent: (() => {
         const db = this.state.dbEvents.find((e) => e.slug === 'niedzielne-u3');
-        if (!db) return this.nearestEvent;
+        if (!db) return { ...this.nearestEvent, hasImage: false, imageUrl: null };
+        const coverUrl = this.galleryImageUrl(db.cover_image_storage_path, 'event-images');
         return {
           title: this.nearestEvent.title,
           subtitle: this.nearestEvent.subtitle,
@@ -3638,6 +3762,8 @@ class Component extends DCLogic {
           time: db.event_time ? ('Godzina zbiórki: ' + db.event_time.slice(0, 5)) : this.nearestEvent.time,
           desc: db.short_description || this.nearestEvent.desc,
           level: db.location || this.nearestEvent.level,
+          hasImage: !!coverUrl,
+          imageUrl: coverUrl,
           onRegisterClick: db.external_form_url
             ? (() => window.open(db.external_form_url, '_blank', 'noopener'))
             : (() => this.openEventDetail('niedzielne-u3')),

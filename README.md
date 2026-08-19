@@ -54,6 +54,7 @@ Skrót zawartości:
 | `007_admin_product_functions.sql` | `admin_create_product()` — tworzenie produktu z wariantami w jednej transakcji. |
 | `008_storage.sql` | Buckety na zdjęcia (produkty, galeria, marki, wydarzenia) + reguły dostępu. |
 | `010_reviews_insert_guard.sql` | Zabezpieczenie tabeli `reviews` przed samodzielnym publikowaniem/weryfikowaniem opinii. Tabela istnieje w schemacie, ale **funkcja opinii nie jest już używana** w sklepie ani w panelu (usunięta na prośbę właściciela) — migracja została mimo to zastosowana, bo naprawia realną lukę bezpieczeństwa niezależnie od tego, czy UI z niej korzysta. |
+| `011_storage_limits.sql` | Limit rozmiaru pliku (10 MB) i dozwolone typy MIME na 4 buckietach ze zdjęciami — znalezione podczas audytu systemu zdjęć (patrz `IMAGE_AUDIT.md`), wcześniej nieograniczone na poziomie Storage. |
 
 Uwaga: numeracja przeskakuje z `008` na `010` — plik `009` (rejestracja na
 wydarzenia przez wewnętrzny formularz) został napisany, ale wycofany przed
